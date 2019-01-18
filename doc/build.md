@@ -7,7 +7,7 @@ BitGrin's programming language `rust` has build targets for most platforms.
 
 What's working so far?
 
-* Linux x86\_64 and MacOS [bitgrin + mining + development]
+* Linux x86\_64 and macOS [bitgrin + mining + development]
 * Windows 10 coming soon with GUI
 
 ## Requirements
