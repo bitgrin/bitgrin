@@ -11,13 +11,8 @@ More documentation or updates/fixes to existing documentation are also very welc
 # Find Us
 
 If any help is needed during your effort to contribute on this project, please don't hesitate to contact us:
-* Chat: [Gitter](https://gitter.im/bitgrin_community/Lobby).
-* [Forum](https://www.bitgrin-forum.org/)
-* [Website](https://bitgrin-tech.org)
-* Mailing list: join the [~MimbleWimble team](https://launchpad.net/~mimblewimble) and subscribe on Launchpad.
-* News: 
-  * Twitter for the BitGrin council: [@bitgrincouncil](https://twitter.com/bitgrincouncil)
-  * Twitter bot that scrapes headlines, mailing list, and reddit posts related to MimbleWinble/BitGrin: [@bitgrinmw](https://twitter.com/bitgrinmw)
+* Chat: [Discord](https://discord.gg/BkhDNyG)
+* [Website](https://bitgrin.io)
 
 # Pull-Request Title Prefix
 
@@ -41,7 +36,7 @@ BitGrin uses `rustfmt` to maintain consistent formatting, and we're using the gi
 
 ## Install rustfmt
 
-You should use rustup. See [build docs](doc/build.md) for more info.
+You should use `rustup`. See [build docs](doc/build.md) for more info.
 
 ```
 rustup component add rustfmt-preview
