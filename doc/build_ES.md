@@ -48,7 +48,7 @@ Con una compilación finalizada se obtiene:
 
 * `target/release/bitgrin` - los binarios principales de bitgrin
 
-Todos los datos, configuración y archivos de registro creados y utilizados por BitGrin se encuentran en el directorio oculto `~/.bitgrin` (bajo el directorio home del usuario) por defecto. Puede modificar toda la configuración editando el archivo `~/.bitgrin/bitgrin-server.toml`.
+Todos los datos, configuración y archivos de registro creados y utilizados por BitGrin se encuentran en el directorio oculto `~/.bitgrin` (bajo el directorio home del usuario) por defecto. Puede modificar toda la configuración editando el archivo `~/.bitgrin/main/bitgrin-server.toml`.
 
 También es posible hacer que BitGrin cree sus propios archivos de datos en el directorio actual. Para ello ejecute:
 
@@ -56,12 +56,12 @@ También es posible hacer que BitGrin cree sus propios archivos de datos en el d
 bitgrin server config
 ```
 
-Lo que generará un archivo `bitgrin-server.toml` en el directorio actual, preconfigurado para usar el directorio actual para todos sus datos. Ejecutando BitGrin desde un directorio que contiene el archivo `bitgrin-server.toml` usará los valores de ese archivo en lugar de los valores por defecto de `~/.bitgrin/bitgrin-server.toml`.
+Lo que generará un archivo `bitgrin-server.toml` en el directorio actual, preconfigurado para usar el directorio actual para todos sus datos. Ejecutando BitGrin desde un directorio que contiene el archivo `bitgrin-server.toml` usará los valores de ese archivo en lugar de los valores por defecto de `~/.bitgrin/main/bitgrin-server.toml`.
 
 Durante las pruebas, ponga el binario de BitGrin en su ruta de esta manera:
 
 ```sh
-export PATH=/path/to/bitgrin/dir/target/debug:$PATH
+export PATH=/path/to/bitgrin/dir/target/release:$PATH
 ```
 
 Donde `path/to/bitgrin/dir` es su ruta absoluta al directorio raíz de la instalación de BitGrin.

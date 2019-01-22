@@ -50,7 +50,7 @@ A successful build gets you:
 
 All data, configuration and log files created and used by bitgrin are located in the hidden
 `~/.bitgrin` directory (under your user home directory) by default. You can modify all configuration
-values by editing the file `~/.bitgrin/bitgrin-server.toml`.
+values by editing the file `~/.bitgrin/main/bitgrin-server.toml`.
 
 It is also possible to have bitgrin create its data files in the current directory. To do this, run
 
@@ -61,15 +61,15 @@ bitgrin server config
 Which will generate a `bitgrin-server.toml` file in the current directory, pre-configured to use
 the current directory for all of its data. Running bitgrin from a directory that contains a
 `bitgrin-server.toml` file will use the values in that file instead of the default
-`~/.bitgrin/bitgrin-server.toml`.
+`~/.bitgrin/main/bitgrin-server.toml`.
 
 While testing, put the bitgrin binary on your path like this:
 
 ```sh
-export PATH=/path/to/bitgrin/dir/target/debug:$PATH
+export PATH=/path/to/bitgrin/dir/target/release:$PATH
 ```
 
-Where path/to/bitgrin/dir is your absolute path to the root directory of your BitGrin installation.
+Where /path/to/bitgrin/dir is your absolute path to the root directory of your BitGrin installation.
 
 You can then run `bitgrin` directly (try `bitgrin help` for more options).
 
