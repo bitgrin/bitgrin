@@ -2,7 +2,7 @@
 
 Find an area you can help with and do it. Open source is about collaboration and open participation. Try to make your code look like what already exists and submit a pull request.
 
-The [list of issues](https://github.com/bitgrin/bitgrin/issues) is a good place to start, especially the ones tagged as "help wanted" (but don't let that stop you from looking at others). If you're looking for additional ideas, the code includes `TODO` comments for minor to major improvements. Grep is your friend.
+The [list of issues](https://github.com/bitgrin/bitgrin/issues) is a good place to start, especially the ones tagged as "help wanted" (but don't let that stop you from looking at others). If you're looking for additional ideas, the code includes `TODO` comments for minor to major improvements. Use _Search in files_ in your code editor, or `grep "TODO" -r --exclude-dir=target --exclude-dir=.git .`.
 
 Additional tests are rewarded with an immense amount of positive karma.
 
@@ -48,11 +48,7 @@ For example: `fix: a panick on xxx when bitgrin exiting`. Please don't worry if 
 
 # BitGrin Style Guide
 
-<<<<<<< HEAD
 BitGrin uses `rustfmt` to maintain consistent formatting, and we're using the git commit hook as explained below.
-=======
-This project uses `rustfmt` to maintain consistent formatting. We've made sure that rustfmt runs **automatically**, but you must install rustfmt manually first.
->>>>>>> b02f95c2... CONTRIBUTING update rustfmt explanation
 
 ## Install rustfmt
 
@@ -99,10 +95,6 @@ Not recommended, but you can run rustfmt on a file like this: `rustfmt client.rs
 
 ## Thanks for any contribution
 
-<<<<<<< HEAD
 Even one word correction are welcome! Our objective is to encourage you to get interested in BitGrin and contribute in any way possible. Thanks for any help!
 
 
-=======
-Even one word correction are welcome! Our objective is to encourage you to get interested in Grin and contribute in any way possible. Thanks for any help!
->>>>>>> b02f95c2... CONTRIBUTING update rustfmt explanation
