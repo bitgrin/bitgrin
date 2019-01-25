@@ -14,11 +14,9 @@
 //! Test wallet command line works as expected
 #[cfg(test)]
 mod wallet_tests {
-	use chrono;
 	use clap;
 	use bitgrin_util as util;
 	use bitgrin_wallet;
-	use serde;
 
 	use bitgrin_wallet::test_framework::{self, LocalWalletClient, WalletProxy};
 
