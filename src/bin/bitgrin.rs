@@ -69,7 +69,6 @@ fn log_build_info() {
 }
 
 fn main() {
-	info!("Hi");
 	println!("Welcome to BitGrin. The mimble whimble implementation with Bitcoin economics.");
 	let exit_code = real_main();
 	std::process::exit(exit_code);
