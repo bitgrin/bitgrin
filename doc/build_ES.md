@@ -31,8 +31,8 @@ apt install build-essential cmake git libgit2-dev clang libncurses5-dev libncurs
 ## Pasos para la compilación
 
 ```sh
-git clone https://github.com/mimblewimble/grin.git
-cd grin
+git clone https://github.com/bitgrin/grin.git
+cd bitgrin
 cargo build --release
 ```
 
@@ -40,15 +40,15 @@ Grin también puede compilarse en modo debug (sin la etiqueta `--release`, pero 
 
 ## Errores de compilación
 
-Vea [Solución de problemas](https://github.com/mimblewimble/docs/wiki/Troubleshooting)
+Vea [Solución de problemas](https://github.com/bitgrin/docs/wiki/Troubleshooting)
 
 ## ¿Qué se ha compilado?
 
 Con una compilación finalizada se obtiene:
 
-* `target/release/grin` - los binarios principales de grin
+* `target/release/bitgrin` - los binarios principales de bitgrin
 
-Todos los datos, configuración y archivos de registro creados y utilizados por Grin se encuentran en el directorio oculto `~/.grin` (bajo el directorio home del usuario) por defecto. Puede modificar toda la configuración editando el archivo `~/.grin/grin-server.toml`.
+Todos los datos, configuración y archivos de registro creados y utilizados por Grin se encuentran en el directorio oculto `~/.bitgrin` (bajo el directorio home del usuario) por defecto. Puede modificar toda la configuración editando el archivo `~/.bitgrin/bitgrin-server.toml`.
 
 También es posible hacer que Grin cree sus propios archivos de datos en el directorio actual. Para ello ejecute:
 
@@ -56,9 +56,9 @@ También es posible hacer que Grin cree sus propios archivos de datos en el dire
 grin server config
 ```
 
-Lo que generará un archivo `grin-server.toml` en el directorio actual, preconfigurado para usar el directorio actual para todos sus datos. Ejecutando Grin desde un directorio que contiene el archivo `grin-server.toml` usará los valores de ese archivo en lugar de los valores por defecto de `~/.grin/grin-server.toml`.
+Lo que generará un archivo `bitgrin-server.toml` en el directorio actual, preconfigurado para usar el directorio actual para todos sus datos. Ejecutando Grin desde un directorio que contiene el archivo `bitgrin-server.toml` usará los valores de ese archivo en lugar de los valores por defecto de `~/.bitgrin/bitgrin-server.toml`.
 
-Durante las pruebas, ponga el binario de Grin en su ruta de esta manera:
+Durante las pruebas, ponga el binario de BitGrin en su ruta de esta manera:
 
 ```sh
 export PATH=/path/to/grin/dir/target/debug:$PATH
@@ -66,36 +66,36 @@ export PATH=/path/to/grin/dir/target/debug:$PATH
 
 Donde `path/to/grin/dir` es su ruta absoluta al directorio raíz de la instalación de Grin.
 
-Puede ejecutar `grin` directamente (pruebe `grin help` para más opciones).
+Puede ejecutar `bitgrin` directamente (pruebe `bitgrin help` para más opciones).
 
 ## Configuración
 
-Grin se ejecuta con valores predeterminados, y puede configurarse aún más a través del archivo `grin-server.toml`. Este fichero es generado por grin en su primera ejecución, y contiene documentación sobre cada opción disponible.
+Grin se ejecuta con valores predeterminados, y puede configurarse aún más a través del archivo `bitgrin-server.toml`. Este fichero es generado por grin en su primera ejecución, y contiene documentación sobre cada opción disponible.
 
-Aunque se recomienda que realice toda la configuración de grin server a través de `grin-server.toml`, también es posible suministrar cambios de comandos para grin que anulan cualquier configuración en el archivo.
+Aunque se recomienda que realice toda la configuración de grin server a través de `bitgrin-server.toml`, también es posible suministrar cambios de comandos para grin que anulan cualquier configuración en el archivo.
 
 Para obtener ayuda sobre los comandos de grin y sus cambios intente:
 
 ```sh
-grin help
-grin wallet help
-grin client help
+bitgrin help
+bitgrin wallet help
+bitgrin client help
 ```
 
 ## Docker
 
 ```sh
-docker build -t grin -f etc/Dockerfile .
+docker build -t bitgrin -f etc/Dockerfile .
 ```
 
 Puede ubicar la caché de Grin para que se ejecute dentro del contenedor
 
 ```sh
-docker run -it -d -v $HOME/.grin:/root/.grin grin
+docker run -it -d -v $HOME/.bitgrin:/root/.bitgrin grin
 ```
 ## Compilación multiplataforma
 
-Rust (cargo) puede compilar Grin para muchas plataformas, así que en teoría ejecutar `grin` como un nodo de validación en un dispositivo de baja potencia podría ser posible. Para hacer una compilación cruzada `grin` en una plataforma x86 Linux y generar binarios de ARM, por ejemplo para Raspberry-pi.
+Rust (cargo) puede compilar Grin para muchas plataformas, así que en teoría ejecutar `bitgrin` como un nodo de validación en un dispositivo de baja potencia podría ser posible. Para hacer una compilación cruzada `bitgrin` en una plataforma x86 Linux y generar binarios de ARM, por ejemplo para Raspberry-pi.
 
 ## Usando Grin
 
@@ -103,4 +103,4 @@ La página de la wiki [Cómo usar grin](https://github.com/mimblewimble/docs/wik
 
 ## Minando en Grin
 
-Tenga en cuenta que todas las funciones de minería de Grin se han trasladado a un paquete independiente llamado [grin_minner](https://github.com/mimblewimble/grin-miner). Una vez que el nodo de grin esté listo y funcionando, puede empezar a minar compilando y ejecutando grin-miner con su nodo Grin en funcionamiento.
+Tenga en cuenta que todas las funciones de minería de Grin se han trasladado a un paquete independiente llamado [bitgrin_minner](https://github.com/bitgrin/bitgrin-miner). Una vez que el nodo de grin esté listo y funcionando, puede empezar a minar compilando y ejecutando grin-miner con su nodo Grin en funcionamiento.

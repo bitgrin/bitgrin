@@ -3,7 +3,7 @@
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.stdenv.mkDerivation {
-  name = "grin";
+  name = "bitgrin";
 
   buildInputs = with pkgs; [
     ncurses cmake clang

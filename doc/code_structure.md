@@ -36,8 +36,8 @@ After checking out grin, building and using, these are the folders you'll have:
 - `pool`\
  Code for the transaction pool implementation.
 - `server`\
- A folder you're [supposed to create](build.md#running-a-node), before starting your server: cd to project root; mkdir server; cd server; grin server start (or run) and it will create a subfolder .grin
-  - `.grin`
+ A folder you're [supposed to create](build.md#running-a-node), before starting your server: cd to project root; mkdir server; cd server; grin server start (or run) and it will create a subfolder .bitgrin
+  - `.bitgrin`
     - `chain` - a Rocksdb with the blockchain blocks and related information
     - `peers` - a Rocksdb with the list of Grin peers you're connected to
     - `txhashset` - contains folders kernel, rangeproof and output that each have a pmmr_dat.bin

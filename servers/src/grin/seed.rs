@@ -31,6 +31,7 @@ use crate::p2p::ChainAdapter;
 use crate::pool::DandelionConfig;
 use crate::util::{Mutex, StopState};
 
+// TODO: correct this
 // DNS Seeds with contact email associated
 const MAINNET_DNS_SEEDS: &'static [&'static str] = &[
 	"mainnet.seed.grin-tech.org",      // igno.peverell@protonmail.com

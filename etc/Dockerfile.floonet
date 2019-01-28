@@ -14,12 +14,12 @@ RUN set -ex && \
     cmake \
     git
 
-WORKDIR /usr/src/grin
+WORKDIR /usr/src/bitgrin
 
-# Copying Grin
+# Copying bitgrin
 COPY . .
 
-# Building Grin
+# Building bitgrin
 RUN cargo build --release
 
 # runtime stage
@@ -33,17 +33,17 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 
 ENV LANG en_US.UTF-8
 
-COPY --from=builder /usr/src/grin/target/release/grin /usr/local/bin/grin
+COPY --from=builder /usr/src/bitgrin/target/release/bitgrin /usr/local/bin/bitgrin
 
-WORKDIR /root/.grin
+WORKDIR /root/.bitgrin
 
-RUN grin --floonet server config && \
-    sed -i -e 's/run_tui = true/run_tui = false/' grin-server.toml
+RUN bitgrin --floonet server config && \
+    sed -i -e 's/run_tui = true/run_tui = false/' bitgrin-server.toml
 
-VOLUME ["/root/.grin"]
+VOLUME ["/root/.bitgrin"]
 
 EXPOSE 13413 13414 13415 13416
 
-ENTRYPOINT ["grin", "--floonet"]
+ENTRYPOINT ["bitgrin", "--floonet"]
 
 CMD ["server", "run"]

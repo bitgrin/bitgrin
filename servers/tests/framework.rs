@@ -197,7 +197,7 @@ impl LocalServerContainer {
 		let s = servers::Server::new(servers::ServerConfig {
 			api_http_addr: api_addr,
 			api_secret_path: None,
-			db_root: format!("{}/.grin", self.working_dir),
+			db_root: format!("{}/.bitgrin", self.working_dir),
 			p2p_config: p2p::P2PConfig {
 				port: self.config.p2p_server_port,
 				seeds: Some(seeds),

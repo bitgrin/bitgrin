@@ -56,7 +56,7 @@ lazy_static! {
 
 const LOGGING_PATTERN: &str = "{d(%Y%m%d %H:%M:%S%.3f)} {h({l})} {M} - {m}{n}";
 
-/// This filter is rejecting messages that doesn't start with "grin"
+/// This filter is rejecting messages that doesn't start with "bitgrin"
 /// in order to save log space for only Grin-related records
 #[derive(Debug)]
 struct GrinFilter;
@@ -64,7 +64,7 @@ struct GrinFilter;
 impl Filter for GrinFilter {
 	fn filter(&self, record: &Record<'_>) -> Response {
 		if let Some(module_path) = record.module_path() {
-			if module_path.starts_with("grin") {
+			if module_path.starts_with("bitgrin") {
 				return Response::Neutral;
 			}
 		}

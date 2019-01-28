@@ -28,7 +28,7 @@ fn comments() -> HashMap<String, String> {
 # order:
 #
 # -The working directory
-# -[user home]/.grin
+# -[user home]/.bitgrin
 #
 
 #########################################

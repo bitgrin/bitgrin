@@ -1,13 +1,13 @@
 [package]
-name = "grin"
+name = "bitgrin"
 version = "1.0.0"
 authors = ["Grin Developers <mimblewimble@lists.launchpad.net>"]
 description = "Simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
-repository = "https://github.com/mimblewimble/grin"
-keywords = [ "crypto", "grin", "mimblewimble" ]
+repository = "https://github.com/bitgrin/bitgrin"
+keywords = [ "crypto", "bitgrin", "mimblewimble" ]
 readme = "README.md"
-exclude = ["**/*.grin", "**/*.grin2"]
+exclude = ["**/*.bitgrin", "**/*.bitgrin2"]
 build = "src/build/build.rs"
 edition = "2018"
 
@@ -16,8 +16,8 @@ members = ["api", "chain", "config", "core", "keychain", "p2p", "servers", "stor
 exclude = ["etc/gen_gen"]
 
 [[bin]]
-name = "grin"
-path = "src/bin/grin.rs"
+name = "bitgrin"
+path = "src/bin/bitgrin.rs"
 
 [dependencies]
 blake2-rfc = "0.2"

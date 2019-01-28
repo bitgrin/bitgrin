@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mimblewimble/grin.svg?branch=master)](https://travis-ci.org/mimblewimble/grin) [![Gitter chat](https://badges.gitter.im/grin_community/Lobby.png)](https://gitter.im/grin_community/Lobby) [![Codecov coverage status](https://codecov.io/gh/mimblewimble/grin/branch/master/graph/badge.svg)](https://codecov.io/gh/mimblewimble/grin)
+[![Build Status](https://travis-ci.org/bitgrin/bitgrin.svg?branch=master)](https://travis-ci.org/bitgrin/bitgrin) [![Gitter chat](https://badges.gitter.im/grin_community/Lobby.png)](https://gitter.im/grin_community/Lobby) [![Codecov coverage status](https://codecov.io/gh/bitgrin/bitgrin/branch/master/graph/badge.svg)](https://codecov.io/gh/bitgrin/bitgrin)
 
 # Grin
 

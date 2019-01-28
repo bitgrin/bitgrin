@@ -42,7 +42,7 @@ pub const SERVER_CONFIG_FILE_NAME: &'static str = "grin-server.toml";
 pub const WALLET_CONFIG_FILE_NAME: &'static str = "grin-wallet.toml";
 const SERVER_LOG_FILE_NAME: &'static str = "grin-server.log";
 const WALLET_LOG_FILE_NAME: &'static str = "grin-wallet.log";
-const GRIN_HOME: &'static str = ".grin";
+const GRIN_HOME: &'static str = ".bitgrin";
 const GRIN_CHAIN_DIR: &'static str = "chain_data";
 /// Wallet data directory
 pub const GRIN_WALLET_DIR: &'static str = "wallet_data";
@@ -117,7 +117,7 @@ fn check_api_secret_file(chain_type: &global::ChainTypes) -> Result<(), ConfigEr
 /// Handles setup and detection of paths for node
 pub fn initial_setup_server(chain_type: &global::ChainTypes) -> Result<GlobalConfig, ConfigError> {
 	check_api_secret_file(chain_type)?;
-	// Use config file if current directory if it exists, .grin home otherwise
+	// Use config file if current directory if it exists, .bitgrin home otherwise
 	if let Some(p) = check_config_current_dir(SERVER_CONFIG_FILE_NAME) {
 		GlobalConfig::new(p.to_str().unwrap())
 	} else {
@@ -145,7 +145,7 @@ pub fn initial_setup_wallet(
 	chain_type: &global::ChainTypes,
 ) -> Result<GlobalWalletConfig, ConfigError> {
 	check_api_secret_file(chain_type)?;
-	// Use config file if current directory if it exists, .grin home otherwise
+	// Use config file if current directory if it exists, .bitgrin home otherwise
 	if let Some(p) = check_config_current_dir(WALLET_CONFIG_FILE_NAME) {
 		GlobalWalletConfig::new(p.to_str().unwrap())
 	} else {

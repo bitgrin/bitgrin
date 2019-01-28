@@ -31,7 +31,7 @@ apt install build-essential cmake git libgit2-dev clang libncurses5-dev libncurs
 ## Build steps
 
 ```sh
-git clone https://github.com/mimblewimble/grin.git
+git clone https://github.com/bitgrin/bitgrin.git
 cd grin
 cargo build --release
 ```
@@ -46,11 +46,11 @@ See [Troubleshooting](https://github.com/mimblewimble/docs/wiki/Troubleshooting)
 
 A successful build gets you:
 
-* `target/release/grin` - the main grin binary
+* `target/release/bitgrin` - the main grin binary
 
 All data, configuration and log files created and used by grin are located in the hidden
-`~/.grin` directory (under your user home directory) by default. You can modify all configuration
-values by editing the file `~/.grin/grin-server.toml`.
+`~/.bitgrin` directory (under your user home directory) by default. You can modify all configuration
+values by editing the file `~/.bitgrin/grin-server.toml`.
 
 It is also possible to have grin create its data files in the current directory. To do this, run
 
@@ -61,15 +61,15 @@ grin server config
 Which will generate a `grin-server.toml` file in the current directory, pre-configured to use
 the current directory for all of its data. Running grin from a directory that contains a
 `grin-server.toml` file will use the values in that file instead of the default
-`~/.grin/grin-server.toml`.
+`~/.bitgrin/grin-server.toml`.
 
 While testing, put the grin binary on your path like this:
 
 ```sh
-export PATH=/path/to/grin/dir/target/debug:$PATH
+export PATH=/path/to/bitgrin/dir/target/debug:$PATH
 ```
 
-Where path/to/grin/dir is your absolute path to the root directory of your Grin installation.
+Where path/to/bitgrin/dir is your absolute path to the root directory of your Grin installation.
 
 You can then run `grin` directly (try `grin help` for more options).
 
@@ -101,29 +101,29 @@ For floonet, use `etc/Dockerfile.floonet` instead
 You can bind-mount your grin cache to run inside the container.
 
 ```sh
-docker run -it -d -v $HOME/.grin:/root/.grin grin
+docker run -it -d -v $HOME/.bitgrin:/root/.bitgrin grin
 ```
-If you prefer to use a docker named volume, you can pass `-v dotgrin:/root/.grin` instead.
+If you prefer to use a docker named volume, you can pass `-v dotgrin:/root/.bitgrin` instead.
 Using a named volume copies default configurations upon volume creation
 
 ## Cross-platform builds
 
-Rust (cargo) can build grin for many platforms, so in theory running `grin`
+Rust (cargo) can build grin for many platforms, so in theory running `bitgrin`
 as a validating node on your low powered device might be possible.
-To cross-compile `grin` on a x86 Linux platform and produce ARM binaries,
+To cross-compile `bitgrin` on a x86 Linux platform and produce ARM binaries,
 say, for a Raspberry Pi.
 
 ## Using grin
 
-The wiki page [How to use grin](https://github.com/mimblewimble/docs/wiki/How-to-use-grin)
+The wiki page [How to use bitgrin](https://github.com/mimblewimble/docs/wiki/How-to-use-grin)
 and linked pages have more information on what features we have,
 troubleshooting, etc.
 
-## Mining in Grin
+## Mining in BitGrin
 
 Please note that all mining functions for Grin have moved into a separate, standalone package called
-[grin-miner](https://github.com/mimblewimble/grin-miner). Once your Grin code node is up and running,
+[bitgrin-miner](https://github.com/bitgrin/bitgrin-miner). Once your Grin code node is up and running,
 you can start mining by building and running grin-miner against your running Grin node.
 
-For grin-miner to be able to communicate with your grin node, make sure that you have `enable_stratum_server = true`
-in your `grin-server.toml` configuration file and you have a wallet listener running (`grin wallet listen`). 
+For bitgrin-miner to be able to communicate with your grin node, make sure that you have `enable_stratum_server = true`
+in your `bitgrin-server.toml` configuration file and you have a wallet listener running (`bitgrin wallet listen`). 

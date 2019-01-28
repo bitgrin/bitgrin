@@ -39,7 +39,8 @@ pub const NANO_GRIN: u64 = 1;
 pub const BLOCK_TIME_SEC: u64 = 60;
 
 /// The block subsidy amount, one grin per second on average
-pub const REWARD: u64 = BLOCK_TIME_SEC * GRIN_BASE;
+/// Reward 5 BitGrin per minute, to match the initial BTC reward of 50 per 10 minutes
+pub const REWARD: u64 = 5 * GRIN_BASE;
 
 /// Actual block reward for a given total fee amount
 pub fn reward(fee: u64) -> u64 {

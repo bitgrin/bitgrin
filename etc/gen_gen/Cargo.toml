@@ -5,8 +5,8 @@ edition = "2018"
 authors = ["Grin Developers <mimblewimble@lists.launchpad.net>"]
 description = "Utility to automate the generation of Grin's genesis block"
 license = "Apache-2.0"
-repository = "https://github.com/mimblewimble/grin"
-keywords = [ "crypto", "grin", "mimblewimble" ]
+repository = "https://github.com/bitgrin/bitgrin"
+keywords = [ "crypto", "bitgrin", "mimblewimble" ]
 readme = "README.md"
 
 [[bin]]

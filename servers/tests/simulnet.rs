@@ -894,7 +894,7 @@ pub fn create_wallet(
 	Arc::new(Mutex::new(wallet))
 }
 
-/// Intended to replicate https://github.com/mimblewimble/grin/issues/1325
+/// Intended to replicate https://github.com/bitgrin/bitgrin/issues/1325
 #[ignore]
 #[test]
 fn replicate_tx_fluff_failure() {
