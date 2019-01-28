@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ impl MainService {
 		// Set up directory relative to executable for the time being
 		let mut exe_path = env::current_exe().unwrap();
 		exe_path.pop();
-		exe_path.push("grin-wallet");
+		exe_path.push("bitgrin-wallet");
 		MainService {
 			static_: Static::new(exe_path),
 		}
@@ -92,7 +92,7 @@ pub fn start_webwallet_server() {
 			let server = Server::bind(&addr)
 				.serve(|| future::ok::<_, Error>(MainService::new()))
 				.map_err(|e| eprintln!("server error: {}", e));
-			warn!("Grin Web-Wallet Application is running at http://{}/", addr);
+			warn!("BitGrin Web-Wallet Application is running at http://{}/", addr);
 			rt::run(server);
 		});
 }

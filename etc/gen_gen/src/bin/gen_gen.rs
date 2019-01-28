@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,16 +25,16 @@ use rpassword;
 use serde_json;
 
 use cuckoo_miner as cuckoo;
-use grin_chain as chain;
-use grin_core as core;
-use grin_miner_plugin as plugin;
-use grin_store as store;
-use grin_util as util;
-use grin_wallet as wallet;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
+use bitgrin_miner_plugin as plugin;
+use bitgrin_store as store;
+use bitgrin_util as util;
+use bitgrin_wallet as wallet;
 
-use grin_core::core::hash::Hashed;
-use grin_core::core::verifier_cache::LruVerifierCache;
-use grin_keychain::{BlindingFactor, ExtKeychain, Keychain};
+use bitgrin_core::core::hash::Hashed;
+use bitgrin_core::core::verifier_cache::LruVerifierCache;
+use bitgrin_keychain::{BlindingFactor, ExtKeychain, Keychain};
 
 static BCHAIN_INFO_URL: &str = "https://blockchain.info/latestblock";
 static BCYPHER_URL: &str = "https://api.blockcypher.com/v1/btc/main";
@@ -93,7 +93,7 @@ fn main() {
 	{
 		// setup a tmp chain to set block header roots
 		core::global::set_mining_mode(core::global::ChainTypes::UserTesting);
-		let tmp_chain = setup_chain(".grin.tmp", core::pow::mine_genesis_block().unwrap());
+		let tmp_chain = setup_chain(".bitgrin.tmp", core::pow::mine_genesis_block().unwrap());
 		tmp_chain.set_txhashset_roots(&mut gen).unwrap();
 	}
 

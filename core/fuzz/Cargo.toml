@@ -1,16 +1,16 @@
 [package]
-name = "grin_core-fuzz"
+name = "bitgrin_core-fuzz"
 version = "0.0.3"
-authors = ["Grin Developers <mimblewimble@lists.launchpad.net>"]
+authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
 publish = false
 
 [package.metadata]
 cargo-fuzz = true
 
 [dependencies]
-grin_core = { path = ".."}
-grin_keychain = { path = "../../keychain"}
-grin_wallet = { path = "../../wallet"}
+bitgrin_core = { path = ".."}
+bitgrin_keychain = { path = "../../keychain"}
+bitgrin_wallet = { path = "../../wallet"}
 [dependencies.libfuzzer-sys]
 git = "https://github.com/rust-fuzz/libfuzzer-sys.git"
 

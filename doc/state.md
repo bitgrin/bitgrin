@@ -1,10 +1,10 @@
 # State and Storage
 
-## The Grin State
+## The BitGrin State
 
 ### Structure
 
-The full state of a Grin chain consists of all the following data:
+The full state of a BitGrin chain consists of all the following data:
 
 1. The full unspent output (UTXO) set.
 1. The range proof for each output.
@@ -20,7 +20,7 @@ a node to function anymore.
 
 ### Validation
 
-With a full Grin state, we can validate the following:
+With a full BitGrin state, we can validate the following:
 
 1. The kernel signature is valid against its commitment (public key). This
    proves the kernel is valid.
@@ -54,7 +54,7 @@ pruned.
 
 ## State Storage
 
-Data storage for outputs, range proofs and kernels in Grin is simple: a plain
+Data storage for outputs, range proofs and kernels in BitGrin is simple: a plain
 append-only file that's memory-mapped for data access. As outputs get spent,
 a remove log maintains which positions can be removed. Those positions nicely
 match MMR node positions as they're all inserted in the same order. When the

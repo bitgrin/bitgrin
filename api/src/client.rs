@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -129,14 +129,14 @@ fn build_request<'a>(
 	let mut builder = Request::builder();
 	if api_secret.is_some() {
 		let basic_auth =
-			"Basic ".to_string() + &to_base64(&("grin:".to_string() + &api_secret.unwrap()));
+			"Basic ".to_string() + &to_base64(&("bitgrin:".to_string() + &api_secret.unwrap()));
 		builder.header(AUTHORIZATION, basic_auth);
 	}
 
 	builder
 		.method(method)
 		.uri(uri)
-		.header(USER_AGENT, "grin-client")
+		.header(USER_AGENT, "bitgrin-client")
 		.header(ACCEPT, "application/json")
 		.body(match body {
 			None => Body::empty(),

@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ fn main() {
 }
 
 fn _download_and_decompress(target_file: &str) -> Result<bool, Box<std::error::Error>> {
-	let req_path = format!("https://github.com/mimblewimble/grin-web-wallet/releases/download/{}/grin-web-wallet.tar.gz", _WEB_WALLET_TAG);
+	let req_path = format!("https://github.com/mimblewimble/bitgrin-web-wallet/releases/download/{}/bitgrin-web-wallet.tar.gz", _WEB_WALLET_TAG);
 	let mut resp = reqwest::get(&req_path)?;
 
 	if !resp.status().is_success() {
@@ -98,7 +98,7 @@ fn _download_and_decompress(target_file: &str) -> Result<bool, Box<std::error::E
 /// Download and unzip tagged web-wallet build
 fn _install_web_wallet() -> Result<bool, Box<std::error::Error>> {
 	let target_file = format!(
-		"{}/grin-web-wallet-{}.tar",
+		"{}/bitgrin-web-wallet-{}.tar",
 		env::var("OUT_DIR")?,
 		_WEB_WALLET_TAG
 	);
@@ -119,7 +119,7 @@ fn _install_web_wallet() -> Result<bool, Box<std::error::Error>> {
 
 	// remove old version
 	let mut remove_path = out_path.clone();
-	remove_path.push("grin-wallet");
+	remove_path.push("bitgrin-wallet");
 	let _ = fs::remove_dir_all(remove_path);
 
 	// Untar

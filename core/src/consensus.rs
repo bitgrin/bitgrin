@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -23,14 +23,14 @@ use std::cmp::{max, min};
 use crate::global;
 use crate::pow::Difficulty;
 
-/// A grin is divisible to 10^9, following the SI prefixes
-pub const GRIN_BASE: u64 = 1_000_000_000;
-/// Milligrin, a thousand of a grin
-pub const MILLI_GRIN: u64 = GRIN_BASE / 1_000;
-/// Microgrin, a thousand of a milligrin
-pub const MICRO_GRIN: u64 = MILLI_GRIN / 1_000;
-/// Nanogrin, smallest unit, takes a billion to make a grin
-pub const NANO_GRIN: u64 = 1;
+/// A bitgrin is divisible to 10^9, following the SI prefixes
+pub const BITGRIN_BASE: u64 = 1_000_000_000;
+/// Millibitgrin, a thousand of a bitgrin
+pub const MILLI_BITGRIN: u64 = BITGRIN_BASE / 1_000;
+/// Microbitgrin, a thousand of a millibitgrin
+pub const MICRO_BITGRIN: u64 = MILLI_BITGRIN / 1_000;
+/// Nanobitgrin, smallest unit, takes a billion to make a bitgrin
+pub const NANO_BITGRIN: u64 = 1;
 
 /// Block interval, in seconds, the network will tune its next_target for. Note
 /// that we may reduce this value in the future as we get more data on mining
@@ -38,8 +38,8 @@ pub const NANO_GRIN: u64 = 1;
 /// (adjusting the reward accordingly).
 pub const BLOCK_TIME_SEC: u64 = 60;
 
-/// The block subsidy amount, one grin per second on average
-pub const REWARD: u64 = BLOCK_TIME_SEC * GRIN_BASE;
+/// The block subsidy amount, one bitgrin per second on average
+pub const REWARD: u64 = BLOCK_TIME_SEC * BITGRIN_BASE;
 
 /// Actual block reward for a given total fee amount
 pub fn reward(fee: u64) -> u64 {

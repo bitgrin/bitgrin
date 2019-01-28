@@ -1,1 +1,1 @@
-# BitGrin: The technology of Grin, with the economics of Bitcoin
+# BitBitGrin: The technology of BitGrin, with the economics of Bitcoin

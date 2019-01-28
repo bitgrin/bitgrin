@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -85,9 +85,9 @@ where
 	///
 	/// # Example
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	///
 	/// use std::sync::Arc;
 	/// use util::Mutex;
@@ -140,9 +140,9 @@ where
 	/// # Example
 	/// Set up as in [`new`](struct.APIOwner.html#method.new) method above.
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	/// # use std::sync::Arc;
 	/// # use util::Mutex;
 	/// # use keychain::ExtKeychain;
@@ -196,9 +196,9 @@ where
 	/// # Example
 	/// Set up as in [`new`](struct.APIOwner.html#method.new) method above.
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	/// # use std::sync::Arc;
 	/// # use util::Mutex;
 	/// # use keychain::ExtKeychain;
@@ -250,9 +250,9 @@ where
 	/// # Example
 	/// Set up as in [`new`](struct.APIOwner.html#method.new) method above.
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	/// # use std::sync::Arc;
 	/// # use util::Mutex;
 	/// # use keychain::ExtKeychain;
@@ -308,9 +308,9 @@ where
 	/// # Example
 	/// Set up as in [`new`](struct.APIOwner.html#method.new) method above.
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	/// # use std::sync::Arc;
 	/// # use util::Mutex;
 	/// # use keychain::ExtKeychain;
@@ -385,9 +385,9 @@ where
 	/// # Example
 	/// Set up as in [`new`](struct.APIOwner.html#method.new) method above.
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	/// # use std::sync::Arc;
 	/// # use util::Mutex;
 	/// # use keychain::ExtKeychain;
@@ -459,9 +459,9 @@ where
 	/// # Example
 	/// Set up as in [`new`](struct.APIOwner.html#method.new) method above.
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	/// # use std::sync::Arc;
 	/// # use util::Mutex;
 	/// # use keychain::ExtKeychain;
@@ -530,7 +530,7 @@ where
 	/// for the transaction, overriding whatever the active account is as set via the
 	/// [`set_active_account`](struct.APIOwner.html#method.set_active_account) method.
 	/// If None, the transaction will use the active account.
-	/// * `amount` - The amount to send, in nanogrins. (`1 G = 1_000_000_000nG`)
+	/// * `amount` - The amount to send, in nanobitgrins. (`1 G = 1_000_000_000nG`)
 	/// * `minimum_confirmations` - The minimum number of confirmations an output
 	/// should have in order to be included in the transaction.
 	/// * `max_outputs` - By default, the wallet selects as many inputs as possible in a
@@ -573,9 +573,9 @@ where
 	/// # Example
 	/// Set up as in [new](struct.APIOwner.html#method.new) method above.
 	/// ```
-	/// # extern crate grin_wallet as wallet;
-	/// # extern crate grin_keychain as keychain;
-	/// # extern crate grin_util as util;
+	/// # extern crate bitgrin_wallet as wallet;
+	/// # extern crate bitgrin_keychain as keychain;
+	/// # extern crate bitgrin_util as util;
 	/// # use std::sync::Arc;
 	/// # use util::Mutex;
 	/// # use keychain::ExtKeychain;
@@ -600,7 +600,7 @@ where
 	///		500,        // max outputs
 	///		1,          // num change outputs
 	///		true,       // select all outputs
-	///		Some("Have some Grins. Love, Yeastplume".to_owned()),
+	///		Some("Have some BitGrins. Love, Yeastplume".to_owned()),
 	///	);
 	///
 	/// if let Ok((slate, lock_fn)) = result {
@@ -677,7 +677,7 @@ where
 
 	/// Sender finalization of the transaction. Takes the file returned by the
 	/// sender as well as the private file generate on the first send step.
-	/// Builds the complete transaction and sends it to a grin node for
+	/// Builds the complete transaction and sends it to a bitgrin node for
 	/// propagation.
 	pub fn finalize_tx(&mut self, slate: &mut Slate) -> Result<(), Error> {
 		let mut w = self.wallet.lock();
@@ -710,7 +710,7 @@ where
 		let parent_key_id = w.parent_key_id();
 		if !self.update_outputs(&mut w, false) {
 			return Err(ErrorKind::TransactionCancellationError(
-				"Can't contact running Grin node. Not Cancelling.",
+				"Can't contact running BitGrin node. Not Cancelling.",
 			))?;
 		}
 		tx::cancel_tx(&mut *w, &parent_key_id, tx_id, tx_slate_id)?;

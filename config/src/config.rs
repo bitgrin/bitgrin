@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,30 +37,30 @@ use crate::wallet::WalletConfig;
 
 /// The default file name to use when trying to derive
 /// the node config file location
-pub const SERVER_CONFIG_FILE_NAME: &'static str = "grin-server.toml";
+pub const SERVER_CONFIG_FILE_NAME: &'static str = "bitgrin-server.toml";
 /// And a wallet configuration file name
-pub const WALLET_CONFIG_FILE_NAME: &'static str = "grin-wallet.toml";
-const SERVER_LOG_FILE_NAME: &'static str = "grin-server.log";
-const WALLET_LOG_FILE_NAME: &'static str = "grin-wallet.log";
-const GRIN_HOME: &'static str = ".grin";
-const GRIN_CHAIN_DIR: &'static str = "chain_data";
+pub const WALLET_CONFIG_FILE_NAME: &'static str = "bitgrin-wallet.toml";
+const SERVER_LOG_FILE_NAME: &'static str = "bitgrin-server.log";
+const WALLET_LOG_FILE_NAME: &'static str = "bitgrin-wallet.log";
+const BITGRIN_HOME: &'static str = ".bitgrin";
+const BITGRIN_CHAIN_DIR: &'static str = "chain_data";
 /// Wallet data directory
-pub const GRIN_WALLET_DIR: &'static str = "wallet_data";
+pub const BITGRIN_WALLET_DIR: &'static str = "wallet_data";
 const API_SECRET_FILE_NAME: &'static str = ".api_secret";
 
-fn get_grin_path(chain_type: &global::ChainTypes) -> Result<PathBuf, ConfigError> {
-	// Check if grin dir exists
-	let mut grin_path = match dirs::home_dir() {
+fn get_bitgrin_path(chain_type: &global::ChainTypes) -> Result<PathBuf, ConfigError> {
+	// Check if bitgrin dir exists
+	let mut bitgrin_path = match dirs::home_dir() {
 		Some(p) => p,
 		None => PathBuf::new(),
 	};
-	grin_path.push(GRIN_HOME);
-	grin_path.push(chain_type.shortname());
+	bitgrin_path.push(BITGRIN_HOME);
+	bitgrin_path.push(chain_type.shortname());
 	// Create if the default path doesn't exist
-	if !grin_path.exists() {
-		fs::create_dir_all(grin_path.clone())?;
+	if !bitgrin_path.exists() {
+		fs::create_dir_all(bitgrin_path.clone())?;
 	}
-	Ok(grin_path)
+	Ok(bitgrin_path)
 }
 
 fn check_config_current_dir(path: &str) -> Option<PathBuf> {
@@ -104,8 +104,8 @@ fn check_api_secret(api_secret_path: &PathBuf) -> Result<(), ConfigError> {
 
 /// Check that the api secret file exists and is valid
 fn check_api_secret_file(chain_type: &global::ChainTypes) -> Result<(), ConfigError> {
-	let grin_path = get_grin_path(chain_type)?;
-	let mut api_secret_path = grin_path.clone();
+	let bitgrin_path = get_bitgrin_path(chain_type)?;
+	let mut api_secret_path = bitgrin_path.clone();
 	api_secret_path.push(API_SECRET_FILE_NAME);
 	if !api_secret_path.exists() {
 		init_api_secret(&api_secret_path)
@@ -117,22 +117,22 @@ fn check_api_secret_file(chain_type: &global::ChainTypes) -> Result<(), ConfigEr
 /// Handles setup and detection of paths for node
 pub fn initial_setup_server(chain_type: &global::ChainTypes) -> Result<GlobalConfig, ConfigError> {
 	check_api_secret_file(chain_type)?;
-	// Use config file if current directory if it exists, .grin home otherwise
+	// Use config file if current directory if it exists, .bitgrin home otherwise
 	if let Some(p) = check_config_current_dir(SERVER_CONFIG_FILE_NAME) {
 		GlobalConfig::new(p.to_str().unwrap())
 	} else {
-		// Check if grin dir exists
-		let grin_path = get_grin_path(chain_type)?;
+		// Check if bitgrin dir exists
+		let bitgrin_path = get_bitgrin_path(chain_type)?;
 
 		// Get path to default config file
-		let mut config_path = grin_path.clone();
+		let mut config_path = bitgrin_path.clone();
 		config_path.push(SERVER_CONFIG_FILE_NAME);
 
 		// Spit it out if it doesn't exist
 		if !config_path.exists() {
 			let mut default_config = GlobalConfig::for_chain(chain_type);
 			// update paths relative to current dir
-			default_config.update_paths(&grin_path);
+			default_config.update_paths(&bitgrin_path);
 			default_config.write_to_file(config_path.to_str().unwrap())?;
 		}
 
@@ -145,22 +145,22 @@ pub fn initial_setup_wallet(
 	chain_type: &global::ChainTypes,
 ) -> Result<GlobalWalletConfig, ConfigError> {
 	check_api_secret_file(chain_type)?;
-	// Use config file if current directory if it exists, .grin home otherwise
+	// Use config file if current directory if it exists, .bitgrin home otherwise
 	if let Some(p) = check_config_current_dir(WALLET_CONFIG_FILE_NAME) {
 		GlobalWalletConfig::new(p.to_str().unwrap())
 	} else {
-		// Check if grin dir exists
-		let grin_path = get_grin_path(chain_type)?;
+		// Check if bitgrin dir exists
+		let bitgrin_path = get_bitgrin_path(chain_type)?;
 
 		// Get path to default config file
-		let mut config_path = grin_path.clone();
+		let mut config_path = bitgrin_path.clone();
 		config_path.push(WALLET_CONFIG_FILE_NAME);
 
 		// Spit it out if it doesn't exist
 		if !config_path.exists() {
 			let mut default_config = GlobalWalletConfig::for_chain(chain_type);
 			// update paths relative to current dir
-			default_config.update_paths(&grin_path);
+			default_config.update_paths(&bitgrin_path);
 			default_config.write_to_file(config_path.to_str().unwrap())?;
 		}
 
@@ -297,16 +297,16 @@ impl GlobalConfig {
 	}
 
 	/// Update paths
-	pub fn update_paths(&mut self, grin_home: &PathBuf) {
+	pub fn update_paths(&mut self, bitgrin_home: &PathBuf) {
 		// need to update server chain path
-		let mut chain_path = grin_home.clone();
-		chain_path.push(GRIN_CHAIN_DIR);
+		let mut chain_path = bitgrin_home.clone();
+		chain_path.push(BITGRIN_CHAIN_DIR);
 		self.members.as_mut().unwrap().server.db_root = chain_path.to_str().unwrap().to_owned();
-		let mut secret_path = grin_home.clone();
+		let mut secret_path = bitgrin_home.clone();
 		secret_path.push(API_SECRET_FILE_NAME);
 		self.members.as_mut().unwrap().server.api_secret_path =
 			Some(secret_path.to_str().unwrap().to_owned());
-		let mut log_path = grin_home.clone();
+		let mut log_path = bitgrin_home.clone();
 		log_path.push(SERVER_LOG_FILE_NAME);
 		self.members
 			.as_mut()
@@ -429,7 +429,7 @@ impl GlobalWalletConfig {
 	/// Update paths
 	pub fn update_paths(&mut self, wallet_home: &PathBuf) {
 		let mut wallet_path = wallet_home.clone();
-		wallet_path.push(GRIN_WALLET_DIR);
+		wallet_path.push(BITGRIN_WALLET_DIR);
 		self.members.as_mut().unwrap().wallet.data_file_dir =
 			wallet_path.to_str().unwrap().to_owned();
 		let mut secret_path = wallet_home.clone();

@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,9 +20,9 @@ use crate::chain;
 use crate::common::types::{SyncState, SyncStatus};
 use crate::core::global;
 use crate::core::pow::Difficulty;
-use crate::grin::sync::body_sync::BodySync;
-use crate::grin::sync::header_sync::HeaderSync;
-use crate::grin::sync::state_sync::StateSync;
+use crate::bitgrin::sync::body_sync::BodySync;
+use crate::bitgrin::sync::header_sync::HeaderSync;
+use crate::bitgrin::sync::state_sync::StateSync;
 use crate::p2p;
 use crate::util::{Mutex, StopState};
 
@@ -80,7 +80,7 @@ impl SyncRunner {
 			let wp = self.peers.more_or_same_work_peers();
 			// exit loop when:
 			// * we have more than MIN_PEERS more_or_same_work peers
-			// * we are synced already, e.g. grin was quickly restarted
+			// * we are synced already, e.g. bitgrin was quickly restarted
 			// * timeout
 			if wp > MIN_PEERS
 				|| (wp == 0

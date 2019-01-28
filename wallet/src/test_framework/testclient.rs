@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,12 +30,12 @@ use self::util::{Mutex, RwLock, StopState};
 use crate::libwallet::types::*;
 use crate::{controller, libwallet, WalletCommAdapter, WalletConfig};
 use failure::ResultExt;
-use grin_api as api;
-use grin_chain as chain;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_store as store;
-use grin_util as util;
+use bitgrin_api as api;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_store as store;
+use bitgrin_util as util;
 use serde_json;
 use std::collections::HashMap;
 use std::marker::PhantomData;
@@ -95,12 +95,12 @@ where
 	C: NodeClient,
 	K: Keychain,
 {
-	/// Create a new client that will communicate with the given grin node
+	/// Create a new client that will communicate with the given bitgrin node
 	pub fn new(chain_dir: &str) -> Self {
 		set_mining_mode(ChainTypes::AutomatedTesting);
 		let genesis_block = pow::mine_genesis_block().unwrap();
 		let verifier_cache = Arc::new(RwLock::new(LruVerifierCache::new()));
-		let dir_name = format!("{}/.grin", chain_dir);
+		let dir_name = format!("{}/.bitgrin", chain_dir);
 		let db_env = Arc::new(store::new_env(dir_name.to_string()));
 		let c = Chain::init(
 			dir_name.to_string(),
@@ -394,7 +394,7 @@ impl NodeClient for LocalWalletClient {
 	}
 	fn set_node_url(&mut self, _node_url: &str) {}
 	fn set_node_api_secret(&mut self, _node_api_secret: Option<String>) {}
-	/// Posts a transaction to a grin node
+	/// Posts a transaction to a bitgrin node
 	/// In this case it will create a new block with award rewarded to
 	fn post_tx(&self, tx: &TxWrapper, _fluff: bool) -> Result<(), libwallet::Error> {
 		let m = WalletProxyMessage {

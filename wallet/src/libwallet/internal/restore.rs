@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,7 +69,7 @@ where
 	let mut wallet_outputs: Vec<OutputResult> = Vec::new();
 
 	warn!(
-		"Scanning {} outputs in the current Grin utxo set",
+		"Scanning {} outputs in the current BitGrin utxo set",
 		outputs.len(),
 	);
 
@@ -89,7 +89,7 @@ where
 			*height
 		};
 
-		// TODO: Output paths are always going to be length 3 for now, but easy enough to grind
+		// TODO: Output paths are always going to be length 3 for now, but easy enough to bitgrind
 		// through to find the right path if required later
 		let key_id = Identifier::from_serialized_path(3u8, &info.message.as_bytes());
 

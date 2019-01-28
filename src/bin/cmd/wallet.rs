@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 use crate::cmd::wallet_args;
 use crate::config::GlobalWalletConfig;
 use clap::ArgMatches;
-use grin_wallet::{self, HTTPNodeClient, WalletConfig, WalletSeed};
+use bitgrin_wallet::{self, HTTPNodeClient, WalletConfig, WalletSeed};
 use std::path::PathBuf;
 use std::thread;
 use std::time::Duration;
@@ -30,7 +30,7 @@ pub fn _init_wallet_seed(wallet_config: WalletConfig, password: &str) {
 pub fn seed_exists(wallet_config: WalletConfig) -> bool {
 	let mut data_file_dir = PathBuf::new();
 	data_file_dir.push(wallet_config.data_file_dir);
-	data_file_dir.push(grin_wallet::SEED_FILE);
+	data_file_dir.push(bitgrin_wallet::SEED_FILE);
 	if data_file_dir.exists() {
 		true
 	} else {

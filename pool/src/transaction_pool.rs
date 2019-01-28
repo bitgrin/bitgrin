@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ use crate::types::{
 	BlockChain, PoolAdapter, PoolConfig, PoolEntry, PoolEntryState, PoolError, TxSource,
 };
 use chrono::prelude::*;
-use grin_core as core;
-use grin_util as util;
+use bitgrin_core as core;
+use bitgrin_util as util;
 use std::collections::VecDeque;
 use std::sync::Arc;
 

@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! Aggregated Signature functions used in the creation of Grin transactions.
+//! Aggregated Signature functions used in the creation of BitGrin transactions.
 //! This module interfaces into the underlying
 //! [Rust Aggsig library](https://github.com/mimblewimble/rust-secp256k1-zkp/blob/master/src/aggsig.rs)
 
@@ -32,8 +32,8 @@ use crate::util::secp::{self, aggsig, Message, Secp256k1, Signature};
 /// # Example
 ///
 /// ```
-/// # extern crate grin_core as core;
-/// # extern crate grin_util as util;
+/// # extern crate bitgrin_core as core;
+/// # extern crate bitgrin_util as util;
 /// use core::libtx::aggsig;
 /// use util::secp::{ContextFlag, Secp256k1};
 /// let secp = Secp256k1::with_caps(ContextFlag::SignOnly);
@@ -66,8 +66,8 @@ pub fn create_secnonce(secp: &Secp256k1) -> Result<SecretKey, Error> {
 /// # Example
 ///
 /// ```
-/// # extern crate grin_core as core;
-/// # extern crate grin_util as util;
+/// # extern crate bitgrin_core as core;
+/// # extern crate bitgrin_util as util;
 /// # extern crate rand;
 /// use rand::thread_rng;
 /// use core::libtx::aggsig;
@@ -137,8 +137,8 @@ pub fn calculate_partial_sig(
 /// # Example
 ///
 /// ```
-/// # extern crate grin_core as core;
-/// # extern crate grin_util as util;
+/// # extern crate bitgrin_core as core;
+/// # extern crate bitgrin_util as util;
 /// # extern crate rand;
 /// use rand::thread_rng;
 /// use core::libtx::aggsig;
@@ -222,9 +222,9 @@ pub fn verify_partial_sig(
 /// # Example
 ///
 /// ```
-/// # extern crate grin_util as util;
-/// # extern crate grin_core as core;
-/// # extern crate grin_keychain as keychain;
+/// # extern crate bitgrin_util as util;
+/// # extern crate bitgrin_core as core;
+/// # extern crate bitgrin_keychain as keychain;
 /// use core::consensus::reward;
 /// use util::secp::key::{PublicKey, SecretKey};
 /// use util::secp::{ContextFlag, Secp256k1};
@@ -286,9 +286,9 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate grin_util as util;
-/// # extern crate grin_core as core;
-/// # extern crate grin_keychain as keychain;
+/// # extern crate bitgrin_util as util;
+/// # extern crate bitgrin_core as core;
+/// # extern crate bitgrin_keychain as keychain;
 /// use core::consensus::reward;
 /// use core::libtx::{aggsig, proof};
 /// use util::secp::key::{PublicKey, SecretKey};
@@ -358,8 +358,8 @@ pub fn verify_single_from_commit(
 /// # Example
 ///
 /// ```
-/// # extern crate grin_core as core;
-/// # extern crate grin_util as util;
+/// # extern crate bitgrin_core as core;
+/// # extern crate bitgrin_util as util;
 /// # extern crate rand;
 /// use rand::thread_rng;
 /// use core::libtx::aggsig;

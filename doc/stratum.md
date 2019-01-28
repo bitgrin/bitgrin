@@ -1,6 +1,6 @@
-# Grin Stratum RPC Protocol
+# BitGrin Stratum RPC Protocol
 
-This document describes the current Stratum RPC protocol implemented in Grin.
+This document describes the current Stratum RPC protocol implemented in BitGrin.
 
 ## Table of Contents
 
@@ -57,7 +57,7 @@ Example:
 {  
    "id":"10",
    "jsonrpc":"2.0",
-   "method":"getgrins",
+   "method":"getbitgrins",
    "error":{  
       "code":-32601,
       "message":"Method not found"
@@ -223,7 +223,7 @@ Example:
 ***
 
 A message initiated by the miner.
-Miner can log in on a Grin Stratum server with a login, password and agent (usually statically set by the miner program).
+Miner can log in on a BitGrin Stratum server with a login, password and agent (usually statically set by the miner program).
 
 #### Request
 
@@ -245,7 +245,7 @@ Example:
    "params":{  
       "login":"login",
       "pass":"password",
-      "agent":"grin-miner"
+      "agent":"bitgrin-miner"
    }
 }
 
@@ -508,7 +508,7 @@ Example:
 
 ## Error Messages
 
-Grin Stratum protocol implementation contains the following error message:
+BitGrin Stratum protocol implementation contains the following error message:
 
 | Error code  | Error Message                          |
 | :---------- | :------------------------------------- |
@@ -534,4 +534,4 @@ Miners SHOULD, MAY or MUST respect the following rules:
 
 ## Reference Implementation
 
-The current reference implementation is available at [mimblewimble/grin-miner](https://github.com/mimblewimble/grin-miner/blob/master/src/bin/client.rs).
+The current reference implementation is available at [mimblewimble/bitgrin-miner](https://github.com/mimblewimble/bitgrin-miner/blob/master/src/bin/client.rs).

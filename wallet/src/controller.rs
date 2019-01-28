@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -87,8 +87,8 @@ where
 	let mut router = Router::new();
 	if api_secret.is_some() {
 		let api_basic_auth =
-			"Basic ".to_string() + &to_base64(&("grin:".to_string() + &api_secret.unwrap()));
-		let basic_realm = "Basic realm=GrinOwnerAPI".to_string();
+			"Basic ".to_string() + &to_base64(&("bitgrin:".to_string() + &api_secret.unwrap()));
+		let basic_realm = "Basic realm=BitGrinOwnerAPI".to_string();
 		let basic_auth_middleware = Arc::new(BasicAuthMiddleware::new(api_basic_auth, basic_realm));
 		router.add_middleware(basic_auth_middleware);
 	}
@@ -332,7 +332,7 @@ where
 			let (mut slate, lock_fn) = match result {
 				Ok(s) => {
 					info!(
-						"Tx created: {} grin to {} (strategy '{}')",
+						"Tx created: {} bitgrin to {} (strategy '{}')",
 						core::amount_to_hr_string(args.amount, false),
 						&args.dest,
 						args.selection_strategy_is_use_all,

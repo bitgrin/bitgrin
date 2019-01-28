@@ -9,10 +9,10 @@ Also, almost all transaction data (inputs, outputs, excesses and excess
 proofs) have the ability to be summed in some way, so it makes sense to
 treat Merkle sum trees as the default option, and address the sums here.
 
-A design goal of Grin is that all structures be as easy to implement and
+A design goal of BitGrin is that all structures be as easy to implement and
 as simple as possible. MimbleWimble introduces a lot of new cryptography
 so it should be made as easy to understand as possible. Its validation rules
-are simple to specify (no scripts) and Grin is written in a language with
+are simple to specify (no scripts) and BitGrin is written in a language with
 very explicit semantics, so simplicity is also good to achieve well-understood
 consensus rules.
 
@@ -98,7 +98,7 @@ tree design.
 
 ### Efficient proof-of-spentness
 
-Grin itself does not need proof-of-spentness but it is a good thing to support
+BitGrin itself does not need proof-of-spentness but it is a good thing to support
 in the future for SPV clients.
 
 The children-counts imply an index of each object in the tree, which does not

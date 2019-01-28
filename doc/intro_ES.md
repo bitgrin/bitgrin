@@ -1,4 +1,4 @@
-# Introducción a MimbleWimble y Grin
+# Introducción a MimbleWimble y BitGrin
 
 *Lea esto en otros idiomas: [English](intro.md), [简体中文](intro.zh-cn.md).*
 
@@ -6,10 +6,10 @@ MimbleWimble es un formato y un protocolo de cadena de bloques que proporciona u
 extremadamente buenas al basarse en fuertes algoritmos criptográficos. Aborda los vacíos existentes en casi todas las 
 implementaciones actuales de cadenas de bloques.
 
-Grin es un proyecto de software de código abierto que implementa una cadena de bloques MimbleWimble y rellena los espacios 
+BitGrin es un proyecto de software de código abierto que implementa una cadena de bloques MimbleWimble y rellena los espacios 
 necesarios para una implementación completa de la cadena de bloques y moneda criptográfica.
 
-El objetivo principal y las características del proyecto Grin son:
+El objetivo principal y las características del proyecto BitGrin son:
 
 * Privacidad por defecto. Esto permite una funcionalidad completa sin excluir la posibilidad de revelar información de forma 
   selectiva cuando sea necesario.
@@ -24,13 +24,13 @@ El objetivo principal y las características del proyecto Grin son:
 ## Tongue Tying para todos
 
 Este documento está dirigido a lectores con un buen conocimiento de cadenas de bloques y de la criptografía básica. Con 
-esto en mente, tratamos de explicar el desarrollo técnico de MimbleWimble y cómo se aplica en Grin. Esperamos que este 
+esto en mente, tratamos de explicar el desarrollo técnico de MimbleWimble y cómo se aplica en BitGrin. Esperamos que este 
 documento sea comprensible para la mayoría de los lectores con visión técnica. Nuestro objetivo es animarles a interesarse en 
-Grin y contribuir de cualquier manera posible.
+BitGrin y contribuir de cualquier manera posible.
 
-Para lograr este objetivo, presentaremos los principales conceptos necesarios para una buena comprensión de Grin como 
+Para lograr este objetivo, presentaremos los principales conceptos necesarios para una buena comprensión de BitGrin como 
 implementación de MimbleWimble. Comenzaremos con una breve descripción de algunas propiedades relevantes de la Criptografía 
-de Curva Elíptica (ECC) para sentar las bases sobre las que se basa Grin y luego describir todos los elementos clave de las 
+de Curva Elíptica (ECC) para sentar las bases sobre las que se basa BitGrin y luego describir todos los elementos clave de las 
 transacciones y bloques de una cadena de bloques MimbleWimble.
 
 ### Pequeños Bits de Curvas Elípticas
@@ -54,7 +54,7 @@ la multiplicación es trivial, la "división" por puntos de curva es extremadame
 La fórmula anterior `(k+j)*H = k*H + j*H`, con _k_ y _j_ ambas claves privadas, demuestra que una clave pública obtenida de 
 la adición de dos claves privadas (`(k+j)*H`) es idéntica a la adición de las claves públicas para cada una de esas dos 
 claves privadas (`k*H + j*H`). En la cadena de bloques Bitcoin, las carteras jerárquicas deterministas se basan en gran 
-medida en este principio. MimbleWimble y la implementación de Grin también lo hacen.
+medida en este principio. MimbleWimble y la implementación de BitGrin también lo hacen.
 
 ### Transacciones con MimbleWimble
 
@@ -177,8 +177,8 @@ denomina  _transacción de kernel_ y es comprobada por todos los validadores.
 
 #### Algunos puntos más precisos
 
-Esta sección explica con más detalle la creación de transacciones discutiendo cómo se introduce el cambio y el requisito de pruebas de rango para que se demuestre que todos los valores no son negativos. Ninguno de los dos es absolutamente necesario para entender MimbleWimbleWimble y Grin, así que si tienes prisa, no dudes en ir directamente a
-[Poniendo todo junto](https://github.com/wimel/grin/blob/master/doc/intro.md#putting-it-all-together).
+Esta sección explica con más detalle la creación de transacciones discutiendo cómo se introduce el cambio y el requisito de pruebas de rango para que se demuestre que todos los valores no son negativos. Ninguno de los dos es absolutamente necesario para entender MimbleWimbleWimble y BitGrin, así que si tienes prisa, no dudes en ir directamente a
+[Poniendo todo junto](https://github.com/wimel/bitgrin/blob/master/doc/intro.md#putting-it-all-together).
 
 ##### Cambio
 

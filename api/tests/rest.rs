@@ -1,5 +1,5 @@
-use grin_api as api;
-use grin_util as util;
+use bitgrin_api as api;
+use bitgrin_util as util;
 
 use crate::api::*;
 use hyper::{Body, Request};

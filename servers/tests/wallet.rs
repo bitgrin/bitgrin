@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,9 +19,9 @@ mod framework;
 
 use self::util::Mutex;
 use crate::framework::{LocalServerContainer, LocalServerContainerConfig};
-use grin_core as core;
-use grin_util as util;
-use grin_wallet as wallet;
+use bitgrin_core as core;
+use bitgrin_util as util;
+use bitgrin_wallet as wallet;
 use std::sync::Arc;
 use std::{thread, time};
 
@@ -97,7 +97,7 @@ fn basic_wallet_transactions() {
 		coinbase_info =
 			LocalServerContainer::get_wallet_info(&coinbase_wallet_config, &coinbase_seed);
 	}
-	warn!("Sending 50 Grins to recipient wallet");
+	warn!("Sending 50 BitGrins to recipient wallet");
 	LocalServerContainer::send_amount_to(
 		&coinbase_wallet_config,
 		"50.00",

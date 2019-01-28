@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use grin_chain as chain;
-use grin_core as core;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
 
-use grin_store as store;
-use grin_util as util;
+use bitgrin_store as store;
+use bitgrin_util as util;
 
 use std::collections::HashSet;
 use std::fs::{self, File, OpenOptions};
@@ -39,7 +39,7 @@ fn test_unexpected_zip() {
 	let now = SystemTime::now();
 	let rand = now.duration_since(UNIX_EPOCH).unwrap().subsec_micros();
 
-	let db_root = format!(".grin_txhashset_zip");
+	let db_root = format!(".bitgrin_txhashset_zip");
 	clean_output_dir(&db_root);
 	let db_env = Arc::new(store::new_env(db_root.clone()));
 	let chain_store = ChainStore::new(db_env).unwrap();

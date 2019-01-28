@@ -1,14 +1,14 @@
-extern crate grin_core;
-extern crate grin_keychain;
-extern crate grin_wallet;
+extern crate bitgrin_core;
+extern crate bitgrin_keychain;
+extern crate bitgrin_wallet;
 
-use grin_core::core::target::Difficulty;
-use grin_core::core::{Block, BlockHeader, CompactBlock, Transaction};
-use grin_core::libtx::build::{input, output, transaction, with_fee};
-use grin_core::libtx::reward;
-use grin_core::ser;
-use grin_keychain::keychain::ExtKeychain;
-use grin_keychain::Keychain;
+use bitgrin_core::core::target::Difficulty;
+use bitgrin_core::core::{Block, BlockHeader, CompactBlock, Transaction};
+use bitgrin_core::libtx::build::{input, output, transaction, with_fee};
+use bitgrin_core::libtx::reward;
+use bitgrin_core::ser;
+use bitgrin_keychain::keychain::ExtKeychain;
+use bitgrin_keychain::Keychain;
 use std::fs::{self, File};
 use std::path::Path;
 

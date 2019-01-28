@@ -1,12 +1,12 @@
-# Einführung in MimbleWimble und Grin
+# Einführung in MimbleWimble und BitGrin
 
 *In anderen Sprachen lesen: [English](intro.md), [简体中文](intro.zh-cn.md), [Español](intro_ES.md), [Русский](intro.ru.md), [日本語](intro.jp.md), [Deutsch](intro_DE.md).*
 
 MimbleWimble ist ein Blockchain-Format und Protokoll, welches auf starke kryptographische Primitiven setzt und dadurch äußerst gute Skalierbarkeit, Privatssphäre und Fungibilität bietet. Es befasst sich mit Lücken, die in fast allen gegenwärtigen Blockchainimplementierungen existieren.
 
-Grin ist ein Open-Source-Softwareprojekt, dass eine MimbleWimble-Blockchain implementiert und die für den Einsatz einer vollständigen Blockchain und Kryptowährung nötigen Lücken schließt.
+BitGrin ist ein Open-Source-Softwareprojekt, dass eine MimbleWimble-Blockchain implementiert und die für den Einsatz einer vollständigen Blockchain und Kryptowährung nötigen Lücken schließt.
 
-Das Hauptziel und die Charakteristika des Grin-Projekts sind wie folgt:
+Das Hauptziel und die Charakteristika des BitGrin-Projekts sind wie folgt:
 
 * Standardmäßige Privatssphäre. Dies ermöglicht volle Fungibilität ohne die Fähigkeit auszuschließen, Informationen nach Bedarf selektiv preisgeben zu können.
 * Skaliert hauptsächlich mit der Anzahl der Nutzer und minimal mit der Anzahl an Transaktionen (<100 byte `kernel`), was zu hoher Platzsparung im Vergleich zu anderen Blockchains führt.
@@ -16,9 +16,9 @@ Das Hauptziel und die Charakteristika des Grin-Projekts sind wie folgt:
 
 ## Tongue Tying für Jedermann
 
-Dieses Dokument richtet sich an Leser mit einem guten Verständnis von Blockchains und grundlegender Kryptografie. Vor diesem Hintergrund sind wir bestrebt, den technischen Aufbau von MimbleWimble und dessen Einsatz in Grin zu erklären. Wir hoffen, dass dieses Dokument für die meisten technikbegeisterten Leser verständlich ist. Unser Ziel ist es, dich für Grin zu begeistern und dein Interesse zu wecken, dich in jeder möglichen Weise einzubringen.
+Dieses Dokument richtet sich an Leser mit einem guten Verständnis von Blockchains und grundlegender Kryptografie. Vor diesem Hintergrund sind wir bestrebt, den technischen Aufbau von MimbleWimble und dessen Einsatz in BitGrin zu erklären. Wir hoffen, dass dieses Dokument für die meisten technikbegeisterten Leser verständlich ist. Unser Ziel ist es, dich für BitGrin zu begeistern und dein Interesse zu wecken, dich in jeder möglichen Weise einzubringen.
 
-Um dieses Ziel zu erreichen, führen wir die für ein gutes Verständnis von Grin als MimbleWimble-Umsetzung nötigen Hauptkonzepte ein. Wir beginnen mit einer kurzen Erläutering einiger relevanter Eigenschaften der Elliptischen-Kurven-Kryptografie (ECC), um die Grundlagen für Grin zu legen und anschließend die Kernelemente von Transaktionen und Blocks im MimbleWimble-Blockchain zu beschreiben. 
+Um dieses Ziel zu erreichen, führen wir die für ein gutes Verständnis von BitGrin als MimbleWimble-Umsetzung nötigen Hauptkonzepte ein. Wir beginnen mit einer kurzen Erläutering einiger relevanter Eigenschaften der Elliptischen-Kurven-Kryptografie (ECC), um die Grundlagen für BitGrin zu legen und anschließend die Kernelemente von Transaktionen und Blocks im MimbleWimble-Blockchain zu beschreiben. 
 
 ### Tiny Bits of Elliptic Curves
 
@@ -30,7 +30,7 @@ Eine elliptische Kurve zum Zwecke der Kryptografie ist ein großes Set an Punkte
 
 Wenn wir in ECC eine sehr große Zahl _k_ als privaten Schlüssel wählen, gilt `k*H` als der korrespondierende öffentliche Schlüssel. Selbst wenn der Wert des öffentlichen Schlüssels `k*H` bekannt ist, ist die Ableitung von _k_ nahezu unmöglich (oder anders ausgedrückt, während die Multiplikation trivial ist, ist die "Division" durch Kurvenpunkte extrem schwierig).
 
-Die vorherige Formel `(k+j)*H = k*H + j*H`, mit jeweils _k_ und _j_ als privaten Schlüsseln, demonstriert, dass ein aus der Addition zweier privater Schlüssel (`(k+j)*H`) erhaltener öffentlicher Schlüssel identisch mit der Addition der öffentlichen Schlüssel für jeden der zwei privaten Schlüssel (`k*H + j*H`) ist. Im Bitcoin-Blockchain stützen sich Hierarchical Deterministic Wallets stark auf dieses Prinzip. Gleiches gilt auch für MimbleWimble und die Grin-Implementierung.
+Die vorherige Formel `(k+j)*H = k*H + j*H`, mit jeweils _k_ und _j_ als privaten Schlüsseln, demonstriert, dass ein aus der Addition zweier privater Schlüssel (`(k+j)*H`) erhaltener öffentlicher Schlüssel identisch mit der Addition der öffentlichen Schlüssel für jeden der zwei privaten Schlüssel (`k*H + j*H`) ist. Im Bitcoin-Blockchain stützen sich Hierarchical Deterministic Wallets stark auf dieses Prinzip. Gleiches gilt auch für MimbleWimble und die BitGrin-Implementierung.
 
 ### Transaktionen mit MimbleWimble
 
@@ -122,7 +122,7 @@ Diese Signatur, die jeder Transaktion zusammen mit weiteren Daten (wie Mininggeb
 
 #### Einige Feinheiten
 
-Dieser Abschnitt führt die Erstellung von Transaktionen weiter aus und erörtert wie Wechselgeld eingeführt wird, sowie ferner die Voraussetzung von Range Proofs, sodass alle Werte nachweislich nicht negativ sind. Keines der beiden ist für das Verständnis von MimbleWimble und Grin absolut von Nöten, falls du es also eilig hast, spring einfach gleich zur [Zusammenfassung](#zusammenfassung).
+Dieser Abschnitt führt die Erstellung von Transaktionen weiter aus und erörtert wie Wechselgeld eingeführt wird, sowie ferner die Voraussetzung von Range Proofs, sodass alle Werte nachweislich nicht negativ sind. Keines der beiden ist für das Verständnis von MimbleWimble und BitGrin absolut von Nöten, falls du es also eilig hast, spring einfach gleich zur [Zusammenfassung](#zusammenfassung).
 
 #### Wechselgeld
 

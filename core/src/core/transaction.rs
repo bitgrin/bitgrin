@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ enum_from_primitive! {
 	#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 	#[repr(u8)]
 	pub enum KernelFeatures {
-		/// Plain kernel (the default for Grin txs).
+		/// Plain kernel (the default for BitGrin txs).
 		Plain = 0,
 		/// A coinbase kernel.
 		Coinbase = 1,
@@ -1134,7 +1134,7 @@ enum_from_primitive! {
 	#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
 	#[repr(u8)]
 	pub enum OutputFeatures {
-		/// Plain output (the default for Grin txs).
+		/// Plain output (the default for BitGrin txs).
 		Plain = 0,
 		/// A coinbase output.
 		Coinbase = 1,

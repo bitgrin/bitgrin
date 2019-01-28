@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -283,7 +283,7 @@ where
 	}
 
 	fn store_tx(&self, uuid: &str, tx: &Transaction) -> Result<(), Error> {
-		let filename = format!("{}.grintx", uuid);
+		let filename = format!("{}.bitgrintx", uuid);
 		let path = path::Path::new(&self.config.data_file_dir)
 			.join(TX_SAVE_DIR)
 			.join(filename);

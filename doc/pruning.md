@@ -4,7 +4,7 @@ One of the principal attractions of MimbleWimble is its theoretical space
 efficiency. Indeed, a trusted or pre-validated full blockchain state only
 requires unspent transaction outputs, which could be tiny.
 
-The grin blockchain includes the following types of data (we assume prior
+The bitgrin blockchain includes the following types of data (we assume prior
 understanding of the MimbleWimble protocol):
 
 1. Transaction outputs, which include for each output:

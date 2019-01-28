@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -178,7 +178,7 @@ pub struct ServerConfig {
 impl Default for ServerConfig {
 	fn default() -> ServerConfig {
 		ServerConfig {
-			db_root: "grin_chain".to_string(),
+			db_root: "bitgrin_chain".to_string(),
 			api_http_addr: "127.0.0.1:3413".to_string(),
 			api_secret_path: Some(".api_secret".to_string()),
 			tls_certificate_file: None,
@@ -203,7 +203,7 @@ impl Default for ServerConfig {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct StratumServerConfig {
 	/// Run a stratum mining server (the only way to communicate to mine this
-	/// node via grin-miner
+	/// node via bitgrin-miner
 	pub enable_stratum_server: Option<bool>,
 
 	/// If enabled, the address and port to listen on

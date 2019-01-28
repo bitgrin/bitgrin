@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ use crate::keychain::{BlindingFactor, ExtKeychain, Keychain};
 use crate::util::secp;
 use crate::util::RwLock;
 use chrono::Duration;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_util as util;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_util as util;
 use std::sync::Arc;
 use std::time::Instant;
 

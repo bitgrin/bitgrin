@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ use self::core::ser;
 use self::core::ser::{FixedLength, PMMRable, Readable, Reader, Writeable, Writer};
 use croaring;
 use croaring::Bitmap;
-use grin_core as core;
+use bitgrin_core as core;
 use std::path::Path;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]

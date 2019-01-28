@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ use crate::lmdb;
 use crate::types::Tip;
 use crate::util::secp::pedersen::Commitment;
 use croaring::Bitmap;
-use grin_store as store;
-use grin_store::{option_to_not_found, to_key, Error};
+use bitgrin_store as store;
+use bitgrin_store::{option_to_not_found, to_key, Error};
 use std::sync::Arc;
 
 const STORE_SUBPATH: &'static str = "chain";

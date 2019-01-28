@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ mod framework;
 use self::core::global::{self, ChainTypes};
 use crate::framework::{config, stratum_config};
 use bufstream::BufStream;
-use grin_core as core;
-use grin_servers as servers;
-use grin_util as util;
-use grin_util::{Mutex, StopState};
+use bitgrin_core as core;
+use bitgrin_servers as servers;
+use bitgrin_util as util;
+use bitgrin_util::{Mutex, StopState};
 use serde_json::Value;
 use std::io::prelude::{BufRead, Write};
 use std::net::TcpStream;
@@ -31,7 +31,7 @@ use std::process;
 use std::sync::Arc;
 use std::{thread, time};
 
-// Create a grin server, and a stratum server.
+// Create a bitgrin server, and a stratum server.
 // Simulate a few JSONRpc requests and verify the results.
 // Validate disconnected workers
 // Validate broadcasting new jobs
