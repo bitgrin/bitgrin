@@ -33,19 +33,23 @@ use crate::util::{Mutex, StopState};
 
 // DNS Seeds with contact email associated
 const MAINNET_DNS_SEEDS: &'static [&'static str] = &[
+	/*
 	"mainnet.seed.bitgrin-tech.org",      // igno.peverell@protonmail.com
 	"mainnet.seed.bitgrin.icu",           // gary.peverell@protonmail.com
 	"mainnet.seed.713.mw",             // jasper@713.mw
 	"mainnet.seed.bitgrin.lesceller.com", // q.lesceller@gmail.com
 	"mainnet.seed.bitgrin.prokapi.com",   // hendi@prokapi.com
 	"bitgrinseed.yeastplume.org",         // yeastplume@protonmail.com
+	*/
 ];
 const FLOONET_DNS_SEEDS: &'static [&'static str] = &[
+	/*
 	"floonet.seed.bitgrin-tech.org",      // igno.peverell@protonmail.com
 	"floonet.seed.bitgrin.icu",           // gary.peverell@protonmail.com
 	"floonet.seed.713.mw",             // jasper@713.mw
 	"floonet.seed.bitgrin.lesceller.com", // q.lesceller@gmail.com
 	"floonet.seed.bitgrin.prokapi.com",   // hendi@prokapi.com
+	*/
 ];
 
 pub fn connect_and_monitor(

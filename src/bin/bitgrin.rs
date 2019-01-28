@@ -16,9 +16,7 @@
 
 #[macro_use]
 extern crate clap;
-use ctrlc;
 
-use serde_json;
 #[macro_use]
 extern crate log;
 use crate::config::config::{SERVER_CONFIG_FILE_NAME, WALLET_CONFIG_FILE_NAME};
@@ -69,6 +67,7 @@ fn log_build_info() {
 }
 
 fn main() {
+	println!("BitGrin v1.0.0");
 	let exit_code = real_main();
 	std::process::exit(exit_code);
 }

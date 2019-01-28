@@ -15,12 +15,12 @@ path = "src/bin/gen_gen.rs"
 
 [dependencies]
 chrono = "0.4.4"
-cuckoo_miner = "1.0.0"
+cuckoo_miner = "0.5.2"
 curl = "0.4.19"
 bitgrin_core = { path = "../../core" }
 bitgrin_chain = { path = "../../chain" }
 bitgrin_keychain = { path = "../../keychain" }
-bitgrin_miner_plugin = "1.0.0"
+grin_miner_plugin = "0.5.2"
 bitgrin_store = { path = "../../store" }
 bitgrin_util = { path = "../../util" }
 bitgrin_wallet = { path = "../../wallet" }
