@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::fs::{self, File};
+use std::fs::{self, File, create_dir_all};
 use std::io::{Read, Write};
 use std::path::Path;
 use std::path::MAIN_SEPARATOR;
@@ -195,13 +195,18 @@ impl WalletSeed {
 			"{}{}{}",
 			wallet_config.data_file_dir, MAIN_SEPARATOR, SEED_FILE,
 		);
+		let seed_file_directory = &format!(
+			"{}{}",
+			wallet_config.data_file_dir, MAIN_SEPARATOR,
+		);
 		if WalletSeed::seed_file_exists(wallet_config).is_err() {
 			WalletSeed::backup_seed(wallet_config)?;
 		}
 		let seed = WalletSeed::from_mnemonic(word_list)?;
 		let enc_seed = EncryptedWalletSeed::from_seed(&seed, password)?;
 		let enc_seed_json = serde_json::to_string_pretty(&enc_seed).context(ErrorKind::Format)?;
-		let mut file = File::create(seed_file_path).context(ErrorKind::IO)?;
+		create_dir_all(seed_file_directory).context(ErrorKind::IO)?;
+		let mut file = File::create(seed_file_path).context(ErrorKind::IO)?; // Broken
 		file.write_all(&enc_seed_json.as_bytes())
 			.context(ErrorKind::IO)?;
 		warn!("Seed created from word list");
