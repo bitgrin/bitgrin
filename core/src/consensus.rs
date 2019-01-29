@@ -193,7 +193,7 @@ pub const UNIT_DIFFICULTY: u64 =
 /// Currently grossly over-estimated at 10% of current
 /// ethereum GPUs (assuming 1GPU can solve a block at diff 1 in one block interval)
 // pub const INITIAL_DIFFICULTY: u64 = 1_000_000 * UNIT_DIFFICULTY;
-pub const INITIAL_DIFFICULTY: u64 = 100 * UNIT_DIFFICULTY;
+pub const INITIAL_DIFFICULTY: u64 = 1_024;//100 * UNIT_DIFFICULTY;
 
 /// Minimal header information required for the Difficulty calculation to
 /// take place
