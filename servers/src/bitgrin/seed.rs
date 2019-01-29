@@ -33,8 +33,7 @@ use crate::util::{Mutex, StopState};
 
 // DNS Seeds with contact email associated
 const MAINNET_DNS_SEEDS: &'static [&'static str] = &[
-	"seed.bitgrin.org",
-	"127.0.0.1",
+	"seed.bitgrin.io",
 	/*"mainnet.seed.bitgrin-tech.org",      // igno.peverell@protonmail.com
 	"mainnet.seed.bitgrin.icu",           // gary.peverell@protonmail.com
 	"mainnet.seed.713.mw",             // jasper@713.mw
