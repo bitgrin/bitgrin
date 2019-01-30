@@ -26,6 +26,7 @@ use crate::util;
 use crate::util::secp::constants::SINGLE_BULLET_PROOF_SIZE;
 use crate::util::secp::pedersen::{Commitment, RangeProof};
 use crate::util::secp::Signature;
+use crate::consensus::{INITIAL_DIFFICULTY};
 
 use crate::core::hash::Hash;
 use crate::keychain::BlindingFactor;
@@ -180,7 +181,7 @@ pub fn genesis_main() -> core::Block {
 		output_mmr_size: 1,
 		kernel_mmr_size: 1,
 		pow: ProofOfWork {
-			total_difficulty: Difficulty::from_num(2_u64.pow(34)),
+			total_difficulty: Difficulty::from_num(INITIAL_DIFFICULTY),
 			secondary_scaling: 1856,
 			nonce: 41, // REPLACE
 			proof: Proof {

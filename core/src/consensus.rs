@@ -64,7 +64,7 @@ pub const HALVENING_10: u64 = 10 * 4 * YEAR_HEIGHT;
 
 
 /// The block subsidy amount, one bitgrin per second on average
-pub const REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE;
+// pub const REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE;
 /// Halvening rewards
 pub const HALVENING_1_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE;
 /// Halvening rewards
@@ -92,41 +92,41 @@ pub const HALVENING_12_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 2048;
 
 
 /// Actual block reward for a given total fee amount
-pub fn reward(fee: u64) -> u64 {
-	REWARD.saturating_add(fee)
+pub fn reward(fee: u64, height: u64) -> u64 {
+	reward_at_height(height).saturating_add(fee)
 }
 
 /// Actual block reward for a given total fee amount, based on height
-pub fn reward_at_height(fee: u64, height: u64) -> u64 {
+pub fn reward_at_height(height: u64) -> u64 {
 	if height < HALVENING_1 {
-		return HALVENING_1_REWARD.saturating_add(fee)
+		return HALVENING_1_REWARD
 	}
 	else if height < HALVENING_2 {
-		return HALVENING_2_REWARD.saturating_add(fee)
+		return HALVENING_2_REWARD
 	}
 	else if height < HALVENING_3 {
-		return HALVENING_3_REWARD.saturating_add(fee)
+		return HALVENING_3_REWARD
 	}
 	else if height < HALVENING_4 {
-		return HALVENING_4_REWARD.saturating_add(fee)
+		return HALVENING_4_REWARD
 	}
 	else if height < HALVENING_5 {
-		return HALVENING_5_REWARD.saturating_add(fee)
+		return HALVENING_5_REWARD
 	}
 	else if height < HALVENING_6 {
-		return HALVENING_6_REWARD.saturating_add(fee)
+		return HALVENING_6_REWARD
 	}
 	else if height < HALVENING_7 {
-		return HALVENING_7_REWARD.saturating_add(fee)
+		return HALVENING_7_REWARD
 	}
 	else if height < HALVENING_8 {
-		return HALVENING_8_REWARD.saturating_add(fee)
+		return HALVENING_8_REWARD
 	}
 	else if height < HALVENING_9 {
-		return HALVENING_9_REWARD.saturating_add(fee)
+		return HALVENING_9_REWARD
 	}
 	else {
-		return HALVENING_10_REWARD.saturating_add(fee)
+		return HALVENING_10_REWARD
 	}
 }
 
@@ -387,11 +387,11 @@ where
 		CLAMP_FACTOR,
 	);
 	// minimum difficulty avoids getting stuck due to dampening
-	//min_difficulty: 3  diff_sum: 1030792151040  block_time_sec: 60  adj_ts: 3600
-
-	error!("min_difficulty: {}  diff_sum: {}  block_time_sec: {}  adj_ts: {}", MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts);
-	// let difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
-	let difficulty = 3; // TODO: not this
+	error!("height: {}  min_difficulty: {}  diff_sum: {}  block_time_sec: {}  adj_ts: {}", height, MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts);
+	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
+	if height == 0 {
+		difficulty = INITIAL_DIFFICULTY;
+	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
 }

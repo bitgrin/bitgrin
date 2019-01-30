@@ -29,7 +29,6 @@ use lmdb_zero as lmdb;
 
 #[macro_use]
 extern crate bitgrin_core as core;
-use bitgrin_store;
 use bitgrin_util as util;
 
 #[macro_use]

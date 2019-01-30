@@ -29,9 +29,7 @@ use bitgrin_core as core;
 use bitgrin_p2p as p2p;
 use bitgrin_servers as servers;
 use bitgrin_util as util;
-use bitgrin_wallet;
 use std::process::exit;
-use term;
 
 mod cmd;
 pub mod tui;

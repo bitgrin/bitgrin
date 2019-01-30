@@ -33,7 +33,6 @@ extern crate log;
 use failure;
 use bitgrin_core as core;
 use bitgrin_keychain as keychain;
-use bitgrin_store;
 use bitgrin_util as util;
 
 mod chain;

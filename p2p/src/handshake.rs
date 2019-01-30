@@ -63,6 +63,7 @@ impl Handshake {
 		}
 	}
 
+	// TODOBG: Confirm this won't ever connect to Grin nodes
 	pub fn initiate(
 		&self,
 		capab: Capabilities,

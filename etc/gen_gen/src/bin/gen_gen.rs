@@ -105,7 +105,7 @@ fn main() {
 	.unwrap();
 	let keychain: ExtKeychain = seed.derive_keychain(false).unwrap();
 	let key_id = ExtKeychain::derive_key_id(3, 1, 0, 0, 0);
-	let reward = core::libtx::reward::output(&keychain, &key_id, 0).unwrap();
+	let reward = core::libtx::reward::output(&keychain, &key_id, 0, 0).unwrap(); // TODOBG: This should be height 0 or 1? Not certain...
 	gen = gen.with_reward(reward.0, reward.1);
 
 	{
