@@ -38,12 +38,96 @@ pub const NANO_BITGRIN: u64 = 1;
 /// (adjusting the reward accordingly).
 pub const BLOCK_TIME_SEC: u64 = 60;
 
+/// Block rewards
+pub const BLOCK_REWARD: u64 = 5;
+
+/// Halvenings
+pub const HALVENING_1: u64 = 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_2: u64 = 2 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_3: u64 = 3 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_4: u64 = 4 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_5: u64 = 5 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_6: u64 = 6 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_7: u64 = 7 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_8: u64 = 8 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_9: u64 = 9 * 4 * YEAR_HEIGHT;
+/// Halvenings
+pub const HALVENING_10: u64 = 10 * 4 * YEAR_HEIGHT;
+
+
 /// The block subsidy amount, one bitgrin per second on average
-pub const REWARD: u64 = BLOCK_TIME_SEC * BITGRIN_BASE;
+pub const REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE;
+/// Halvening rewards
+pub const HALVENING_1_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE;
+/// Halvening rewards
+pub const HALVENING_2_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 2;
+/// Halvening rewards
+pub const HALVENING_3_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 4;
+/// Halvening rewards
+pub const HALVENING_4_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 8;
+/// Halvening rewards
+pub const HALVENING_5_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 16;
+/// Halvening rewards
+pub const HALVENING_6_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 32;
+/// Halvening rewards
+pub const HALVENING_7_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 64;
+/// Halvening rewards
+pub const HALVENING_8_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 128;
+/// Halvening rewards
+pub const HALVENING_9_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 256;
+/// Halvening rewards
+pub const HALVENING_10_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 512;
+/// Halvening rewards
+pub const HALVENING_11_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 1024;
+/// Halvening rewards
+pub const HALVENING_12_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 2048;
+
 
 /// Actual block reward for a given total fee amount
 pub fn reward(fee: u64) -> u64 {
 	REWARD.saturating_add(fee)
+}
+
+/// Actual block reward for a given total fee amount, based on height
+pub fn reward_at_height(fee: u64, height: u64) -> u64 {
+	if height < HALVENING_1 {
+		return HALVENING_1_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_2 {
+		return HALVENING_2_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_3 {
+		return HALVENING_3_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_4 {
+		return HALVENING_4_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_5 {
+		return HALVENING_5_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_6 {
+		return HALVENING_6_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_7 {
+		return HALVENING_7_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_8 {
+		return HALVENING_8_REWARD.saturating_add(fee)
+	}
+	else if height < HALVENING_9 {
+		return HALVENING_9_REWARD.saturating_add(fee)
+	}
+	else {
+		return HALVENING_10_REWARD.saturating_add(fee)
+	}
 }
 
 /// Nominal height for standard time intervals, hour is 60 blocks
