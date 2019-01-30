@@ -105,7 +105,7 @@ fn build_block(
 
 	// Determine the difficulty our block should be at.
 	// Note: do not keep the difficulty_iter in scope (it has an active batch).
-	let difficulty = consensus::next_difficulty(head.height + 1, chain.difficulty_iter());
+	let difficulty = consensus::next_difficulty(head.height + 1, chain.difficulty_iter()); // TODO: edit this
 
 	// extract current transaction from the pool
 	let txs = tx_pool.read().prepare_mineable_transactions()?;

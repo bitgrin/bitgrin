@@ -193,7 +193,7 @@ pub const UNIT_DIFFICULTY: u64 =
 /// Currently grossly over-estimated at 10% of current
 /// ethereum GPUs (assuming 1GPU can solve a block at diff 1 in one block interval)
 // pub const INITIAL_DIFFICULTY: u64 = 1_000_000 * UNIT_DIFFICULTY;
-pub const INITIAL_DIFFICULTY: u64 = 1_024;//100 * UNIT_DIFFICULTY;
+pub const INITIAL_DIFFICULTY: u64 = 1_024 * UNIT_DIFFICULTY;
 
 /// Minimal header information required for the Difficulty calculation to
 /// take place
@@ -303,7 +303,11 @@ where
 		CLAMP_FACTOR,
 	);
 	// minimum difficulty avoids getting stuck due to dampening
-	let difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
+	//min_difficulty: 3  diff_sum: 1030792151040  block_time_sec: 60  adj_ts: 3600
+
+	error!("min_difficulty: {}  diff_sum: {}  block_time_sec: {}  adj_ts: {}", MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts);
+	// let difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
+	let difficulty = 3; // TODO: not this
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
 }

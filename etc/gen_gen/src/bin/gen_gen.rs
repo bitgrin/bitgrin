@@ -71,7 +71,7 @@ fn main() {
 
 	let mut h1 = "".to_string();
 	let mut hashResolved = false;
-	while(!hashResolved) {
+	while !hashResolved {
 		// get the latest bitcoin hash
 		let ih1 = get_bchain_head();
 		let ih2 = get_bcypher_head();
@@ -130,7 +130,8 @@ fn main() {
 	let mut solver_sols = plugin::SolverSolutions::default();
 	let mut solver_stats = plugin::SolverStats::default();
 	let mut nonce = 0;
-	println!("Mining...");
+	// gen.header.pow.total_difficulty = Difficulty::from_num(1);
+	println!("Mining  block with difficulty {}", gen.header.total_difficulty());
 	while solver_sols.num_sols == 0 {
 		solver_sols = plugin::SolverSolutions::default();
 		gen.header.pow.nonce = nonce;
