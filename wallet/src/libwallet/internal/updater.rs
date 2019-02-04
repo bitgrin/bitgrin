@@ -19,7 +19,7 @@ use failure::ResultExt;
 use std::collections::HashMap;
 use uuid::Uuid;
 
-use crate::core::consensus::{reward, get_coinbase_maturity_for_block};
+use crate::core::consensus::{get_coinbase_maturity_for_block, reward};
 use crate::core::core::{Output, TxKernel};
 use crate::core::libtx::reward;
 use crate::core::{global, ser};

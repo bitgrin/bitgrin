@@ -57,10 +57,10 @@ pub const DEV_FEE_AMT: u64 = DEV_FEE_TOTAL / QTY_DEV_FEE_PAYOUTS;
 
 /// Dev fee at given block height
 pub fn dev_fee_at_height(height: u64) -> u64 {
-    if height -  2 >= QTY_DEV_FEE_PAYOUTS {
-        return 0;
-    }
-    return DEV_FEE_AMT * BITGRIN_BASE;
+	if height - 2 >= QTY_DEV_FEE_PAYOUTS {
+		return 0;
+	}
+	return DEV_FEE_AMT * BITGRIN_BASE;
 }
 
 /// Actual block reward for a given total fee amount, and lock offset
@@ -71,7 +71,7 @@ pub fn reward(fee: u64, height: u64) -> (u64, u64) {
 
 /// Coinbase maturity rates are different for the initial dev fee block rewards
 pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
-	if(dev_fee_at_height(height) != 0) {
+	if (dev_fee_at_height(height) != 0) {
 		return height + reward(fee, height).1;
 	}
 	return height + global::coinbase_maturity();
@@ -79,17 +79,17 @@ pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
 
 /// Returns (reward, height_offset) at given height
 pub fn reward_at_height(height: u64) -> (u64, u64) {
-    if height == 0 {
-        return (BLOCK_REWARD, 0);
-    }
-    if height - 1 < QTY_DEV_FEE_PAYOUTS {
-        // Initial blocks create locked outputs that
-        // can be redeemed by the developer at regular intervals
-        // These rewards are not spendable until the
-        // blocks pass over the course of four years
-        let height_offset: u64 = (height) * DEV_FEE_PAYOUT_INTERVAL;
-        return (dev_fee_at_height(height + 1), height_offset);
-    }
+	if height == 0 {
+		return (BLOCK_REWARD, 0);
+	}
+	if height - 1 < QTY_DEV_FEE_PAYOUTS {
+		// Initial blocks create locked outputs that
+		// can be redeemed by the developer at regular intervals
+		// These rewards are not spendable until the
+		// blocks pass over the course of four years
+		let height_offset: u64 = (height) * DEV_FEE_PAYOUT_INTERVAL;
+		return (dev_fee_at_height(height + 1), height_offset);
+	}
 	let reward_divisor = ((height as f64) / (HALVENING_FREQUENCY as f64)).ceil() as u64;
 	let reward_divisor_bounded = max(reward_divisor, 1);
 	let reward = BLOCK_REWARD * BITGRIN_BASE / reward_divisor_bounded;

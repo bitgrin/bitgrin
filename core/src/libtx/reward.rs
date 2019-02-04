@@ -23,7 +23,12 @@ use crate::libtx::{aggsig, proof};
 use crate::util::static_secp_instance;
 
 /// output a reward output
-pub fn output<K>(keychain: &K, key_id: &Identifier, fees: u64, height: u64) -> Result<(Output, TxKernel), Error>
+pub fn output<K>(
+	keychain: &K,
+	key_id: &Identifier,
+	fees: u64,
+	height: u64,
+) -> Result<(Output, TxKernel), Error>
 where
 	K: Keychain,
 {
