@@ -19,7 +19,7 @@ use failure::ResultExt;
 use std::collections::HashMap;
 use uuid::Uuid;
 
-use crate::core::consensus::reward;
+use crate::core::consensus::{reward, get_coinbase_maturity_for_block};
 use crate::core::core::{Output, TxKernel};
 use crate::core::libtx::reward;
 use crate::core::{global, ser};
@@ -468,7 +468,7 @@ where
 	K: Keychain,
 {
 	let height = block_fees.height;
-	let lock_height = height + global::coinbase_maturity();
+	let lock_height = get_coinbase_maturity_for_block(block_fees.fees, height);
 	let key_id = block_fees.key_id();
 	let parent_key_id = wallet.parent_key_id();
 
@@ -480,7 +480,7 @@ where
 	{
 		// Now acquire the wallet lock and write the new output.
 		//let amount = reward_at_height(block_fees.fees, height);
-		let amount = reward(block_fees.fees, height);
+		let amount = reward(block_fees.fees, height).0;
 		let commit = wallet.calc_commit_for_cache(amount, &key_id)?;
 		let mut batch = wallet.batch()?;
 		batch.save(OutputData {

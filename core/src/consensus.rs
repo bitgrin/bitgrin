@@ -38,96 +38,62 @@ pub const NANO_BITGRIN: u64 = 1;
 /// (adjusting the reward accordingly).
 pub const BLOCK_TIME_SEC: u64 = 60;
 
-/// Block rewards
+/// Block reward base
+/// The block subsidy amount, five BitGrin per block initially
 pub const BLOCK_REWARD: u64 = 5;
 
-/// Halvenings
-pub const HALVENING_1: u64 = 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_2: u64 = 2 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_3: u64 = 3 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_4: u64 = 4 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_5: u64 = 5 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_6: u64 = 6 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_7: u64 = 7 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_8: u64 = 8 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_9: u64 = 9 * 4 * YEAR_HEIGHT;
-/// Halvenings
-pub const HALVENING_10: u64 = 10 * 4 * YEAR_HEIGHT;
+/// How often the reward per block should split in half
+/// Rewards cut in half every 2096640 blocks (4 years)
+pub const HALVENING_FREQUENCY: u64 = 4 * YEAR_HEIGHT;
 
+/// Parameters for dev fee
+pub const QTY_DEV_FEE_PAYOUTS_PER_YEAR: u64 = 12;
+pub const DEV_FEE_PAYOUT_DURATION_IN_YEARS: u64 = 4;
+pub const QTY_DEV_FEE_PAYOUTS: u64 =
+	QTY_DEV_FEE_PAYOUTS_PER_YEAR * DEV_FEE_PAYOUT_DURATION_IN_YEARS;
+pub const DEV_FEE_TOTAL: u64 = 1_000_000; // 1M coins to match Satoshi's Bitcoin holdings
+pub const DEV_FEE_PAYOUT_INTERVAL: u64 = YEAR_HEIGHT / QTY_DEV_FEE_PAYOUTS_PER_YEAR;
+pub const DEV_FEE_AMT: u64 = DEV_FEE_TOTAL / QTY_DEV_FEE_PAYOUTS;
 
-/// The block subsidy amount, one bitgrin per second on average
-// pub const REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE;
-/// Halvening rewards
-pub const HALVENING_1_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE;
-/// Halvening rewards
-pub const HALVENING_2_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 2;
-/// Halvening rewards
-pub const HALVENING_3_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 4;
-/// Halvening rewards
-pub const HALVENING_4_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 8;
-/// Halvening rewards
-pub const HALVENING_5_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 16;
-/// Halvening rewards
-pub const HALVENING_6_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 32;
-/// Halvening rewards
-pub const HALVENING_7_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 64;
-/// Halvening rewards
-pub const HALVENING_8_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 128;
-/// Halvening rewards
-pub const HALVENING_9_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 256;
-/// Halvening rewards
-pub const HALVENING_10_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 512;
-/// Halvening rewards
-pub const HALVENING_11_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 1024;
-/// Halvening rewards
-pub const HALVENING_12_REWARD: u64 = BLOCK_REWARD * BITGRIN_BASE / 2048;
-
-
-/// Actual block reward for a given total fee amount
-pub fn reward(fee: u64, height: u64) -> u64 {
-	reward_at_height(height).saturating_add(fee)
+/// Dev fee at given block height
+pub fn dev_fee_at_height(height: u64) -> u64 {
+    if height -  2 >= QTY_DEV_FEE_PAYOUTS {
+        return 0;
+    }
+    return DEV_FEE_AMT * BITGRIN_BASE;
 }
 
-/// Actual block reward for a given total fee amount, based on height
-pub fn reward_at_height(height: u64) -> u64 {
-	if height < HALVENING_1 {
-		return HALVENING_1_REWARD
+/// Actual block reward for a given total fee amount, and lock offset
+pub fn reward(fee: u64, height: u64) -> (u64, u64) {
+	let (reward, lock_offset) = reward_at_height(height);
+	return (reward.saturating_add(fee), lock_offset);
+}
+
+/// Coinbase maturity rates are different for the initial dev fee block rewards
+pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
+	if(dev_fee_at_height(height) != 0) {
+		return height + reward(fee, height).1;
 	}
-	else if height < HALVENING_2 {
-		return HALVENING_2_REWARD
-	}
-	else if height < HALVENING_3 {
-		return HALVENING_3_REWARD
-	}
-	else if height < HALVENING_4 {
-		return HALVENING_4_REWARD
-	}
-	else if height < HALVENING_5 {
-		return HALVENING_5_REWARD
-	}
-	else if height < HALVENING_6 {
-		return HALVENING_6_REWARD
-	}
-	else if height < HALVENING_7 {
-		return HALVENING_7_REWARD
-	}
-	else if height < HALVENING_8 {
-		return HALVENING_8_REWARD
-	}
-	else if height < HALVENING_9 {
-		return HALVENING_9_REWARD
-	}
-	else {
-		return HALVENING_10_REWARD
-	}
+	return height + global::coinbase_maturity();
+}
+
+/// Returns (reward, height_offset) at given height
+pub fn reward_at_height(height: u64) -> (u64, u64) {
+    if height == 0 {
+        return (BLOCK_REWARD, 0);
+    }
+    if height - 1 < QTY_DEV_FEE_PAYOUTS {
+        // Initial blocks create locked outputs that
+        // can be redeemed by the developer at regular intervals
+        // These rewards are not spendable until the
+        // blocks pass over the course of four years
+        let height_offset: u64 = (height) * DEV_FEE_PAYOUT_INTERVAL;
+        return (dev_fee_at_height(height + 1), height_offset);
+    }
+	let reward_divisor = ((height as f64) / (HALVENING_FREQUENCY as f64)).ceil() as u64;
+	let reward_divisor_bounded = max(reward_divisor, 1);
+	let reward = BLOCK_REWARD * BITGRIN_BASE / reward_divisor_bounded;
+	(reward, 0)
 }
 
 /// Nominal height for standard time intervals, hour is 60 blocks
@@ -140,7 +106,7 @@ pub const WEEK_HEIGHT: u64 = 7 * DAY_HEIGHT;
 pub const YEAR_HEIGHT: u64 = 52 * WEEK_HEIGHT;
 
 /// Number of blocks before a coinbase matures and can be spent
-pub const COINBASE_MATURITY: u64 = DAY_HEIGHT;
+pub const COINBASE_MATURITY: u64 = 1;
 
 /// Ratio the secondary proof of work should take over the primary, as a
 /// function of block height (time). Starts at 90% losing a percent
@@ -277,7 +243,7 @@ pub const UNIT_DIFFICULTY: u64 =
 /// Currently grossly over-estimated at 10% of current
 /// ethereum GPUs (assuming 1GPU can solve a block at diff 1 in one block interval)
 // pub const INITIAL_DIFFICULTY: u64 = 1_000_000 * UNIT_DIFFICULTY;
-pub const INITIAL_DIFFICULTY: u64 = 1_024 * UNIT_DIFFICULTY;
+pub const INITIAL_DIFFICULTY: u64 = 1 * UNIT_DIFFICULTY; // UNIT_DIFFICULTY starts around 1,855.
 
 /// Minimal header information required for the Difficulty calculation to
 /// take place
@@ -387,11 +353,14 @@ where
 		CLAMP_FACTOR,
 	);
 	// minimum difficulty avoids getting stuck due to dampening
-	error!("height: {}  min_difficulty: {}  diff_sum: {}  block_time_sec: {}  adj_ts: {}", height, MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts);
+	error!(
+		"height: {}  min_difficulty: {}  diff_sum: {}  block_time_sec: {}  adj_ts: {}",
+		height, MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts
+	);
 	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
-	if height == 0 {
-		difficulty = INITIAL_DIFFICULTY;
-	}
+	// if height < 60 {
+	difficulty = 1;
+	// }
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
 }

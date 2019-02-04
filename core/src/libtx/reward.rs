@@ -27,7 +27,7 @@ pub fn output<K>(keychain: &K, key_id: &Identifier, fees: u64, height: u64) -> R
 where
 	K: Keychain,
 {
-	let value = reward(fees, height);
+	let value = reward(fees, height).0;
 	let commit = keychain.commit(value, key_id)?;
 
 	trace!("Block reward - Pedersen Commit is: {:?}", commit,);
@@ -42,7 +42,7 @@ where
 
 	let secp = static_secp_instance();
 	let secp = secp.lock();
-	let over_commit = secp.commit_value(reward(fees, height))?;
+	let over_commit = secp.commit_value(reward(fees, height).0)?;
 	let out_commit = output.commitment();
 	let excess = secp.commit_sum(vec![out_commit], vec![over_commit])?;
 	let pubkey = excess.to_pubkey(&secp)?;
