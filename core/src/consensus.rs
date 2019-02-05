@@ -47,12 +47,17 @@ pub const BLOCK_REWARD: u64 = 5;
 pub const HALVENING_FREQUENCY: u64 = 4 * YEAR_HEIGHT;
 
 /// Parameters for dev fee
+/// How many payouts are distributed every year
 pub const QTY_DEV_FEE_PAYOUTS_PER_YEAR: u64 = 12;
+/// For how many year will the payouts continue
 pub const DEV_FEE_PAYOUT_DURATION_IN_YEARS: u64 = 4;
-pub const QTY_DEV_FEE_PAYOUTS: u64 =
-	QTY_DEV_FEE_PAYOUTS_PER_YEAR * DEV_FEE_PAYOUT_DURATION_IN_YEARS;
+/// Calculate total number of payouts needed
+pub const QTY_DEV_FEE_PAYOUTS: u64 = QTY_DEV_FEE_PAYOUTS_PER_YEAR * DEV_FEE_PAYOUT_DURATION_IN_YEARS;
+/// The total to be paid out over the entirety of the duration
 pub const DEV_FEE_TOTAL: u64 = 1_000_000; // 1M coins to match Satoshi's Bitcoin holdings
+/// Calculate how many blocks pass per interval for a payout
 pub const DEV_FEE_PAYOUT_INTERVAL: u64 = YEAR_HEIGHT / QTY_DEV_FEE_PAYOUTS_PER_YEAR;
+/// Calculate the amount in XBG must be in each payment
 pub const DEV_FEE_AMT: u64 = DEV_FEE_TOTAL / QTY_DEV_FEE_PAYOUTS;
 
 /// Nominal height for standard time intervals, hour is 60 blocks
@@ -80,13 +85,13 @@ pub fn dev_fee_at_height(height: u64) -> u64 {
 
 /// Actual block reward for a given total fee amount, and lock offset
 pub fn reward(fee: u64, height: u64) -> (u64, u64) {
-	let (mut reward, lock_offset) = reward_at_height(height);
+	let (reward, lock_offset) = reward_at_height(height);
 	return (reward.saturating_add(fee), lock_offset);
 }
 
 /// Coinbase maturity rates are different for the initial dev fee block rewards
 pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
-	if (dev_fee_at_height(height) != 0) {
+	if dev_fee_at_height(height) != 0 {
 		return height + reward(fee, height).1;
 	}
 	return height + 1445;
