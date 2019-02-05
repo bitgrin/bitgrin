@@ -374,9 +374,9 @@ where
 		height, MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts
 	);
 	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
-	// if height < 60 {
-	difficulty = 1;
-	// }
+	if height <= 49 {
+		difficulty = 1;
+	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
 }
