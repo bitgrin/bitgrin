@@ -55,6 +55,18 @@ pub const DEV_FEE_TOTAL: u64 = 1_000_000; // 1M coins to match Satoshi's Bitcoin
 pub const DEV_FEE_PAYOUT_INTERVAL: u64 = YEAR_HEIGHT / QTY_DEV_FEE_PAYOUTS_PER_YEAR;
 pub const DEV_FEE_AMT: u64 = DEV_FEE_TOTAL / QTY_DEV_FEE_PAYOUTS;
 
+/// Nominal height for standard time intervals, hour is 60 blocks
+pub const HOUR_HEIGHT: u64 = 3600 / BLOCK_TIME_SEC;
+/// A day is 1440 blocks
+pub const DAY_HEIGHT: u64 = 24 * HOUR_HEIGHT;
+/// A week is 10_080 blocks
+pub const WEEK_HEIGHT: u64 = 7 * DAY_HEIGHT;
+/// A year is 524_160 blocks
+pub const YEAR_HEIGHT: u64 = 52 * WEEK_HEIGHT;
+
+/// Number of blocks before a coinbase matures and can be spent
+pub const COINBASE_MATURITY: u64 = 1;
+
 /// Dev fee at given block height
 pub fn dev_fee_at_height(height: u64) -> u64 {
     if height < 1 {
@@ -68,7 +80,7 @@ pub fn dev_fee_at_height(height: u64) -> u64 {
 
 /// Actual block reward for a given total fee amount, and lock offset
 pub fn reward(fee: u64, height: u64) -> (u64, u64) {
-	let (reward, lock_offset) = reward_at_height(height);
+	let (mut reward, lock_offset) = reward_at_height(height);
 	return (reward.saturating_add(fee), lock_offset);
 }
 
@@ -80,10 +92,15 @@ pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
 	return height + 1445;
 }
 
+/// Adjusted down block reward to compensate for dev fee in emission curve
+pub fn adjusted_block_reward() -> u64 {
+    return (4.5 * BITGRIN_BASE as f64) as u64;
+}
+
 /// Returns (reward, height_offset) at given height
 pub fn reward_at_height(height: u64) -> (u64, u64) {
 	if height == 0 {
-		return (BLOCK_REWARD, 0);
+		return (adjusted_block_reward(), 0);
 	}
 	if height - 1 <= QTY_DEV_FEE_PAYOUTS {
 		// Initial blocks create locked outputs that
@@ -93,23 +110,14 @@ pub fn reward_at_height(height: u64) -> (u64, u64) {
 		let height_offset: u64 = (height) * DEV_FEE_PAYOUT_INTERVAL;
 		return (dev_fee_at_height(height), height_offset);
 	}
+    if height < HALVENING_FREQUENCY {
+        return (adjusted_block_reward(), 0);
+    }
 	let reward_divisor = ((height as f64) / (HALVENING_FREQUENCY as f64)).ceil() as u64;
 	let reward_divisor_bounded = max(reward_divisor, 1);
 	let reward = BLOCK_REWARD * BITGRIN_BASE / reward_divisor_bounded;
 	(reward, 0)
 }
-
-/// Nominal height for standard time intervals, hour is 60 blocks
-pub const HOUR_HEIGHT: u64 = 3600 / BLOCK_TIME_SEC;
-/// A day is 1440 blocks
-pub const DAY_HEIGHT: u64 = 24 * HOUR_HEIGHT;
-/// A week is 10_080 blocks
-pub const WEEK_HEIGHT: u64 = 7 * DAY_HEIGHT;
-/// A year is 524_160 blocks
-pub const YEAR_HEIGHT: u64 = 52 * WEEK_HEIGHT;
-
-/// Number of blocks before a coinbase matures and can be spent
-pub const COINBASE_MATURITY: u64 = 1;
 
 /// Ratio the secondary proof of work should take over the primary, as a
 /// function of block height (time). Starts at 90% losing a percent
