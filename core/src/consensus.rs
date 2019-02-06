@@ -77,7 +77,7 @@ pub fn dev_fee_at_height(height: u64) -> u64 {
     if height < 1 {
         return 0;
     }
-    if height > QTY_DEV_FEE_PAYOUTS + 1 {
+    if height > QTY_DEV_FEE_PAYOUTS {
         return 0;
     }
     return DEV_FEE_AMT * BITGRIN_BASE;
@@ -107,7 +107,7 @@ pub fn reward_at_height(height: u64) -> (u64, u64) {
 	if height == 0 {
 		return (adjusted_block_reward(), 0);
 	}
-	if height - 1 <= QTY_DEV_FEE_PAYOUTS {
+	if height - 1 < QTY_DEV_FEE_PAYOUTS {
 		// Initial blocks create locked outputs that
 		// can be redeemed by the developer at regular intervals
 		// These rewards are not spendable until the
@@ -376,6 +376,9 @@ where
 	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
 	if height <= 49 {
 		difficulty = 1;
+	}
+	else if height <= 109 {
+		difficulty = 2u64.pow(10);
 	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
