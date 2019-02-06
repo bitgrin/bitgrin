@@ -94,7 +94,7 @@ pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
 	if dev_fee_at_height(height) != 0 {
 		return height + reward(fee, height).1;
 	}
-	return height + 1445;
+	return height + COINBASE_MATURITY;
 }
 
 /// Adjusted down block reward to compensate for dev fee in emission curve

@@ -389,6 +389,13 @@ where
 	let mut locked_total = 0;
 
 	for out in outputs {
+		debug!("is_coinbase: {}, lock_height: {}, current_height: {}, amount: {}, output height: {}",
+			out.is_coinbase,
+			out.lock_height,
+			current_height,
+			out.value,
+			out.height
+		);
 		match out.status {
 			OutputStatus::Unspent => {
 				if out.is_coinbase && out.lock_height > current_height {
@@ -508,7 +515,7 @@ where
 	let mut block_fees = block_fees.clone();
 	block_fees.key_id = Some(key_id.clone());
 
-	debug!("receive_coinbase: {:?}", block_fees);
+	debug!("receive_coinbase: {:?} lock_height: {}", block_fees, lock_height);
 
 	let (out, kern) = reward::output(wallet.keychain(), &key_id, block_fees.fees, height).unwrap();
 	/* .context(ErrorKind::Keychain)?; */
