@@ -378,7 +378,7 @@ where
 	if height <= 49 {
 		difficulty = 1;
 	} else if height <= 109 {
-		difficulty = 10u64.pow(10);
+		difficulty = 10u64.pow(6);
 	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
