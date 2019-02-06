@@ -31,7 +31,7 @@ apt install build-essential cmake git libgit2-dev clang libncurses5-dev libncurs
 ## Build steps
 
 ```sh
-git clone https://github.com/mimblewimble/bitgrin.git
+git clone https://github.com/bitgrin/bitgrin.git
 cd bitgrin
 cargo build --release
 ```
