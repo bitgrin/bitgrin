@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use grin_chain as chain;
-use grin_core as core;
-use grin_p2p as p2p;
-use grin_pool as pool;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
+use bitgrin_p2p as p2p;
+use bitgrin_pool as pool;
 
-use grin_util as util;
+use bitgrin_util as util;
 
 use failure;
 #[macro_use]

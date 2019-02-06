@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@
 //! Common test functions
 
 use crate::keychain::{Identifier, Keychain};
-use grin_core::core::{
+use bitgrin_core::core::{
 	block::{Block, BlockHeader},
 	Transaction,
 };
-use grin_core::libtx::{
+use bitgrin_core::libtx::{
 	build::{self, input, output, with_fee},
 	reward,
 };
-use grin_core::pow::Difficulty;
-use grin_keychain as keychain;
+use bitgrin_core::pow::Difficulty;
+use bitgrin_keychain as keychain;
 
 // utility producing a transaction with 2 inputs and a single outputs
 pub fn tx2i1o() -> Transaction {
@@ -91,7 +91,9 @@ where
 	K: Keychain,
 {
 	let fees = txs.iter().map(|tx| tx.fee()).sum();
-	let reward_output = reward::output(keychain, &key_id, fees).unwrap();
+	let height = previous_header.height + 1;
+	debug!("Create new block at height {}", height);
+	let reward_output = reward::output(keychain, &key_id, fees, height).unwrap();
 	Block::new(
 		&previous_header,
 		txs.into_iter().cloned().collect(),

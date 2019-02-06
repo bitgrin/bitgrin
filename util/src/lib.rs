@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 // limitations under the License.
 
 //! Logging, as well as various low-level utilities that factor Rust
-//! patterns that are frequent within the grin codebase.
+//! patterns that are frequent within the bitgrin codebase.
 
 #![deny(non_upper_case_globals)]
 #![deny(non_camel_case_types)]
@@ -110,13 +110,13 @@ pub fn to_base64(s: &str) -> String {
 	base64::encode(s)
 }
 
-/// Global stopped/paused state shared across various subcomponents of Grin.
+/// Global stopped/paused state shared across various subcomponents of BitGrin.
 ///
 /// Arc<Mutex<StopState>> allows the chain to lock the stop_state during critical processing.
 /// Other subcomponents cannot abruptly shutdown the server during block/header processing.
 /// This should prevent the chain ever ending up in an inconsistent state on restart.
 ///
-/// "Stopped" allows a clean shutdown of the Grin server.
+/// "Stopped" allows a clean shutdown of the BitGrin server.
 /// "Paused" is used in some tests to allow nodes to reach steady state etc.
 ///
 pub struct StopState {

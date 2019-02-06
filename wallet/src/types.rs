@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::fs::{self, File};
+use std::fs::{self, File, create_dir_all};
 use std::io::{Read, Write};
 use std::path::Path;
 use std::path::MAIN_SEPARATOR;
@@ -43,7 +43,7 @@ pub struct WalletConfig {
 	pub api_listen_port: u16,
 	/// Location of the secret for basic auth on the Owner API
 	pub api_secret_path: Option<String>,
-	/// Location of the node api secret for basic auth on the Grin API
+	/// Location of the node api secret for basic auth on the BitGrin API
 	pub node_api_secret_path: Option<String>,
 	// The api address of a running server node against which transaction inputs
 	// will be checked during send
@@ -195,13 +195,18 @@ impl WalletSeed {
 			"{}{}{}",
 			wallet_config.data_file_dir, MAIN_SEPARATOR, SEED_FILE,
 		);
+		let seed_file_directory = &format!(
+			"{}{}",
+			wallet_config.data_file_dir, MAIN_SEPARATOR,
+		);
 		if WalletSeed::seed_file_exists(wallet_config).is_err() {
 			WalletSeed::backup_seed(wallet_config)?;
 		}
 		let seed = WalletSeed::from_mnemonic(word_list)?;
 		let enc_seed = EncryptedWalletSeed::from_seed(&seed, password)?;
 		let enc_seed_json = serde_json::to_string_pretty(&enc_seed).context(ErrorKind::Format)?;
-		let mut file = File::create(seed_file_path).context(ErrorKind::IO)?;
+		create_dir_all(seed_file_directory).context(ErrorKind::IO)?;
+		let mut file = File::create(seed_file_path).context(ErrorKind::IO)?; // Broken
 		file.write_all(&enc_seed_json.as_bytes())
 			.context(ErrorKind::IO)?;
 		warn!("Seed created from word list");
@@ -269,8 +274,8 @@ impl WalletSeed {
 			Ok(wallet_seed)
 		} else {
 			error!(
-				"wallet seed file {} could not be opened (grin wallet init). \
-				 Run \"grin wallet init\" to initialize a new wallet.",
+				"wallet seed file {} could not be opened (bitgrin wallet init). \
+				 Run \"bitgrin wallet init\" to initialize a new wallet.",
 				seed_file_path
 			);
 			Err(ErrorKind::WalletSeedDoesntExist)?

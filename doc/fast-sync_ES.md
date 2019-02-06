@@ -1,10 +1,10 @@
 # Sincronización rápida
 
-En Grin, llamamos "sync" al proceso de sincronizar un nuevo nodo o un nodo que no ha estado al día con la cadena durante un 
+En BitGrin, llamamos "sync" al proceso de sincronizar un nuevo nodo o un nodo que no ha estado al día con la cadena durante un 
 tiempo, y llevarlo hasta el último bloque conocido. La Descarga Inicial de Bloques (o IBD) es usada a menudo por otras cadenas 
-de bloques, pero esto es problemático para Grin ya que típicamente no descarga bloques completos..
+de bloques, pero esto es problemático para BitGrin ya que típicamente no descarga bloques completos..
 
-En resumen, una sincronización rápida en Grin hace lo siguiente:
+En resumen, una sincronización rápida en BitGrin hace lo siguiente:
 
 1. Descargar todas las cabeceras de los bloques, por trozos, en la cadena más utilizada, 
    tal y como lo anuncian otros nodos.

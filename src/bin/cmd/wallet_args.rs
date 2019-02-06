@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,10 +18,10 @@ use crate::util::{Mutex, ZeroingString};
 /// Argument parsing and error handling for wallet commands
 use clap::ArgMatches;
 use failure::Fail;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_wallet::{command, instantiate_wallet, NodeClient, WalletConfig, WalletInst, WalletSeed};
-use grin_wallet::{Error, ErrorKind};
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_wallet::{command, instantiate_wallet, NodeClient, WalletConfig, WalletInst, WalletSeed};
+use bitgrin_wallet::{Error, ErrorKind};
 use linefeed::terminal::Signal;
 use linefeed::{Interface, ReadResult};
 use rpassword;
@@ -606,7 +606,7 @@ pub fn wallet_command(
 		("restore", Some(_)) => command::restore(inst_wallet()),
 		("check", Some(_)) => command::check_repair(inst_wallet()),
 		_ => {
-			let msg = format!("Unknown wallet command, use 'grin help wallet' for details");
+			let msg = format!("Unknown wallet command, use 'bitgrin help wallet' for details");
 			return Err(ErrorKind::ArgumentError(msg).into());
 		}
 	};

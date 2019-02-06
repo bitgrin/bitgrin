@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ use crate::lmdb_wallet::LMDBBackend;
 use crate::{controller, libwallet, WalletSeed};
 use crate::{WalletBackend, WalletConfig};
 use chrono::Duration;
-use grin_api as api;
-use grin_chain as chain;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_util as util;
+use bitgrin_api as api;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_util as util;
 use std::sync::Arc;
 
 mod testclient;

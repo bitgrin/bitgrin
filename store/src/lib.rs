@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,18 +20,15 @@
 #![deny(unused_mut)]
 #![warn(missing_docs)]
 
-use lmdb_zero;
-use memmap;
-
 #[macro_use]
 extern crate log;
 use failure;
 #[macro_use]
 extern crate failure_derive;
 #[macro_use]
-extern crate grin_core as core;
+extern crate bitgrin_core as core;
 
-//use grin_core as core;
+//use bitgrin_core as core;
 
 pub mod leaf_set;
 mod lmdb;

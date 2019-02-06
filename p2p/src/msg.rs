@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,8 +32,8 @@ use crate::util::read_write::read_exact;
 /// Current latest version of the protocol
 pub const PROTOCOL_VERSION: u32 = 1;
 
-/// Grin's user agent with current version
-pub const USER_AGENT: &'static str = concat!("MW/Grin ", env!("CARGO_PKG_VERSION"));
+/// BitGrin's user agent with current version
+pub const USER_AGENT: &'static str = concat!("MW/BitGrin ", env!("CARGO_PKG_VERSION"));
 
 /// Magic numbers expected in the header of every message
 const OTHER_MAGIC: [u8; 2] = [73, 43];

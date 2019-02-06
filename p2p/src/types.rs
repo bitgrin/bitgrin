@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ use chrono::prelude::*;
 use crate::core::core::hash::Hash;
 use crate::core::pow::Difficulty;
 use crate::core::{core, ser};
-use grin_store;
+use bitgrin_store;
 
 /// Maximum number of block headers a peer should ever send
 pub const MAX_BLOCK_HEADERS: u32 = 512;
@@ -59,7 +59,7 @@ pub enum Error {
 	Banned,
 	ConnectionClose,
 	Timeout,
-	Store(grin_store::Error),
+	Store(bitgrin_store::Error),
 	PeerWithSelf,
 	NoDandelionRelay,
 	ProtocolMismatch {
@@ -79,8 +79,8 @@ impl From<ser::Error> for Error {
 		Error::Serialization(e)
 	}
 }
-impl From<grin_store::Error> for Error {
-	fn from(e: grin_store::Error) -> Error {
+impl From<bitgrin_store::Error> for Error {
+	fn from(e: bitgrin_store::Error) -> Error {
 		Error::Store(e)
 	}
 }
@@ -150,7 +150,7 @@ impl Default for P2PConfig {
 }
 
 /// Note certain fields are options just so they don't have to be
-/// included in grin-server.toml, but we don't want them to ever return none
+/// included in bitgrin-server.toml, but we don't want them to ever return none
 impl P2PConfig {
 	/// return ban window
 	pub fn ban_window(&self) -> i64 {

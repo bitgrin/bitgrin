@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -204,13 +204,13 @@ pub trait NodeClient: Sync + Send + Clone {
 	/// Change the API secret
 	fn set_node_api_secret(&mut self, node_api_secret: Option<String>);
 
-	/// Posts a transaction to a grin node
+	/// Posts a transaction to a bitgrin node
 	fn post_tx(&self, tx: &TxWrapper, fluff: bool) -> Result<(), Error>;
 
-	/// retrieves the current tip from the specified grin node
+	/// retrieves the current tip from the specified bitgrin node
 	fn get_chain_height(&self) -> Result<u64, Error>;
 
-	/// retrieve a list of outputs from the specified grin node
+	/// retrieve a list of outputs from the specified bitgrin node
 	/// need "by_height" and "by_id" variants
 	fn get_outputs_from_node(
 		&self,

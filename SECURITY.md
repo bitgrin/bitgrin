@@ -1,10 +1,10 @@
-# Grin's Security Process
+# BitGrin's Security Process
 
-Grin has a [code of conduct](CODE_OF_CONDUCT.md) and the handling of vulnerability disclosure is no exception. We are committed to conduct our security process in a professional and civil manner. Public shaming, under-reporting or misrepresentation of vulnerabilities will not be tolerated.
+BitGrin has a [code of conduct](CODE_OF_CONDUCT.md) and the handling of vulnerability disclosure is no exception. We are committed to conduct our security process in a professional and civil manner. Public shaming, under-reporting or misrepresentation of vulnerabilities will not be tolerated.
 
 ## Responsible Disclosure
 
-For all security related issues, Grin has two main points of contact:
+For all security related issues, BitGrin has two main points of contact:
 
 * Daniel Lehnberg, daniel.lehnberg at protonmail.com
 * Ignotus Peverell, igno.peverell at protonmail.com
@@ -13,7 +13,7 @@ Send all communications to both parties and expect a reply within 48h. Public ke
 
 ## Vulnerability Handling
 
-Upon reception of a vulnerability disclosure, the Grin team will:
+Upon reception of a vulnerability disclosure, the BitGrin team will:
 
 * Reply within a 48h window.
 * Within a week, a [CVVS v3](https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator) severity score should be attributed.
@@ -27,17 +27,17 @@ Releasing a fix should include the following steps:
 * Inclusion of a vulnerability explanation, the CVE and the security researcher or team who found the vulnerability in release notes and project vulnerability list (link TBD).
 * Publicize the vulnerability commensurately with severity and encourage fast upgrades (possibly with additional documentation to explain who is affected, the risks and what to do about it).
 
-_Note: Before Grin mainnet is released, we will be taking some liberty in applying the above steps, notably in issuing a CVE and upgrades._
+_Note: Before BitGrin mainnet is released, we will be taking some liberty in applying the above steps, notably in issuing a CVE and upgrades._
 
 ## Recognition and Bug Bounties
 
-As of this writing, Grin is a **traditional open source project** with limited to no direct funding. As such, we have little means with which to compensate  security researchers for their contributions. We recognize this is a shame and intend to do our best to still make these worth while by:
+As of this writing, BitGrin is a **traditional open source project** with limited to no direct funding. As such, we have little means with which to compensate  security researchers for their contributions. We recognize this is a shame and intend to do our best to still make these worth while by:
 
 * Advertising the vulnerability, the researchers, or their team on a public page linked from our website, with a links of their choosing.
 * Acting as reference whenever this is needed.
 * Setting up retroactive bounties whenever possible.
 
-It is our hope that after mainnet release, participants in the ecosystem will be willing to more widely donate to benefit the further development of Grin. When this is the case we will:
+It is our hope that after mainnet release, participants in the ecosystem will be willing to more widely donate to benefit the further development of BitGrin. When this is the case we will:
 
 * Setup a bounty program.
 * Decide on the amounts rewarded based on available funds and CVVS score.
@@ -52,10 +52,10 @@ While we intend to undergo more formal audits before release, continued code rev
 
 ## Chain Splits
 
-The Grin Team runs a chain split monitoring tool at (TBD). It is encouraged to monitor it regularly and setup alerts. In case of an accidental chain split:
+The BitGrin Team runs a chain split monitoring tool at (TBD). It is encouraged to monitor it regularly and setup alerts. In case of an accidental chain split:
 
 * Exchanges and merchants should either cease operation or extend considerably confirmation delays.
-* Miners and mining pools should immediately consult with Grin's development team on regular channels (Grin's Gitter mainly) to diagnose the split and determine a course of events.
+* Miners and mining pools should immediately consult with BitGrin's development team on regular channels (BitGrin's Gitter mainly) to diagnose the split and determine a course of events.
 * In the likely event of an emergency software patch, all actors should upgrade as soon as possible.
 
 ## Useful References

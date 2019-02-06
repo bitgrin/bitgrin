@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,24 +25,29 @@ use rpassword;
 use serde_json;
 
 use cuckoo_miner as cuckoo;
-use grin_chain as chain;
-use grin_core as core;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
 use grin_miner_plugin as plugin;
-use grin_store as store;
-use grin_util as util;
-use grin_wallet as wallet;
+use bitgrin_store as store;
+use bitgrin_util as util;
+use bitgrin_wallet as wallet;
 
-use grin_core::core::hash::Hashed;
-use grin_core::core::verifier_cache::LruVerifierCache;
-use grin_keychain::{BlindingFactor, ExtKeychain, Keychain};
+use bitgrin_core::core::hash::Hashed;
+use bitgrin_core::core::verifier_cache::LruVerifierCache;
+use bitgrin_keychain::{BlindingFactor, ExtKeychain, Keychain};
+
+use std::thread;
+use std::time;
 
 static BCHAIN_INFO_URL: &str = "https://blockchain.info/latestblock";
 static BCYPHER_URL: &str = "https://api.blockcypher.com/v1/btc/main";
 static BCHAIR_URL: &str = "https://api.blockchair.com/bitcoin/blocks?limit=2";
 
 static GENESIS_RS_PATH: &str = "../../core/src/genesis.rs";
-static PLUGIN_PATH: &str = "./cuckaroo_mean_cuda_29.cuckooplugin";
-static WALLET_SEED_PATH: &str = "./wallet.seed";
+// static PLUGIN_PATH: &str = "./cuckaroo_mean_cuda_29.cuckooplugin";
+// static PLUGIN_PATH: &str = "./target/release/plugins/cuckatoo_mean_cuda_gtx_31.cuckooplugin";
+static PLUGIN_PATH: &str = "./target/release/plugins/cuckaroo_cpu_compat_29.cuckooplugin";
+// static WALLET_SEED_PATH: &str = "./wallet.seed";
 
 fn main() {
 	if !path::Path::new(GENESIS_RS_PATH).exists() {
@@ -57,24 +62,37 @@ fn main() {
 			PLUGIN_PATH
 		);
 	}
-	if !path::Path::new(WALLET_SEED_PATH).exists() {
-		panic!(
-			"File {} not found, make sure you're running this from the gen_gen directory",
-			WALLET_SEED_PATH
-		);
-	}
+	// if !path::Path::new(WALLET_SEED_PATH).exists() {
+	// 	panic!(
+	// 		"File {} not found, make sure you're running this from the gen_gen directory",
+	// 		WALLET_SEED_PATH
+	// 	);
+	// }
 
-	// get the latest bitcoin hash
-	let h1 = get_bchain_head();
-	let h2 = get_bcypher_head();
-	let h3 = get_bchair_head();
-	if h1 != h2 || h1 != h3 {
-		panic!(
-			"Bitcoin chain head is inconsistent, please retry ({}, {}, {}).",
-			h1, h2, h3
-		);
+	let mut h1 = "".to_string();
+	let mut hashResolved = false;
+	while !hashResolved {
+		// get the latest bitcoin hash
+		let ih1 = get_bchain_head();
+		let ih2 = get_bcypher_head();
+		let ih3 = get_bchair_head();
+		if ih1 != ih2 || ih1 != ih3 {
+			println!(
+				"Bitcoin chain head is inconsistent, retrying ({}, {}, {}).",
+				ih1, ih2, ih3
+			);
+		}
+		else {
+			hashResolved = true;
+			h1 =ih1;
+		}
+		let t = time::Duration::from_millis(10000);
+		thread::sleep(t);
 	}
 	println!("Using bitcoin block hash {}", h1);
+	// let h1 = "00000000000000000004bbdc307e512bd3465a27b81a10a4b7a465005f0c5e88";
+
+	println!("Using wallet seed: {}", &wallet::WalletConfig::default().data_file_dir);
 
 	// build the basic parts of the genesis block header
 	let mut gen = core::genesis::genesis_main();
@@ -87,13 +105,13 @@ fn main() {
 	.unwrap();
 	let keychain: ExtKeychain = seed.derive_keychain(false).unwrap();
 	let key_id = ExtKeychain::derive_key_id(3, 1, 0, 0, 0);
-	let reward = core::libtx::reward::output(&keychain, &key_id, 0).unwrap();
+	let reward = core::libtx::reward::output(&keychain, &key_id, 0, 0).unwrap(); // TODOBG: This should be height 0 or 1? Not certain...
 	gen = gen.with_reward(reward.0, reward.1);
 
 	{
 		// setup a tmp chain to set block header roots
 		core::global::set_mining_mode(core::global::ChainTypes::UserTesting);
-		let tmp_chain = setup_chain(".grin.tmp", core::pow::mine_genesis_block().unwrap());
+		let tmp_chain = setup_chain(".bitgrin.tmp", core::pow::mine_genesis_block().unwrap());
 		tmp_chain.set_txhashset_roots(&mut gen).unwrap();
 	}
 
@@ -112,6 +130,8 @@ fn main() {
 	let mut solver_sols = plugin::SolverSolutions::default();
 	let mut solver_stats = plugin::SolverStats::default();
 	let mut nonce = 0;
+	// gen.header.pow.total_difficulty = Difficulty::from_num(1);
+	println!("Mining  block with difficulty {}", gen.header.total_difficulty());
 	while solver_sols.num_sols == 0 {
 		solver_sols = plugin::SolverSolutions::default();
 		gen.header.pow.nonce = nonce;

@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,11 +23,11 @@ use self::core::{consensus, genesis};
 use self::keychain::{ExtKeychain, ExtKeychainPath, Keychain};
 use self::util::{Mutex, RwLock, StopState};
 use chrono::Duration;
-use grin_chain as chain;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_store as store;
-use grin_util as util;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_store as store;
+use bitgrin_util as util;
 use std::fs;
 use std::sync::Arc;
 
@@ -73,7 +73,7 @@ fn reload_chain(dir_name: &str) -> Chain {
 
 #[test]
 fn data_files() {
-	let chain_dir = ".grin_df";
+	let chain_dir = ".bitgrin_df";
 	//new block so chain references should be freed
 	{
 		let chain = setup(chain_dir);

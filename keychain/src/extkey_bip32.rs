@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
 //! Implementation of BIP32 hierarchical deterministic wallets, as defined
 //! at https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki
-//! Modified from above to integrate into grin and allow for different
+//! Modified from above to integrate into bitgrin and allow for different
 //! hashing algorithms if desired
 
 #[cfg(feature = "serde")]
@@ -72,7 +72,7 @@ impl Default for Fingerprint {
 }
 
 /// Allow different implementations of hash functions used in BIP32 Derivations
-/// Grin uses blake2 everywhere but the spec calls for SHA512/Ripemd160, so allow
+/// BitGrin uses blake2 everywhere but the spec calls for SHA512/Ripemd160, so allow
 /// this in future and allow us to unit test against published BIP32 test vectors
 /// The function names refer to the place of the hash in the reference BIP32 spec,
 /// not what the actual implementation is
@@ -90,22 +90,22 @@ pub trait BIP32Hasher {
 
 /// Implementation of the above that uses the standard BIP32 Hash algorithms
 #[derive(Clone, Debug)]
-pub struct BIP32GrinHasher {
+pub struct BIP32BitGrinHasher {
 	is_floo: bool,
 	hmac_sha512: Hmac<Sha512>,
 }
 
-impl BIP32GrinHasher {
+impl BIP32BitGrinHasher {
 	/// New empty hasher
-	pub fn new(is_floo: bool) -> BIP32GrinHasher {
-		BIP32GrinHasher {
+	pub fn new(is_floo: bool) -> BIP32BitGrinHasher {
+		BIP32BitGrinHasher {
 			is_floo: is_floo,
 			hmac_sha512: HmacSha512::new(GenericArray::from_slice(&[0u8; 128])),
 		}
 	}
 }
 
-impl BIP32Hasher for BIP32GrinHasher {
+impl BIP32Hasher for BIP32BitGrinHasher {
 	fn network_priv(&self) -> [u8; 4] {
 		match self.is_floo {
 			true => [0x03, 0x27, 0x3A, 0x10],  // fprv
@@ -384,7 +384,7 @@ impl ExtendedPrivKey {
 			Ok(s) => s,
 			Err(e) => return Err(Error::MnemonicError(e)),
 		};
-		let mut hasher = BIP32GrinHasher::new(is_floo);
+		let mut hasher = BIP32BitGrinHasher::new(is_floo);
 		let key = r#try!(ExtendedPrivKey::new_master(secp, &mut hasher, &seed));
 		Ok(key)
 	}

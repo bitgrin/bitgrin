@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ impl Default for LoggingConfig {
 			stdout_log_level: LogLevel::Warning,
 			log_to_file: true,
 			file_log_level: LogLevel::Debug,
-			log_file_path: String::from("grin.log"),
+			log_file_path: String::from("bitgrin.log"),
 			log_file_append: true,
 			log_max_size: Some(1024 * 1024 * 16), // 16 megabytes default
 			tui_running: None,

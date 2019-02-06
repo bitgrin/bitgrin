@@ -1,23 +1,23 @@
-name: grin
+name: bitgrin
 version: "1.0.0"
 about: Lightweight implementation of the MimbleWimble protocol.
-author: The Grin Team
+author: The BitGrin Team
 
 args:
   - floonet:
-      help: Run grin against the Floonet (as opposed to mainnet)
+      help: Run bitgrin against the Floonet (as opposed to mainnet)
       long: floonet
       takes_value: false
   - usernet:
-      help: Run grin as a local-only network. Doesn't block peer connections but will not connect to any peer or seed
+      help: Run bitgrin as a local-only network. Doesn't block peer connections but will not connect to any peer or seed
       long: usernet
       takes_value: false
 subcommands:
   - server:
-      about: Control the Grin server
+      about: Control the BitGrin server
       args:
         - config_file:
-            help: Path to a grin-server.toml configuration file
+            help: Path to a bitgrin-server.toml configuration file
             short: c
             long: config_file
             takes_value: true
@@ -43,18 +43,18 @@ subcommands:
             takes_value: true
       subcommands:
         - config:
-            about: Generate a configuration grin-server.toml file in the current directory
+            about: Generate a configuration bitgrin-server.toml file in the current directory
         - start:
-            about: Start the Grin server as a daemon
+            about: Start the BitGrin server as a daemon
         - stop:
-            about: Stop the Grin server daemon
+            about: Stop the BitGrin server daemon
         - run:
-            about: Run the Grin server in this console
+            about: Run the BitGrin server in this console
   - client:
-      about: Communicates with the Grin server
+      about: Communicates with the BitGrin server
       subcommands:
         - status:
-            about: Current status of the Grin chain
+            about: Current status of the BitGrin chain
         - listconnectedpeers:
             about: Print a list of currently connected peers
         - ban:
@@ -76,7 +76,7 @@ subcommands:
                   required: true
                   takes_value: true
   - wallet:
-      about: Wallet software for Grin
+      about: Wallet software for BitGrin
       args:
         - pass:
             help: Wallet passphrase used to encrypt wallet seed
@@ -275,7 +275,7 @@ subcommands:
             about: Initialize a new wallet seed file and database
             args:
               - here:
-                  help: Create wallet files in the current directory instead of the default ~/.grin directory
+                  help: Create wallet files in the current directory instead of the default ~/.bitgrin directory
                   short: h
                   long: here
                   takes_value: false

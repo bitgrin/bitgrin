@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ use crate::types::{Options, Tip};
 use crate::util::RwLock;
 use chrono::prelude::Utc;
 use chrono::Duration;
-use grin_store;
+use bitgrin_store;
 use std::sync::Arc;
 
 /// Contextual information required to process a new block and either reject or
@@ -324,7 +324,7 @@ fn prev_header_store(
 	batch: &mut store::Batch<'_>,
 ) -> Result<BlockHeader, Error> {
 	let prev = batch.get_previous_header(&header).map_err(|e| match e {
-		grin_store::Error::NotFoundErr(_) => ErrorKind::Orphan,
+		bitgrin_store::Error::NotFoundErr(_) => ErrorKind::Orphan,
 		_ => ErrorKind::StoreErr(e, "check prev header".into()),
 	})?;
 	Ok(prev)
@@ -337,7 +337,7 @@ fn validate_header(header: &BlockHeader, ctx: &mut BlockContext<'_>) -> Result<(
 	// check version, enforces scheduled hard fork
 	if !consensus::valid_header_version(header.height, header.version) {
 		error!(
-			"Invalid block header version received ({}), maybe update Grin?",
+			"Invalid block header version received ({}), maybe update BitGrin?",
 			header.version
 		);
 		return Err(ErrorKind::InvalidBlockVersion(header.version).into());

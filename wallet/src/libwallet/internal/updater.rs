@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ use failure::ResultExt;
 use std::collections::HashMap;
 use uuid::Uuid;
 
-use crate::core::consensus::reward;
+use crate::core::consensus::{get_coinbase_maturity_for_block, reward};
 use crate::core::core::{Output, TxKernel};
 use crate::core::libtx::reward;
 use crate::core::{global, ser};
@@ -389,6 +389,13 @@ where
 	let mut locked_total = 0;
 
 	for out in outputs {
+		debug!("is_coinbase: {}, lock_height: {}, current_height: {}, amount: {}, output height: {}",
+			out.is_coinbase,
+			out.lock_height,
+			current_height,
+			out.value,
+			out.height
+		);
 		match out.status {
 			OutputStatus::Unspent => {
 				if out.is_coinbase && out.lock_height > current_height {
@@ -468,7 +475,7 @@ where
 	K: Keychain,
 {
 	let height = block_fees.height;
-	let lock_height = height + global::coinbase_maturity();
+	let lock_height = get_coinbase_maturity_for_block(block_fees.fees, height);
 	let key_id = block_fees.key_id();
 	let parent_key_id = wallet.parent_key_id();
 
@@ -479,7 +486,8 @@ where
 
 	{
 		// Now acquire the wallet lock and write the new output.
-		let amount = reward(block_fees.fees);
+		//let amount = reward_at_height(block_fees.fees, height);
+		let amount = reward(block_fees.fees, height).0;
 		let commit = wallet.calc_commit_for_cache(amount, &key_id)?;
 		let mut batch = wallet.batch()?;
 		batch.save(OutputData {
@@ -507,9 +515,9 @@ where
 	let mut block_fees = block_fees.clone();
 	block_fees.key_id = Some(key_id.clone());
 
-	debug!("receive_coinbase: {:?}", block_fees);
+	debug!("receive_coinbase: {:?} lock_height: {}", block_fees, lock_height);
 
-	let (out, kern) = reward::output(wallet.keychain(), &key_id, block_fees.fees).unwrap();
+	let (out, kern) = reward::output(wallet.keychain(), &key_id, block_fees.fees, height).unwrap();
 	/* .context(ErrorKind::Keychain)?; */
 	Ok((out, kern, block_fees))
 }

@@ -1,9 +1,9 @@
 # Run `nix-shell` to be able
-# to build Grin on NixOS.
+# to build BitGrin on NixOS.
 { pkgs ? import <nixpkgs> {} }:
 
 pkgs.stdenv.mkDerivation {
-  name = "grin";
+  name = "bitgrin";
 
   buildInputs = with pkgs; [
     ncurses cmake clang

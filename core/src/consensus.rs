@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -23,14 +23,14 @@ use std::cmp::{max, min};
 use crate::global;
 use crate::pow::Difficulty;
 
-/// A grin is divisible to 10^9, following the SI prefixes
-pub const GRIN_BASE: u64 = 1_000_000_000;
-/// Milligrin, a thousand of a grin
-pub const MILLI_GRIN: u64 = GRIN_BASE / 1_000;
-/// Microgrin, a thousand of a milligrin
-pub const MICRO_GRIN: u64 = MILLI_GRIN / 1_000;
-/// Nanogrin, smallest unit, takes a billion to make a grin
-pub const NANO_GRIN: u64 = 1;
+/// A bitgrin is divisible to 10^9, following the SI prefixes
+pub const BITGRIN_BASE: u64 = 1_000_000_000;
+/// Millibitgrin, a thousand of a bitgrin
+pub const MILLI_BITGRIN: u64 = BITGRIN_BASE / 1_000;
+/// Microbitgrin, a thousand of a millibitgrin
+pub const MICRO_BITGRIN: u64 = MILLI_BITGRIN / 1_000;
+/// Nanobitgrin, smallest unit, takes a billion to make a bitgrin
+pub const NANO_BITGRIN: u64 = 1;
 
 /// Block interval, in seconds, the network will tune its next_target for. Note
 /// that we may reduce this value in the future as we get more data on mining
@@ -38,13 +38,27 @@ pub const NANO_GRIN: u64 = 1;
 /// (adjusting the reward accordingly).
 pub const BLOCK_TIME_SEC: u64 = 60;
 
-/// The block subsidy amount, one grin per second on average
-pub const REWARD: u64 = BLOCK_TIME_SEC * GRIN_BASE;
+/// Block reward base
+/// The block subsidy amount, five BitGrin per block initially
+pub const BLOCK_REWARD: u64 = 5;
 
-/// Actual block reward for a given total fee amount
-pub fn reward(fee: u64) -> u64 {
-	REWARD.saturating_add(fee)
-}
+/// How often the reward per block should split in half
+/// Rewards cut in half every 2096640 blocks (4 years)
+pub const HALVENING_FREQUENCY: u64 = 4 * YEAR_HEIGHT;
+
+/// Parameters for dev fee
+/// How many payouts are distributed every year
+pub const QTY_DEV_FEE_PAYOUTS_PER_YEAR: u64 = 12;
+/// For how many year will the payouts continue
+pub const DEV_FEE_PAYOUT_DURATION_IN_YEARS: u64 = 4;
+/// Calculate total number of payouts needed
+pub const QTY_DEV_FEE_PAYOUTS: u64 = QTY_DEV_FEE_PAYOUTS_PER_YEAR * DEV_FEE_PAYOUT_DURATION_IN_YEARS;
+/// The total to be paid out over the entirety of the duration
+pub const DEV_FEE_TOTAL: u64 = 1_000_000; // 1M coins to match Satoshi's Bitcoin holdings
+/// Calculate how many blocks pass per interval for a payout
+pub const DEV_FEE_PAYOUT_INTERVAL: u64 = YEAR_HEIGHT / QTY_DEV_FEE_PAYOUTS_PER_YEAR;
+/// Calculate the amount in XBG must be in each payment
+pub const DEV_FEE_AMT: u64 = DEV_FEE_TOTAL / QTY_DEV_FEE_PAYOUTS;
 
 /// Nominal height for standard time intervals, hour is 60 blocks
 pub const HOUR_HEIGHT: u64 = 3600 / BLOCK_TIME_SEC;
@@ -56,7 +70,59 @@ pub const WEEK_HEIGHT: u64 = 7 * DAY_HEIGHT;
 pub const YEAR_HEIGHT: u64 = 52 * WEEK_HEIGHT;
 
 /// Number of blocks before a coinbase matures and can be spent
-pub const COINBASE_MATURITY: u64 = DAY_HEIGHT;
+pub const COINBASE_MATURITY: u64 = 1;
+
+/// Dev fee at given block height
+pub fn dev_fee_at_height(height: u64) -> u64 {
+    if height < 1 {
+        return 0;
+    }
+    if height > QTY_DEV_FEE_PAYOUTS {
+        return 0;
+    }
+    return DEV_FEE_AMT * BITGRIN_BASE;
+}
+
+/// Actual block reward for a given total fee amount, and lock offset
+pub fn reward(fee: u64, height: u64) -> (u64, u64) {
+	let (reward, lock_offset) = reward_at_height(height);
+	return (reward.saturating_add(fee), lock_offset);
+}
+
+/// Coinbase maturity rates are different for the initial dev fee block rewards
+pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
+	if dev_fee_at_height(height) != 0 {
+		return height + reward(fee, height).1;
+	}
+	return height + COINBASE_MATURITY;
+}
+
+/// Adjusted down block reward to compensate for dev fee in emission curve
+pub fn adjusted_block_reward() -> u64 {
+    return (4.5 * BITGRIN_BASE as f64) as u64;
+}
+
+/// Returns (reward, height_offset) at given height
+pub fn reward_at_height(height: u64) -> (u64, u64) {
+	if height == 0 {
+		return (adjusted_block_reward(), 0);
+	}
+	if height - 1 < QTY_DEV_FEE_PAYOUTS {
+		// Initial blocks create locked outputs that
+		// can be redeemed by the developer at regular intervals
+		// These rewards are not spendable until the
+		// blocks pass over the course of four years
+		let height_offset: u64 = (height) * DEV_FEE_PAYOUT_INTERVAL;
+		return (dev_fee_at_height(height), height_offset);
+	}
+    if height < HALVENING_FREQUENCY {
+        return (adjusted_block_reward(), 0);
+    }
+	let reward_divisor = ((height as f64) / (HALVENING_FREQUENCY as f64)).ceil() as u64;
+	let reward_divisor_bounded = max(reward_divisor, 1);
+	let reward = BLOCK_REWARD * BITGRIN_BASE / reward_divisor_bounded;
+	(reward, 0)
+}
 
 /// Ratio the secondary proof of work should take over the primary, as a
 /// function of block height (time). Starts at 90% losing a percent
@@ -192,7 +258,8 @@ pub const UNIT_DIFFICULTY: u64 =
 /// and difficulty should come down at launch rather than up
 /// Currently grossly over-estimated at 10% of current
 /// ethereum GPUs (assuming 1GPU can solve a block at diff 1 in one block interval)
-pub const INITIAL_DIFFICULTY: u64 = 1_000_000 * UNIT_DIFFICULTY;
+// pub const INITIAL_DIFFICULTY: u64 = 1_000_000 * UNIT_DIFFICULTY;
+pub const INITIAL_DIFFICULTY: u64 = 1 * UNIT_DIFFICULTY; // UNIT_DIFFICULTY starts around 1,855.
 
 /// Minimal header information required for the Difficulty calculation to
 /// take place
@@ -302,7 +369,17 @@ where
 		CLAMP_FACTOR,
 	);
 	// minimum difficulty avoids getting stuck due to dampening
-	let difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
+	error!(
+		"height: {}  min_difficulty: {}  diff_sum: {}  block_time_sec: {}  adj_ts: {}",
+		height, MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts
+	);
+	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
+	if height <= 49 {
+		difficulty = 1;
+	}
+	else if height <= 109 {
+		difficulty = 2u64.pow(10);
+	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
 }

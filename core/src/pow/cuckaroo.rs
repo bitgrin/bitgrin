@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 //!
 //! Cuckaroo is an ASIC-Resistant variation of Cuckoo (CuckARoo) that's
 //! aimed at making the lean mining mode of Cuckoo extremely ineffective.
-//! It is one of the 2 proof of works used in Grin (the other one being the
+//! It is one of the 2 proof of works used in BitGrin (the other one being the
 //! more ASIC friendly Cuckatoo).
 //!
 //! In Cuckaroo, edges are calculated by repeatedly hashing the seeds to

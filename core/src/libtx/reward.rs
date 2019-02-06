@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,11 +23,16 @@ use crate::libtx::{aggsig, proof};
 use crate::util::static_secp_instance;
 
 /// output a reward output
-pub fn output<K>(keychain: &K, key_id: &Identifier, fees: u64) -> Result<(Output, TxKernel), Error>
+pub fn output<K>(
+	keychain: &K,
+	key_id: &Identifier,
+	fees: u64,
+	height: u64,
+) -> Result<(Output, TxKernel), Error>
 where
 	K: Keychain,
 {
-	let value = reward(fees);
+	let value = reward(fees, height).0;
 	let commit = keychain.commit(value, key_id)?;
 
 	trace!("Block reward - Pedersen Commit is: {:?}", commit,);
@@ -42,7 +47,7 @@ where
 
 	let secp = static_secp_instance();
 	let secp = secp.lock();
-	let over_commit = secp.commit_value(reward(fees))?;
+	let over_commit = secp.commit_value(reward(fees, height).0)?;
 	let out_commit = output.commitment();
 	let excess = secp.commit_sum(vec![out_commit], vec![over_commit])?;
 	let pubkey = excess.to_pubkey(&secp)?;

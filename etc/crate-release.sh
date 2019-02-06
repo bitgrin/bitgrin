@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# check we're in the grin root
+# check we're in the bitgrin root
 if [ ! -f "LICENSE" ] ; then
-	echo "Script must be run from Grin's root directory"
+	echo "Script must be run from BitGrin's root directory"
 	exit 1
 fi
 

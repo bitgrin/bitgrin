@@ -1,12 +1,12 @@
 [package]
-name = "grin_gen_gen"
+name = "bitgrin_gen_gen"
 version = "0.0.1"
 edition = "2018"
-authors = ["Grin Developers <mimblewimble@lists.launchpad.net>"]
-description = "Utility to automate the generation of Grin's genesis block"
+authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
+description = "Utility to automate the generation of BitGrin's genesis block"
 license = "Apache-2.0"
-repository = "https://github.com/mimblewimble/grin"
-keywords = [ "crypto", "grin", "mimblewimble" ]
+repository = "https://github.com/mimblewimble/bitgrin"
+keywords = [ "crypto", "bitgrin", "mimblewimble" ]
 readme = "README.md"
 
 [[bin]]
@@ -15,22 +15,22 @@ path = "src/bin/gen_gen.rs"
 
 [dependencies]
 chrono = "0.4.4"
-cuckoo_miner = "1.0.0"
+cuckoo_miner = "0.5.2"
 curl = "0.4.19"
-grin_core = { path = "../../core" }
-grin_chain = { path = "../../chain" }
-grin_keychain = { path = "../../keychain" }
-grin_miner_plugin = "1.0.0"
-grin_store = { path = "../../store" }
-grin_util = { path = "../../util" }
-grin_wallet = { path = "../../wallet" }
+bitgrin_core = { path = "../../core" }
+bitgrin_chain = { path = "../../chain" }
+bitgrin_keychain = { path = "../../keychain" }
+grin_miner_plugin = "0.5.2"
+bitgrin_store = { path = "../../store" }
+bitgrin_util = { path = "../../util" }
+bitgrin_wallet = { path = "../../wallet" }
 rpassword = "2.0.0"
 serde_json = "1"
 
 [patch.crates-io]
-grin_api = { path = "../../api" }
-grin_core = { path = "../../core" }
-grin_chain = { path = "../../chain" }
-grin_keychain = { path = "../../keychain" }
-grin_util = { path = "../../util" }
-grin_wallet = { path = "../../wallet" }
+bitgrin_api = { path = "../../api" }
+bitgrin_core = { path = "../../core" }
+bitgrin_chain = { path = "../../chain" }
+bitgrin_keychain = { path = "../../keychain" }
+bitgrin_util = { path = "../../util" }
+bitgrin_wallet = { path = "../../wallet" }

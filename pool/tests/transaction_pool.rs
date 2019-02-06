@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ use self::core::pow::Difficulty;
 use self::keychain::{ExtKeychain, Keychain};
 use self::util::RwLock;
 use crate::common::*;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_util as util;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_util as util;
 use std::sync::Arc;
 
 /// Test we can add some txs to the pool (both stempool and txpool).
@@ -31,7 +31,7 @@ use std::sync::Arc;
 fn test_the_transaction_pool() {
 	let keychain: ExtKeychain = Keychain::from_random_seed(false).unwrap();
 
-	let db_root = ".grin_transaction_pool".to_string();
+	let db_root = ".bitgrin_transaction_pool".to_string();
 	clean_output_dir(db_root.clone());
 	let chain = Arc::new(ChainAdapter::init(db_root.clone()).unwrap());
 

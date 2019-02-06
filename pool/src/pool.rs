@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ use self::core::core::verifier_cache::VerifierCache;
 use self::core::core::{Block, BlockHeader, BlockSums, Committed, Transaction, TxKernel};
 use self::util::RwLock;
 use crate::types::{BlockChain, PoolEntry, PoolEntryState, PoolError};
-use grin_core as core;
-use grin_util as util;
+use bitgrin_core as core;
+use bitgrin_util as util;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 

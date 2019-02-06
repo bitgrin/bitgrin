@@ -1,11 +1,11 @@
 [package]
-name = "grin_core"
+name = "bitgrin_core"
 version = "1.0.0"
-authors = ["Grin Developers <mimblewimble@lists.launchpad.net>"]
-description = "Chain implementation for grin, a simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
+authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
+description = "Chain implementation for bitgrin, a simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
-repository = "https://github.com/mimblewimble/grin"
-keywords = [ "crypto", "grin", "mimblewimble" ]
+repository = "https://github.com/mimblewimble/bitgrin"
+keywords = [ "crypto", "bitgrin", "mimblewimble" ]
 workspace = ".."
 edition = "2018"
 
@@ -28,5 +28,5 @@ uuid = { version = "0.6", features = ["serde", "v4"] }
 log = "0.4"
 chrono = "0.4.4"
 
-grin_keychain = { path = "../keychain", version = "1.0.0" }
-grin_util = { path = "../util", version = "1.0.0" }
+bitgrin_keychain = { path = "../keychain", version = "1.0.0" }
+bitgrin_util = { path = "../util", version = "1.0.0" }

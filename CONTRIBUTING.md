@@ -2,7 +2,7 @@
 
 Find an area you can help with and do it. Open source is about collaboration and open participation. Try to make your code look like what already exists and submit a pull request.
 
-The [list of issues](https://github.com/mimblewimble/grin/issues) is a good place to start, especially the ones tagged as "help wanted" (but don't let that stop you from looking at others). If you're looking for additional ideas, the code includes `TODO` comments for minor to major improvements. Grep is your friend.
+The [list of issues](https://github.com/mimblewimble/bitgrin/issues) is a good place to start, especially the ones tagged as "help wanted" (but don't let that stop you from looking at others). If you're looking for additional ideas, the code includes `TODO` comments for minor to major improvements. Grep is your friend.
 
 Additional tests are rewarded with an immense amount of positive karma.
 
@@ -11,13 +11,13 @@ More documentation or updates/fixes to existing documentation are also very welc
 # Find Us
 
 If any help is needed during your effort to contribute on this project, please don't hesitate to contact us:
-* Chat: [Gitter](https://gitter.im/grin_community/Lobby).
-* [Forum](https://www.grin-forum.org/)
-* [Website](https://grin-tech.org)
+* Chat: [Gitter](https://gitter.im/bitgrin_community/Lobby).
+* [Forum](https://www.bitgrin-forum.org/)
+* [Website](https://bitgrin-tech.org)
 * Mailing list: join the [~MimbleWimble team](https://launchpad.net/~mimblewimble) and subscribe on Launchpad.
 * News: 
-  * Twitter for the Grin council: [@grincouncil](https://twitter.com/grincouncil)
-  * Twitter bot that scrapes headlines, mailing list, and reddit posts related to MimbleWinble/Grin: [@grinmw](https://twitter.com/grinmw)
+  * Twitter for the BitGrin council: [@bitgrincouncil](https://twitter.com/bitgrincouncil)
+  * Twitter bot that scrapes headlines, mailing list, and reddit posts related to MimbleWinble/BitGrin: [@bitgrinmw](https://twitter.com/bitgrinmw)
 
 # Pull-Request Title Prefix
 
@@ -33,11 +33,11 @@ Please consider putting one of the following prefixes in the title of your pull-
 - **test**:     Adding missing tests
 - **chore**:    Maintain. Changes to the build process or auxiliary tools/libraries/documentation
 
-For example: `fix: a panick on xxx when grin exiting`. Please don't worry if you can't find a suitable prefix, this's just optional, not mandatory.
+For example: `fix: a panick on xxx when bitgrin exiting`. Please don't worry if you can't find a suitable prefix, this's just optional, not mandatory.
 
-# Grin Style Guide
+# BitGrin Style Guide
 
-Grin uses `rustfmt` to maintain consistent formatting, and we're using the git commit hook as explained below.
+BitGrin uses `rustfmt` to maintain consistent formatting, and we're using the git commit hook as explained below.
 
 ## Install rustfmt
 
@@ -85,6 +85,6 @@ rustfmt client.rs
 
 ## Thanks for any contribution
 
-Even one word correction are welcome! Our objective is to encourage you to get interested in Grin and contribute in any way possible. Thanks for any help!
+Even one word correction are welcome! Our objective is to encourage you to get interested in BitGrin and contribute in any way possible. Thanks for any help!
 
 

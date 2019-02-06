@@ -1,4 +1,4 @@
-// Copyright 2018 The Grin Developers
+// Copyright 2018 The BitGrin Developers
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 use crate::util::{Mutex, ZeroingString};
 use std::collections::HashMap;
-/// Grin wallet command-line function implementations
+/// BitGrin wallet command-line function implementations
 use std::fs::File;
 use std::io::Write;
 use std::sync::Arc;
@@ -224,7 +224,7 @@ pub fn send(
 		let (mut slate, lock_fn) = match result {
 			Ok(s) => {
 				info!(
-					"Tx created: {} grin to {} (strategy '{}')",
+					"Tx created: {} bitgrin to {} (strategy '{}')",
 					core::amount_to_hr_string(args.amount, false),
 					args.dest,
 					args.selection_strategy,

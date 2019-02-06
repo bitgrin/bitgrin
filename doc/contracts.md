@@ -1,12 +1,12 @@
 # Contracts
 
-This document describes smart contracts that can be setup using Grin even
-though the Grin chain does not support scripting. All these contracts rely
+This document describes smart contracts that can be setup using BitGrin even
+though the BitGrin chain does not support scripting. All these contracts rely
 on a few basic features that are built in the chain and compose them in
 increasingly clever ways.
 
 None of those constructs are fully original or invented by the authors of this
-document or the Grin development team. Most of the credit should be attributed
+document or the BitGrin development team. Most of the credit should be attributed
 to a long list of cryptographers and researchers. To name just a few: Torben
 Pryds Pedersen, Gregory Maxwell, Andrew Poelstra, John Tromp, Claus Peter
 Schnorr. We apologize in advance for all those we couldn't name and recognize
@@ -14,7 +14,7 @@ that most computer science discoveries are incremental.
 
 ## Built-Ins
 
-This section is meant as a reminder of some crucial features of the Grin chain.
+This section is meant as a reminder of some crucial features of the BitGrin chain.
 We assume some prior reading as to how these are constructed and used.
 
 ### Pedersen Commitments
@@ -45,10 +45,10 @@ s*G = k*G + e * x*G
 
 In this simple case of someone sending a transaction to a receiver they trust
 (see later for the trustless case), an aggregate signature can be directly
-built for a Grin transaction by taking the above private key `x` to be the sum
+built for a BitGrin transaction by taking the above private key `x` to be the sum
 of output blinding factors minus the sum of input blinding factors. The resulting
 kernel is assembled from the aggregate signature generated using `r` and the
-public key `r*G`, and allows to verify non-inflation for all Grin transactions
+public key `r*G`, and allows to verify non-inflation for all BitGrin transactions
 (and signs the fees).
 
 Because these signatures are built simply from a scalar and a public key, they
@@ -92,13 +92,13 @@ but does not demonstrate the full flexibility of the construction. We show
 here how to generalize it for use in outputs involving multiple parties.
 
 As constructed in section 1.2, an aggregate signature requires trusting the
-receiving party. As Grin outputs are completely obscured by Pedersen
+receiving party. As BitGrin outputs are completely obscured by Pedersen
 Commitments, one cannot prove money was actually sent to the right party,
 hence a receiver could claim not having received anything. To solve this
 issue, we require the receiver to collaborate with the sender in building a
 transaction and specifically its kernel signature.
 
-Alice wants to pay Bob in grins. She starts the transaction building process:
+Alice wants to pay Bob in bitgrins. She starts the transaction building process:
 
 1. Alice selects her inputs and builds her change output. The sum of all
    blinding factors (change output minus inputs) is `rs`.
@@ -227,12 +227,12 @@ public key derivation `x*G` to be the hash function and by Bob revealing `x`,
 Alice can then produce an adequate signature proving she knows `x` (in
 addition to her own private key).
 
-Alice has grins and Bob has bitcoin. They would like to swap. We assume Bob
+Alice has bitgrins and Bob has bitcoin. They would like to swap. We assume Bob
 created an output on the Bitcoin blockchain that allows spending either by
 Alice if she learns a hash pre-image `x`, or by Bob after time `Tb`. Alice is
-ready to send her grins to Bob if he reveals `x`.
+ready to send her bitgrins to Bob if he reveals `x`.
 
-First, Alice sends her grins to a multiparty timelock contract with a refund
+First, Alice sends her bitgrins to a multiparty timelock contract with a refund
 time `Ta < Tb`. To send the 2-of-2 output to Bob and execute the swap, Alice
 and Bob start as if they were building a normal trustless transaction as
 specified in section 2.1.
@@ -248,7 +248,7 @@ specified in section 2.1.
    can also compute `e = SHA256(M | ks*G + kr*G)`.
 1. To complete the signature, Bob computes `sr = kr + e * rr` and the final
    signature is `(sr + ss, kr*G + ks*G)`.
-1. As soon as Bob broadcasts the final transaction to get his new grins, Alice
+1. As soon as Bob broadcasts the final transaction to get his new bitgrins, Alice
    can compute `sr' - sr` to get `x`.
 
 #### Notes on the Bitcoin setup

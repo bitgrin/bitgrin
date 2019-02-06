@@ -12,7 +12,7 @@ This document also helps visualizing all the timers in a simple way.
 
 ## T = 5
 
-A sends grins to B. A adds the transaction to its stempool and starts the embargo timer for this transaction.
+A sends bitgrins to B. A adds the transaction to its stempool and starts the embargo timer for this transaction.
 
 ![t = 5](images/t5.png)
 
@@ -31,7 +31,7 @@ G receives the stem transaction, add it to its stempool and starts the embargo t
 
 ## T = 40
 
-G sends grins to E.
+G sends bitgrins to E.
 G adds the transaction it to its stempool and starts the embargo timer for this transaction.
 
 ![t = 40](images/t40.png)

@@ -2,7 +2,7 @@
 
 We describe here the different methods used by a new node when joining the network
 to catch up with the latest chain state. We start with reminding the reader of the
-following assumptions, which are all characteristics of Grin or MimbleWimble:
+following assumptions, which are all characteristics of BitGrin or MimbleWimble:
 
 * All block headers include the root hash of all unspent outputs in the chain at
   the time of that block.
