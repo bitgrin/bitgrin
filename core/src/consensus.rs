@@ -52,7 +52,8 @@ pub const QTY_DEV_FEE_PAYOUTS_PER_YEAR: u64 = 12;
 /// For how many year will the payouts continue
 pub const DEV_FEE_PAYOUT_DURATION_IN_YEARS: u64 = 4;
 /// Calculate total number of payouts needed
-pub const QTY_DEV_FEE_PAYOUTS: u64 = QTY_DEV_FEE_PAYOUTS_PER_YEAR * DEV_FEE_PAYOUT_DURATION_IN_YEARS;
+pub const QTY_DEV_FEE_PAYOUTS: u64 =
+	QTY_DEV_FEE_PAYOUTS_PER_YEAR * DEV_FEE_PAYOUT_DURATION_IN_YEARS;
 /// The total to be paid out over the entirety of the duration
 pub const DEV_FEE_TOTAL: u64 = 1_000_000; // 1M coins to match Satoshi's Bitcoin holdings
 /// Calculate how many blocks pass per interval for a payout
@@ -74,13 +75,13 @@ pub const COINBASE_MATURITY: u64 = 1;
 
 /// Dev fee at given block height
 pub fn dev_fee_at_height(height: u64) -> u64 {
-    if height < 1 {
-        return 0;
-    }
-    if height > QTY_DEV_FEE_PAYOUTS {
-        return 0;
-    }
-    return DEV_FEE_AMT * BITGRIN_BASE;
+	if height < 1 {
+		return 0;
+	}
+	if height > QTY_DEV_FEE_PAYOUTS {
+		return 0;
+	}
+	return DEV_FEE_AMT * BITGRIN_BASE;
 }
 
 /// Actual block reward for a given total fee amount, and lock offset
@@ -99,7 +100,7 @@ pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
 
 /// Adjusted down block reward to compensate for dev fee in emission curve
 pub fn adjusted_block_reward() -> u64 {
-    return (4.5 * BITGRIN_BASE as f64) as u64;
+	return (4.5 * BITGRIN_BASE as f64) as u64;
 }
 
 /// Returns (reward, height_offset) at given height
@@ -115,9 +116,9 @@ pub fn reward_at_height(height: u64) -> (u64, u64) {
 		let height_offset: u64 = (height) * DEV_FEE_PAYOUT_INTERVAL;
 		return (dev_fee_at_height(height), height_offset);
 	}
-    if height < HALVENING_FREQUENCY {
-        return (adjusted_block_reward(), 0);
-    }
+	if height < HALVENING_FREQUENCY {
+		return (adjusted_block_reward(), 0);
+	}
 	let reward_divisor = ((height as f64) / (HALVENING_FREQUENCY as f64)).ceil() as u64;
 	let reward_divisor_bounded = max(reward_divisor, 1);
 	let reward = BLOCK_REWARD * BITGRIN_BASE / reward_divisor_bounded;
@@ -376,9 +377,8 @@ where
 	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
 	if height <= 49 {
 		difficulty = 1;
-	}
-	else if height <= 109 {
-		difficulty = 2u64.pow(10);
+	} else if height <= 109 {
+		difficulty = 10u64.pow(10);
 	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
