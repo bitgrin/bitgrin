@@ -377,8 +377,9 @@ where
 	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
 	if height <= 49 {
 		difficulty = 1;
-	} else if height <= 51 {
-		difficulty = 2 * 10u64.pow(5);
+	} else if height <= (50 + 23) {
+		// Keep difficulty above 250k for at least long enough to become MA for difficulty correction
+		difficulty = max(250_000, difficulty);
 	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
