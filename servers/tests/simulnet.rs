@@ -58,9 +58,9 @@ fn basic_genesis_mine() {
 	pool_config.base_name = String::from(test_name_dir);
 	pool_config.run_length_in_seconds = 10;
 
-	pool_config.base_api_port = 30000;
-	pool_config.base_p2p_port = 31000;
-	pool_config.base_wallet_port = 32000;
+	pool_config.base_api_port = 38500;
+	pool_config.base_p2p_port = 31085;
+	pool_config.base_wallet_port = 32085;
 
 	let mut pool = LocalServerContainerPool::new(pool_config);
 

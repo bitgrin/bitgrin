@@ -216,33 +216,33 @@ impl GlobalConfig {
 		match *chain_type {
 			global::ChainTypes::Mainnet => {}
 			global::ChainTypes::Floonet => {
-				defaults.api_http_addr = "127.0.0.1:13413".to_owned();
-				defaults.p2p_config.port = 13414;
+				defaults.api_http_addr = "127.0.0.1:18513".to_owned();
+				defaults.p2p_config.port = 18514;
 				defaults
 					.stratum_mining_config
 					.as_mut()
 					.unwrap()
-					.stratum_server_addr = Some("127.0.0.1:13416".to_owned());
+					.stratum_server_addr = Some("127.0.0.1:18516".to_owned());
 				defaults
 					.stratum_mining_config
 					.as_mut()
 					.unwrap()
-					.wallet_listener_url = "http://127.0.0.1:13415".to_owned();
+					.wallet_listener_url = "http://127.0.0.1:18515".to_owned();
 			}
 			global::ChainTypes::UserTesting => {
-				defaults.api_http_addr = "127.0.0.1:23413".to_owned();
-				defaults.p2p_config.port = 23414;
+				defaults.api_http_addr = "127.0.0.1:28513".to_owned();
+				defaults.p2p_config.port = 28514;
 				defaults.p2p_config.seeding_type = p2p::Seeding::None;
 				defaults
 					.stratum_mining_config
 					.as_mut()
 					.unwrap()
-					.stratum_server_addr = Some("127.0.0.1:23416".to_owned());
+					.stratum_server_addr = Some("127.0.0.1:28516".to_owned());
 				defaults
 					.stratum_mining_config
 					.as_mut()
 					.unwrap()
-					.wallet_listener_url = "http://127.0.0.1:23415".to_owned();
+					.wallet_listener_url = "http://127.0.0.1:28515".to_owned();
 			}
 			global::ChainTypes::AutomatedTesting => {
 				panic!("Can't run automated testing directly");
@@ -368,12 +368,12 @@ impl GlobalWalletConfig {
 		match *chain_type {
 			global::ChainTypes::Mainnet => {}
 			global::ChainTypes::Floonet => {
-				defaults.api_listen_port = 13415;
-				defaults.check_node_api_http_addr = "http://127.0.0.1:13413".to_owned();
+				defaults.api_listen_port = 18515;
+				defaults.check_node_api_http_addr = "http://127.0.0.1:18513".to_owned();
 			}
 			global::ChainTypes::UserTesting => {
-				defaults.api_listen_port = 23415;
-				defaults.check_node_api_http_addr = "http://127.0.0.1:23413".to_owned();
+				defaults.api_listen_port = 28515;
+				defaults.check_node_api_http_addr = "http://127.0.0.1:28513".to_owned();
 			}
 			global::ChainTypes::AutomatedTesting => {
 				panic!("Can't run automated testing directly");

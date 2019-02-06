@@ -20,7 +20,7 @@ tls_certificate_key =  "/path/to/my/cerificate/privkey.pem"
 If you have Stratum server enabled (you run a miner) make sure that wallet listener URL starts with `https` in node config (by default `~/.bitgrin/bitgrin-server.toml`):
 
 ```toml
-wallet_listener_url = "https://bitgrin1.example.com:13415"
+wallet_listener_url = "https://bitgrin1.example.com:18515"
 ```
 
 Make sure your user has read access to the files (see below for how to do it). Restart wallet. If you changed your node configuration restart `bitgrin` too. When you (or someone else) send bitgrins to this wallet the destination (`-d` option) must start with `https://`, not with `http://`.

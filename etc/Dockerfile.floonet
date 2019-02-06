@@ -42,7 +42,7 @@ RUN bitgrin --floonet server config && \
 
 VOLUME ["/root/.bitgrin"]
 
-EXPOSE 13413 13414 13415 13416
+EXPOSE 18513 18514 18515 18516
 
 ENTRYPOINT ["bitgrin", "--floonet"]
 

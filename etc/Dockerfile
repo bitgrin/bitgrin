@@ -42,7 +42,7 @@ RUN bitgrin server config && \
 
 VOLUME ["/root/.bitgrin"]
 
-EXPOSE 3413 3414 3415 3416
+EXPOSE 8513 8514 8515 8516
 
 ENTRYPOINT ["bitgrin"]
 

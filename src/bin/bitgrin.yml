@@ -61,7 +61,7 @@ subcommands:
             about: Ban peer
             args:
               - peer:
-                  help: Peer ip and port (e.g. 10.12.12.13:13414)
+                  help: Peer ip and port (e.g. 10.12.12.13:18514)
                   short: p
                   long: peer
                   required: true
@@ -70,7 +70,7 @@ subcommands:
             about: Unban peer
             args:
               - peer:
-                  help: Peer ip and port (e.g. 10.12.12.13:13414)
+                  help: Peer ip and port (e.g. 10.12.12.13:18514)
                   short: p
                   long: peer
                   required: true

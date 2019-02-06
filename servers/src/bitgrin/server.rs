@@ -322,7 +322,7 @@ impl Server {
 		let sync_state = self.sync_state.clone();
 		let config_wallet_url = match wallet_listener_url.clone() {
 			Some(u) => u,
-			None => String::from("http://127.0.0.1:13415"),
+			None => String::from("http://127.0.0.1:18515"),
 		};
 
 		let config = StratumServerConfig {
