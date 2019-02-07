@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mimblewimble/bitgrin.svg?branch=master)](https://travis-ci.org/mimblewimble/bitgrin) [![Gitter chat](https://badges.gitter.im/bitgrin_community/Lobby.png)](https://gitter.im/bitgrin_community/Lobby) [![Codecov coverage status](https://codecov.io/gh/mimblewimble/bitgrin/branch/master/graph/badge.svg)](https://codecov.io/gh/mimblewimble/bitgrin)
+[![Build Status](https://travis-ci.org/bitgrin/bitgrin.svg?branch=master)](https://travis-ci.org/bitgrin/bitgrin)
 
 # BitGrin
 
@@ -8,7 +8,7 @@ BitGrin is an in-progress implementation of the MimbleWimble protocol. Many char
   * Follows the MimbleWimble protocol, which provides great anonymity and scaling characteristics.
   * Cuckoo Cycle proof of work.
   * Relatively fast block time (a minute).
-  * Fixed block reward over time with a decreasing dilution.
+  * Decreasing block reward over time.
   * Transaction fees are based on the number of Outputs created/destroyed and total transaction size.
   * Smooth curve for difficulty adjustments.
 
@@ -21,12 +21,6 @@ BitGrin is still an infant, much is left to be done and [contributions](CONTRIBU
 ## Contributing
 
 To get involved, read our [contributing docs](CONTRIBUTING.md).
-
-Find us:
-
-* Chat: [Gitter](https://gitter.im/bitgrin_community/Lobby).
-* Mailing list: join the [~MimbleWimble team](https://launchpad.net/~mimblewimble) and subscribe on Launchpad.
-* Twitter for the BitGrin council: [@bitgrincouncil](https://twitter.com/bitgrincouncil)
 
 ## Getting Started
 
