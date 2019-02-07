@@ -122,7 +122,7 @@ troubleshooting, etc.
 ## Mining in BitGrin
 
 Please note that all mining functions for BitGrin have moved into a separate, standalone package called
-[bitgrin-miner](https://github.com/mimblewimble/bitgrin-miner). Once your BitGrin code node is up and running,
+[bitgrin-miner](https://github.com/bitgrin/bitgrin-miner). Once your BitGrin code node is up and running,
 you can start mining by building and running bitgrin-miner against your running BitGrin node.
 
 For bitgrin-miner to be able to communicate with your bitgrin node, make sure that you have `enable_stratum_server = true`

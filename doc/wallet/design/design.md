@@ -11,7 +11,7 @@ the code is organized into the following components (from highest-level to lowes
 * **Command Line Client** - The command line client invoked by `bitgrin wallet [command]`, simply instantiates the other components below
     and parses command line arguments as needed.
 * **Web Wallet Client** - [Work In Progress]  A web wallet client accessible from the local machine only. Current code can be viewed here:
-  https://github.com/mimblewimble/bitgrin-web-wallet
+  https://github.com/bitgrin/bitgrin-web-wallet
 * **Static File Server** - [TBD] A means of serving up the web wallet client above to the user (still under consideration)
 * **libWallet** - A high level wallet library that provides functions for the default bitgrin wallet. The functions in here can be somewhat
   specific to how the bitgrin wallet does things, but could still be reused by 3rd party implementors following the same basic principles as bitgrin
@@ -38,7 +38,7 @@ notes on each module are worth mentioning here.
 This component is not a 3rd-party hosted 'Web Wallet' , but a client meant to be run on the local machine only by the wallet owner. It should provide
 a usable browser interface into the wallet, that should be functionally equivalent to using the command line but (hopefully) far easier to use.
 It is currently not being included by a default bitgrin build, although the required listener is currently being run by default. To build and test this
-component, see instructions on the [project page](https://github.com/mimblewimble/bitgrin-web-wallet). The 'Static File Server' is still under
+component, see instructions on the [project page](https://github.com/bitgrin/bitgrin-web-wallet). The 'Static File Server' is still under
 discussion, and concerns how to provide the web-wallet to the user in a default BitGrin build.
 
 ### Owner API / Foreign API

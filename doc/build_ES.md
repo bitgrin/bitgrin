@@ -31,7 +31,7 @@ apt install build-essential cmake git libgit2-dev clang libncurses5-dev libncurs
 ## Pasos para la compilación
 
 ```sh
-git clone https://github.com/mimblewimble/bitgrin.git
+git clone https://github.com/bitgrin/bitgrin.git
 cd bitgrin
 cargo build --release
 ```
@@ -103,4 +103,4 @@ La página de la wiki [Cómo usar bitgrin](https://github.com/mimblewimble/docs/
 
 ## Minando en BitGrin
 
-Tenga en cuenta que todas las funciones de minería de BitGrin se han trasladado a un paquete independiente llamado [bitgrin_minner](https://github.com/mimblewimble/bitgrin-miner). Una vez que el nodo de bitgrin esté listo y funcionando, puede empezar a minar compilando y ejecutando bitgrin-miner con su nodo BitGrin en funcionamiento.
+Tenga en cuenta que todas las funciones de minería de BitGrin se han trasladado a un paquete independiente llamado [bitgrin_minner](https://github.com/bitgrin/bitgrin-miner). Una vez que el nodo de bitgrin esté listo y funcionando, puede empezar a minar compilando y ejecutando bitgrin-miner con su nodo BitGrin en funcionamiento.

@@ -83,4 +83,4 @@ A simulation of this scenario is available [here](simulation.md).
 * [1] (Sigmetrics 2017) [Dandelion: Redesigning the Bitcoin Network for Anonymity](https://arxiv.org/abs/1701.04439)
 * [2] [Dandelion BIP](https://github.com/dandelion-org/bips/blob/master/bip-dandelion.mediawiki)
 * [3] (Sigmetrics 2018) [Dandelion++: Lightweight Cryptocurrency Networking with Formal Anonymity Guarantees](https://arxiv.org/abs/1805.11060)
-* [4] [Dandelion BitGrin Pull Request #1067](https://github.com/mimblewimble/bitgrin/pull/1067)
+* [4] [Dandelion BitGrin Pull Request #1067](https://github.com/bitgrin/bitgrin/pull/1067)

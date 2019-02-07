@@ -71,7 +71,7 @@ fn main() {
 }
 
 fn _download_and_decompress(target_file: &str) -> Result<bool, Box<std::error::Error>> {
-	let req_path = format!("https://github.com/mimblewimble/bitgrin-web-wallet/releases/download/{}/bitgrin-web-wallet.tar.gz", _WEB_WALLET_TAG);
+	let req_path = format!("https://github.com/bitgrin/bitgrin-web-wallet/releases/download/{}/bitgrin-web-wallet.tar.gz", _WEB_WALLET_TAG);
 	let mut resp = reqwest::get(&req_path)?;
 
 	if !resp.status().is_success() {
