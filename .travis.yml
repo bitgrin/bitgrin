@@ -38,21 +38,6 @@ env:
     - RUST_BACKTRACE="1"
     - RUST_FLAGS="-C debug-assertions"
 
-matrix:
-  include:
-    - os: linux
-      env: TEST_SUITE=servers
-    - os: linux
-      env: TEST_SUITE=chain-core
-    - os: linux
-      env: TEST_SUITE=pool-p2p-src
-    - os: linux
-      env: TEST_SUITE=keychain-wallet
-    - os: linux
-      env: TEST_SUITE=api-util-store
-    - os: osx
-      env: TEST_SUITE=release
-
 script:
   - echo "skipping tests"
 
