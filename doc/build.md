@@ -66,7 +66,7 @@ the current directory for all of its data. Running bitgrin from a directory that
 While testing, put the bitgrin binary on your path like this:
 
 ```sh
-export PATH=/path/to/bitgrin/dir/target/debug:$PATH
+export PATH=/path/to/bitgrin/dir/target/release:$PATH
 ```
 
 Where path/to/bitgrin/dir is your absolute path to the root directory of your BitGrin installation.
