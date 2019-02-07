@@ -85,5 +85,5 @@ deploy:
   file: target/release/bitgrin-*.tgz*
   skip_cleanup: true
   on:
-    repo: mimblewimble/bitgrin
+    repo: bitgrin/bitgrin
     tags: true
