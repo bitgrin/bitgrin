@@ -71,7 +71,7 @@ pub const WEEK_HEIGHT: u64 = 7 * DAY_HEIGHT;
 pub const YEAR_HEIGHT: u64 = 52 * WEEK_HEIGHT;
 
 /// Number of blocks before a coinbase matures and can be spent
-pub const COINBASE_MATURITY: u64 = 1;
+pub const COINBASE_MATURITY: u64 = DAY_HEIGHT;
 
 /// Dev fee at given block height
 pub fn dev_fee_at_height(height: u64) -> u64 {
