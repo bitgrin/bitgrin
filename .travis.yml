@@ -57,6 +57,7 @@ deploy:
   file_glob: true
   file: target/release/bitgrin-*.tgz*
   skip_cleanup: true
+  overwrite: true
   on:
     repo: bitgrin/bitgrin
     tags: true
