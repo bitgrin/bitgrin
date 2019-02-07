@@ -377,6 +377,10 @@ where
 	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
 	if height <= 49 {
 		difficulty = 1;
+	}
+	else if height == 50 {
+		// Give people a bit of time to set up
+		difficulty = 2_000_000;
 	} else if height <= (50 + 23) {
 		// Keep difficulty above 250k for at least long enough to become MA for difficulty correction
 		difficulty = max(250_000, difficulty);
