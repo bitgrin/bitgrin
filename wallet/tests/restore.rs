@@ -26,6 +26,7 @@ use bitgrin_keychain as keychain;
 use bitgrin_util as util;
 use bitgrin_wallet as wallet;
 use std::fs;
+use std::sync::atomic::Ordering;
 use std::thread;
 use std::time::Duration;
 
@@ -54,6 +55,7 @@ fn restore_wallet(base_dir: &str, wallet_dir: &str) -> Result<(), libwallet::Err
 	wallet_proxy.add_wallet(wallet_dir, client.get_send_instance(), wallet.clone());
 
 	// Set the wallet proxy listener running
+	let wp_running = wallet_proxy.running.clone();
 	thread::spawn(move || {
 		if let Err(e) = wallet_proxy.run() {
 			error!("Wallet Proxy error: {}", e);
@@ -67,6 +69,7 @@ fn restore_wallet(base_dir: &str, wallet_dir: &str) -> Result<(), libwallet::Err
 		Ok(())
 	})?;
 
+	wp_running.store(false, Ordering::Relaxed);
 	Ok(())
 }
 
@@ -108,6 +111,7 @@ fn compare_wallet_restore(
 	}
 
 	// Set the wallet proxy listener running
+	let wp_running = wallet_proxy.running.clone();
 	thread::spawn(move || {
 		if let Err(e) = wallet_proxy.run() {
 			error!("Wallet Proxy error: {}", e);
@@ -164,6 +168,8 @@ fn compare_wallet_restore(
 		dest_accts.as_ref().unwrap().len()
 	);
 
+	wp_running.store(false, Ordering::Relaxed);
+
 	Ok(())
 }
 
@@ -208,6 +214,7 @@ fn setup_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 	wallet_proxy.add_wallet("wallet3", client3.get_send_instance(), wallet3.clone());
 
 	// Set the wallet proxy listener running
+	let wp_running = wallet_proxy.running.clone();
 	thread::spawn(move || {
 		if let Err(e) = wallet_proxy.run() {
 			error!("Wallet Proxy error: {}", e);
@@ -327,17 +334,22 @@ fn setup_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 		Ok(())
 	})?;
 
+	wp_running.store(false, Ordering::Relaxed);
+
+
+
+
 	Ok(())
 }
 
 fn perform_restore(test_dir: &str) -> Result<(), libwallet::Error> {
-	restore_wallet(test_dir, "wallet1")?;
+	restore_wallet(&format!("{}_r1", test_dir), "wallet1")?;
 	compare_wallet_restore(
 		test_dir,
 		"wallet1",
 		&ExtKeychain::derive_key_id(2, 0, 0, 0, 0),
 	)?;
-	restore_wallet(test_dir, "wallet2")?;
+	restore_wallet(&format!("{}_r2", test_dir), "wallet2")?;
 	compare_wallet_restore(
 		test_dir,
 		"wallet2",
@@ -353,7 +365,7 @@ fn perform_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 		"wallet2",
 		&ExtKeychain::derive_key_id(2, 2, 0, 0, 0),
 	)?;
-	restore_wallet(test_dir, "wallet3")?;
+	restore_wallet(&format!("{}_r3", test_dir), "wallet3")?;
 	compare_wallet_restore(
 		test_dir,
 		"wallet3",
