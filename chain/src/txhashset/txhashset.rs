@@ -18,7 +18,7 @@
 use crate::core::core::committed::Committed;
 use crate::core::core::hash::{Hash, Hashed};
 use crate::core::core::merkle_proof::MerkleProof;
-use crate::core::core::pmmr::{self, ReadonlyPMMR, RewindablePMMR, PMMR};
+use crate::core::core::pmmr::{self, Backend, ReadonlyPMMR, RewindablePMMR, PMMR};
 use crate::core::core::{
 	Block, BlockHeader, Input, Output, OutputIdentifier, TxKernel, TxKernelEntry,
 };
@@ -153,6 +153,15 @@ impl TxHashSet {
 		})
 	}
 
+	/// Close all backend file handles
+	pub fn release_backend_files(&mut self) {
+		self.header_pmmr_h.backend.release_files();	
+		self.sync_pmmr_h.backend.release_files();	
+		self.output_pmmr_h.backend.release_files();	
+		self.rproof_pmmr_h.backend.release_files();	
+		self.kernel_pmmr_h.backend.release_files();	
+	}
+	
 	/// Check if an output is unspent.
 	/// We look in the index to find the output MMR pos.
 	/// Then we check the entry in the output MMR and confirm the hash matches.
