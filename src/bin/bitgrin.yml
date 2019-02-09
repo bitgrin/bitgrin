@@ -44,10 +44,6 @@ subcommands:
       subcommands:
         - config:
             about: Generate a configuration bitgrin-server.toml file in the current directory
-        - start:
-            about: Start the BitGrin server as a daemon
-        - stop:
-            about: Stop the BitGrin server daemon
         - run:
             about: Run the BitGrin server in this console
   - client:
