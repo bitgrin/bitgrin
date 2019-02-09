@@ -101,6 +101,11 @@ where
 		self.file.path()
 	}
 
+	/// Drop underlying file handles
+	pub fn release(&mut self){
+		self.file.release();
+	}
+
 	/// Write the file out to disk, pruning removed elements.
 	pub fn save_prune<F>(&self, target: &str, prune_offs: &[u64], prune_cb: F) -> io::Result<()>
 	where
@@ -311,6 +316,12 @@ impl AppendOnlyFile {
 				read += len;
 			}
 		}
+	}
+
+	/// Release underlying file handles
+	pub fn release(&mut self) {
+		self.mmap = None;
+		self.file = None;
 	}
 
 	/// Current size of the file in bytes.

@@ -857,6 +857,11 @@ impl Chain {
 		}
 
 		let header = self.get_block_header(&h)?;
+		{
+			let mut txhashset_Ref = self.txhashset.write();
+			// Drop file handles in underlying txhashset
+			txhashset_ref.release_backend_files();
+		}
 		txhashset::zip_write(self.db_root.clone(), txhashset_data, &header)?;
 
 		let mut txhashset =
