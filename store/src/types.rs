@@ -173,7 +173,7 @@ impl AppendOnlyFile {
 			self.buffer_start = sz as usize;
 			self.mmap = Some(unsafe { memmap::Mmap::map(&self.file.as_ref().unwrap())? });
 		}
-		Ok(()))
+		Ok(())
 	}
 
 	/// Append data to the file. Until the append-only file is synced, data is
@@ -347,7 +347,7 @@ impl AppendOnlyFile {
 			}
 		}
 	}
-	
+
 	/// Replace the underlying file with another file
 	/// deleting the original
 	pub fn replace(&mut self, with: &Path) -> io::Result<()> {
