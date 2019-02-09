@@ -43,6 +43,15 @@ bitgrin_servers = { path = "./servers", version = "1.0.0" }
 bitgrin_util = { path = "./util", version = "1.0.0" }
 bitgrin_wallet = { path = "./wallet", version = "1.0.0" }
 
+
+[target.'cfg(windows)'.dependencies]
+cursive = { version = "0.10.0", default-features = false, features = ["pancurses-backend"] }
+[target.'cfg(unix)'.dependencies]
+cursive = "0.9.0"
+
+[dependencies.pancurses]
+features = ["win32"]
+
 [build-dependencies]
 built = "0.3"
 reqwest = "0.9"
