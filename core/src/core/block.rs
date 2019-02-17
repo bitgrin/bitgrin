@@ -22,7 +22,7 @@ use std::fmt;
 use std::iter::FromIterator;
 use std::sync::Arc;
 
-use crate::consensus::{reward, reward_at_height};
+use crate::consensus::{reward, reward_at_height, total_overage_at_height};
 use crate::core::committed::{self, Committed};
 use crate::core::compact_block::{CompactBlock, CompactBlockBody};
 use crate::core::hash::{Hash, Hashed, ZERO_HASH};
@@ -327,12 +327,7 @@ impl BlockHeader {
 	/// The "total overage" to use when verifying the kernel sums for a full
 	/// chain state. For a full chain state this is 0 - (height * reward).
 	pub fn total_overage(&self, genesis_had_reward: bool) -> i64 {
-		let mut reward_count = self.height;
-		if genesis_had_reward {
-			reward_count += 1;
-		}
-
-		((reward_count * reward_at_height(self.height).0) as i64)
+		total_overage_at_height(self.height)
 			.checked_neg()
 			.unwrap_or(0)
 	}
