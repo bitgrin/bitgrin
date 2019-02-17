@@ -103,6 +103,17 @@ pub fn adjusted_block_reward() -> u64 {
 	return (4.5 * BITGRIN_BASE as f64) as u64;
 }
 
+/// The total overage at a given height. Variable due to changing rewards
+/// TODOBG: Make this more efficient by hardcoding reward schedule times
+pub fn total_overage_at_height(height: u64) -> i64 {
+	let mut sum: i64 = 0;
+	for i in 0..=height {
+		let reward = reward_at_height(i as u64).0 as i64;
+		sum += reward;
+	}
+	return sum;
+}
+
 /// Returns (reward, height_offset) at given height
 pub fn reward_at_height(height: u64) -> (u64, u64) {
 	if height == 0 {
