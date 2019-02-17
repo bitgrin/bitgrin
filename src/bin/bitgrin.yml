@@ -1,5 +1,5 @@
 name: bitgrin
-version: "0.0.9"
+version: "1.0.0"
 about: Lightweight implementation of the MimbleWimble protocol.
 author: The BitGrin Team
 
