@@ -91,6 +91,10 @@ where
 		let basic_realm = "Basic realm=BitGrinOwnerAPI".to_string();
 		let basic_auth_middleware = Arc::new(BasicAuthMiddleware::new(api_basic_auth, basic_realm));
 		router.add_middleware(basic_auth_middleware);
+		info!("Api Secret present...");
+	}
+	else {
+		info!("No API Secret present.");
 	}
 	router
 		.add_route("/v1/wallet/owner/**", Arc::new(api_handler))

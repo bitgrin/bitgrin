@@ -381,10 +381,6 @@ where
 		CLAMP_FACTOR,
 	);
 	// minimum difficulty avoids getting stuck due to dampening
-	error!(
-		"height: {}  min_difficulty: {}  diff_sum: {}  block_time_sec: {}  adj_ts: {}",
-		height, MIN_DIFFICULTY, diff_sum, BLOCK_TIME_SEC, adj_ts
-	);
 	let mut difficulty = max(MIN_DIFFICULTY, diff_sum * BLOCK_TIME_SEC / adj_ts);
 	if height <= 49 {
 		difficulty = 1;
