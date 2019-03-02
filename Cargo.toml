@@ -1,7 +1,7 @@
 [package]
 name = "bitgrin"
 version = "1.0.2"
-authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
+authors = ["BitGrin Developers <bitgrin@protonmail.com>"]
 description = "Simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
@@ -46,11 +46,12 @@ bitgrin_wallet = { path = "./wallet", version = "1.0.0" }
 
 [target.'cfg(windows)'.dependencies]
 cursive = { version = "0.10.0", default-features = false, features = ["pancurses-backend"] }
+[target.'cfg(windows)'.dependencies.pancurses]
+version = "0.16.0"
+features = ["win32"]
 [target.'cfg(unix)'.dependencies]
 cursive = "0.9.0"
 
-[dependencies.pancurses]
-features = ["win32"]
 
 [build-dependencies]
 built = "0.3"

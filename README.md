@@ -4,10 +4,10 @@
 
 BitGrin is an in-progress implementation of the MimbleWimble protocol. Many characteristics are still undefined but the following constitutes a first set of choices:
 
-  * Clean and minimal implementation, aiming to stay as such.
+  * Clean and minimal implementation, and aiming to stay as such.
   * Follows the MimbleWimble protocol, which provides great anonymity and scaling characteristics.
-  * Cuckoo Cycle proof of work.
-  * Relatively fast block time (a minute).
+  * Cuckoo Cycle proof of work in two variants named Cuckaroo (ASIC-resistant) and Cuckatoo (ASIC-targeted).
+  * Relatively fast block time: one minute.
   * Decreasing block reward over time.
   * Transaction fees are based on the number of Outputs created/destroyed and total transaction size.
   * Smooth curve for difficulty adjustments.
@@ -16,7 +16,7 @@ To learn more, read our [introduction to MimbleWimble and BitGrin](doc/intro.md)
 
 ## Status
 
-BitGrin is still an infant, much is left to be done and [contributions](CONTRIBUTING.md) are welcome (see below). Check our [mailing list archives](https://lists.launchpad.net/mimblewimble/) for the latest status.
+BitGrin is live, but still an infant, much is left to be done and [contributions](CONTRIBUTING.md) are welcome (see below).
 
 ## Contributing
 

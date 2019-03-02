@@ -16,8 +16,8 @@
 extern crate log;
 use self::core::global;
 use self::core::global::ChainTypes;
-use self::core::libtx::slate::Slate;
 use self::keychain::{ExtKeychain, Identifier, Keychain};
+use self::libwallet::slate::Slate;
 use self::wallet::libwallet;
 use self::wallet::libwallet::types::AcctPathMapping;
 use self::wallet::test_framework::{self, LocalWalletClient, WalletProxy};
@@ -45,6 +45,7 @@ fn restore_wallet(base_dir: &str, wallet_dir: &str) -> Result<(), libwallet::Err
 	let dest_dir = format!("{}/{}_restore", base_dir, wallet_dir);
 	fs::create_dir_all(dest_dir.clone())?;
 	let dest_seed = format!("{}/wallet.seed", dest_dir);
+	println!("Source: {}, Dest: {}", source_seed, dest_seed);
 	fs::copy(source_seed, dest_seed)?;
 
 	let mut wallet_proxy: WalletProxy<LocalWalletClient, ExtKeychain> = WalletProxy::new(base_dir);
@@ -233,7 +234,6 @@ fn setup_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 		let (slate_i, lock_fn) = sender_api.initiate_tx(
 			None, amount, // amount
 			2,      // minimum confirmations
-			500,    // max outputs
 			1,      // num change outputs
 			true,   // select all outputs
 			None,
@@ -255,7 +255,6 @@ fn setup_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 			None,
 			amount * 2, // amount
 			2,          // minimum confirmations
-			500,        // max outputs
 			1,          // num change outputs
 			true,       // select all outputs
 			None,
@@ -277,7 +276,6 @@ fn setup_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 			None,
 			amount * 3, // amount
 			2,          // minimum confirmations
-			500,        // max outputs
 			1,          // num change outputs
 			true,       // select all outputs
 			None,
@@ -305,7 +303,6 @@ fn setup_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 			None,
 			amount * 3, // amount
 			2,          // minimum confirmations
-			500,        // max outputs
 			1,          // num change outputs
 			true,       // select all outputs
 			None,
@@ -378,10 +375,10 @@ fn perform_restore(test_dir: &str) -> Result<(), libwallet::Error> {
 fn wallet_restore() {
 	let test_dir = "test_output/wallet_restore";
 	if let Err(e) = setup_restore(test_dir) {
-		println!("Set up restore: Libwallet Error: {}", e);
+		panic!("Libwallet Error: {} - {}", e, e.backtrace().unwrap());
 	}
 	if let Err(e) = perform_restore(test_dir) {
-		println!("Perform restore: Libwallet Error: {}", e);
+		panic!("Libwallet Error: {} - {}", e, e.backtrace().unwrap());
 	}
 	// let logging finish
 	thread::sleep(Duration::from_millis(200));

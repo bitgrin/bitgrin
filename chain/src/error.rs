@@ -89,9 +89,15 @@ pub enum ErrorKind {
 	/// Error validating a Merkle proof (coinbase output)
 	#[fail(display = "Error validating merkle proof")]
 	MerkleProof,
-	/// output not found
+	/// Output not found
 	#[fail(display = "Output not found")]
 	OutputNotFound,
+	/// Rangeproof not found
+	#[fail(display = "Rangeproof not found")]
+	RangeproofNotFound,
+	/// Tx kernel not found
+	#[fail(display = "Tx kernel not found")]
+	TxKernelNotFound,
 	/// output spent
 	#[fail(display = "Output is spent")]
 	OutputSpent,
@@ -102,7 +108,7 @@ pub enum ErrorKind {
 	#[fail(display = "Invalid TxHashSet: {}", _0)]
 	InvalidTxHashSet(String),
 	/// Internal issue when trying to save or load data from store
-	#[fail(display = "Store Error: {}", _1)]
+	#[fail(display = "Store Error: {}, reason: {}", _1, _0)]
 	StoreErr(store::Error, String),
 	/// Internal issue when trying to save or load data from append only files
 	#[fail(display = "File Read Error: {}", _0)]
@@ -131,6 +137,9 @@ pub enum ErrorKind {
 	/// We cannot process data once the BitGrin server has been stopped.
 	#[fail(display = "Stopped (BitGrin Shutting Down)")]
 	Stopped,
+	/// Internal Roaring Bitmap error
+	#[fail(display = "Roaring Bitmap error")]
+	Bitmap,
 }
 
 impl Display for Error {

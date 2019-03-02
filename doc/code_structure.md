@@ -44,7 +44,7 @@ After checking out bitgrin, building and using, these are the folders you'll hav
 - `src`\
   Code for the `bitgrin` binary.
 - `store`\
-  Data store - a thin wrapper for Rocksdb, a key-value database forked from LevelDB.
+  Data store - Grin uses near-zero-cost Rust wrapper around LMDB, key-value embedded data store.
 - `target`\
   Where the bitgrin binary ends up, after the compile and build process finishes.
   In case of trouble, see [troubleshooting](https://github.com/mimblewimble/docs/wiki/Troubleshooting)

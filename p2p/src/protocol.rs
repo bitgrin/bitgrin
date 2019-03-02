@@ -16,7 +16,6 @@ use std::cmp;
 use std::env;
 use std::fs::File;
 use std::io::{BufWriter, Write};
-use std::net::SocketAddr;
 use std::sync::Arc;
 
 use crate::conn::{Message, MessageHandler, Response};
@@ -25,18 +24,18 @@ use crate::util::{RateCounter, RwLock};
 use chrono::prelude::Utc;
 
 use crate::msg::{
-	BanReason, GetPeerAddrs, Headers, Locator, PeerAddrs, Ping, Pong, SockAddr, TxHashSetArchive,
+	BanReason, GetPeerAddrs, Headers, Locator, PeerAddrs, Ping, Pong, TxHashSetArchive,
 	TxHashSetRequest, Type,
 };
-use crate::types::{Error, NetAdapter};
+use crate::types::{Error, NetAdapter, PeerAddr};
 
 pub struct Protocol {
 	adapter: Arc<dyn NetAdapter>,
-	addr: SocketAddr,
+	addr: PeerAddr,
 }
 
 impl Protocol {
-	pub fn new(adapter: Arc<dyn NetAdapter>, addr: SocketAddr) -> Protocol {
+	pub fn new(adapter: Arc<dyn NetAdapter>, addr: PeerAddr) -> Protocol {
 		Protocol { adapter, addr }
 	}
 }
@@ -73,7 +72,7 @@ impl MessageHandler for Protocol {
 						height: adapter.total_height(),
 					},
 					writer,
-				)))
+				)?))
 			}
 
 			Type::Pong => {
@@ -106,7 +105,7 @@ impl MessageHandler for Protocol {
 				);
 				let tx = adapter.get_transaction(h);
 				if let Some(tx) = tx {
-					Ok(Some(Response::new(Type::Transaction, tx, writer)))
+					Ok(Some(Response::new(Type::Transaction, tx, writer)?))
 				} else {
 					Ok(None)
 				}
@@ -142,7 +141,7 @@ impl MessageHandler for Protocol {
 
 				let bo = adapter.get_block(h);
 				if let Some(b) = bo {
-					return Ok(Some(Response::new(Type::Block, b, writer)));
+					return Ok(Some(Response::new(Type::Block, b, writer)?));
 				}
 				Ok(None)
 			}
@@ -164,7 +163,7 @@ impl MessageHandler for Protocol {
 				let h: Hash = msg.body()?;
 				if let Some(b) = adapter.get_block(h) {
 					let cb: CompactBlock = b.into();
-					Ok(Some(Response::new(Type::CompactBlock, cb, writer)))
+					Ok(Some(Response::new(Type::CompactBlock, cb, writer)?))
 				} else {
 					Ok(None)
 				}
@@ -191,7 +190,7 @@ impl MessageHandler for Protocol {
 					Type::Headers,
 					Headers { headers },
 					writer,
-				)))
+				)?))
 			}
 
 			// "header first" block propagation - if we have not yet seen this block
@@ -231,19 +230,17 @@ impl MessageHandler for Protocol {
 
 			Type::GetPeerAddrs => {
 				let get_peers: GetPeerAddrs = msg.body()?;
-				let peer_addrs = adapter.find_peer_addrs(get_peers.capabilities);
+				let peers = adapter.find_peer_addrs(get_peers.capabilities);
 				Ok(Some(Response::new(
 					Type::PeerAddrs,
-					PeerAddrs {
-						peers: peer_addrs.iter().map(|sa| SockAddr(*sa)).collect(),
-					},
+					PeerAddrs { peers },
 					writer,
-				)))
+				)?))
 			}
 
 			Type::PeerAddrs => {
 				let peer_addrs: PeerAddrs = msg.body()?;
-				adapter.peer_addrs_received(peer_addrs.peers.iter().map(|pa| pa.0).collect());
+				adapter.peer_addrs_received(peer_addrs.peers);
 				Ok(None)
 			}
 
@@ -266,7 +263,7 @@ impl MessageHandler for Protocol {
 							bytes: file_sz,
 						},
 						writer,
-					);
+					)?;
 					resp.add_attachment(txhashset.reader);
 					Ok(Some(resp))
 				} else {
@@ -315,7 +312,10 @@ impl MessageHandler for Protocol {
 							received_bytes.inc_quiet(size as u64);
 						}
 					}
-					tmp_zip.into_inner().unwrap().sync_all()?;
+					tmp_zip
+						.into_inner()
+						.map_err(|_| Error::Internal)?
+						.sync_all()?;
 					Ok(())
 				};
 
