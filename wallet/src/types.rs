@@ -71,7 +71,7 @@ pub struct WalletConfig {
 impl Default for WalletConfig {
 	fn default() -> WalletConfig {
 		WalletConfig {
-			chain_type: Some(ChainTypes::Floonet),
+			chain_type: Some(ChainTypes::Mainnet),
 			api_listen_interface: "127.0.0.1".to_string(),
 			api_listen_port: 8515,
 			owner_api_listen_port: Some(WalletConfig::default_owner_api_listen_port()),
@@ -93,7 +93,7 @@ impl WalletConfig {
 	pub fn api_listen_addr(&self) -> String {
 		format!("{}:{}", self.api_listen_interface, self.api_listen_port)
 	}
-	
+
 	pub fn default_owner_api_listen_port() -> u16 {
 		8520
 	}
@@ -106,7 +106,7 @@ impl WalletConfig {
 
 	pub fn owner_api_listen_addr(&self) -> String {
 		format!("127.0.0.1:{}", self.owner_api_listen_port())
-	}	
+	}
 }
 
 #[derive(Clone, Debug, PartialEq)]

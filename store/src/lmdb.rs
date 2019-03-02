@@ -59,19 +59,21 @@ pub fn option_to_not_found<T>(res: Result<Option<T>, Error>, field_name: &str) -
 /// Be aware of transactional semantics in lmdb
 /// (transactions are per environment, not per database).
 pub fn new_env(path: String) -> lmdb::Environment {
-	new_named_env(path, "lmdb".into())
+	new_named_env(path, "lmdb".into(), None)
 }
 
 /// TODO - We probably need more flexibility here, 500GB probably too big for peers...
 /// Create a new LMDB env under the provided directory with the provided name.
-pub fn new_named_env(path: String, name: String) -> lmdb::Environment {
+pub fn new_named_env(path: String, name: String, max_readers: Option<u32>) -> lmdb::Environment {
 	let full_path = [path, name].join("/");
-	fs::create_dir_all(&full_path).unwrap();
+	fs::create_dir_all(&full_path)
+		.expect("Unable to create directory 'db_root' to store chain_data");
 
 	let mut env_builder = lmdb::EnvBuilder::new().unwrap();
 	env_builder.set_maxdbs(8).unwrap();
 	// half a TB should give us plenty room, will be an issue on 32 bits
 	// (which we don't support anyway)
+
 	#[cfg(not(target_os = "windows"))]
 	env_builder.set_mapsize(5_368_709_120).unwrap_or_else(|e| {
 		panic!("Unable to allocate LMDB space: {:?}", e);
@@ -83,9 +85,15 @@ pub fn new_named_env(path: String, name: String) -> lmdb::Environment {
 	env_builder.set_mapsize(524_288_000).unwrap_or_else(|e| {
 		panic!("Unable to allocate LMDB space: {:?}", e);
 	});
+
+	if let Some(max_readers) = max_readers {
+		env_builder
+			.set_maxreaders(max_readers)
+			.expect("Unable set max_readers");
+	}
 	unsafe {
 		env_builder
-			.open(&full_path, lmdb::open::Flags::empty(), 0o600)
+			.open(&full_path, lmdb::open::NOTLS, 0o600)
 			.unwrap()
 	}
 }
@@ -154,11 +162,11 @@ impl Store {
 		res.to_opt().map(|r| r.is_some()).map_err(From::from)
 	}
 
-	/// Produces an iterator of `Readable` types moving forward from the
-	/// provided key.
+	/// Produces an iterator of (key, value) pairs, where values are `Readable` types
+	/// moving forward from the provided key.
 	pub fn iter<T: ser::Readable>(&self, from: &[u8]) -> Result<SerIterator<T>, Error> {
 		let tx = Arc::new(lmdb::ReadTransaction::new(self.env.clone())?);
-		let cursor = Arc::new(tx.cursor(self.db.clone()).unwrap());
+		let cursor = Arc::new(tx.cursor(self.db.clone())?);
 		Ok(SerIterator {
 			tx,
 			cursor,
@@ -265,9 +273,9 @@ impl<T> Iterator for SerIterator<T>
 where
 	T: ser::Readable,
 {
-	type Item = T;
+	type Item = (Vec<u8>, T);
 
-	fn next(&mut self) -> Option<T> {
+	fn next(&mut self) -> Option<(Vec<u8>, T)> {
 		let access = self.tx.access();
 		let kv = if self.seek {
 			Arc::get_mut(&mut self.cursor).unwrap().next(&access)
@@ -277,7 +285,10 @@ where
 				.unwrap()
 				.seek_range_k(&access, &self.prefix[..])
 		};
-		self.deser_if_prefix_match(kv)
+		match kv {
+			Ok((k, v)) => self.deser_if_prefix_match(k, v),
+			Err(_) => None,
+		}
 	}
 }
 
@@ -285,17 +296,16 @@ impl<T> SerIterator<T>
 where
 	T: ser::Readable,
 {
-	fn deser_if_prefix_match(&self, kv: Result<(&[u8], &[u8]), lmdb::Error>) -> Option<T> {
-		match kv {
-			Ok((k, v)) => {
-				let plen = self.prefix.len();
-				if plen == 0 || k[0..plen] == self.prefix[..] {
-					ser::deserialize(&mut &v[..]).ok()
-				} else {
-					None
-				}
+	fn deser_if_prefix_match(&self, key: &[u8], value: &[u8]) -> Option<(Vec<u8>, T)> {
+		let plen = self.prefix.len();
+		if plen == 0 || key[0..plen] == self.prefix[..] {
+			if let Ok(value) = ser::deserialize(&mut &value[..]) {
+				Some((key.to_vec(), value))
+			} else {
+				None
 			}
-			Err(_) => None,
+		} else {
+			None
 		}
 	}
 }

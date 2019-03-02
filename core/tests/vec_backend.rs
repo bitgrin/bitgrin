@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use self::core::core::hash::Hash;
+use self::core::core::hash::{DefaultHashable, Hash};
 use self::core::core::pmmr::{self, Backend};
 use self::core::core::BlockHeader;
 use self::core::ser;
@@ -24,6 +24,8 @@ use std::path::Path;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct TestElem(pub [u32; 4]);
+
+impl DefaultHashable for TestElem {}
 
 impl FixedLength for TestElem {
 	const LEN: usize = 16;
@@ -102,6 +104,10 @@ impl<T: PMMRable> Backend<T> for VecBackend<T> {
 		Some(data.as_elmt())
 	}
 
+	fn leaf_pos_iter(&self) -> Box<Iterator<Item = u64> + '_> {
+		unimplemented!()
+	}
+
 	fn remove(&mut self, position: u64) -> Result<(), String> {
 		self.remove_list.push(position);
 		Ok(())
@@ -121,6 +127,8 @@ impl<T: PMMRable> Backend<T> for VecBackend<T> {
 	fn get_data_file_path(&self) -> &Path {
 		Path::new("")
 	}
+
+	fn release_files(&mut self) {}
 
 	fn dump_stats(&self) {}
 }

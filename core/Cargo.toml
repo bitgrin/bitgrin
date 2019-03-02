@@ -30,3 +30,6 @@ chrono = "0.4.4"
 
 bitgrin_keychain = { path = "../keychain", version = "1.0.0" }
 bitgrin_util = { path = "../util", version = "1.0.0" }
+
+[dev-dependencies]
+serde_json = "1"

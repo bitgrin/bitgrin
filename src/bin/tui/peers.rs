@@ -22,12 +22,13 @@ use crate::tui::humansize::{file_size_opts::CONVENTIONAL, FileSize};
 use chrono::prelude::*;
 
 use cursive::direction::Orientation;
+use cursive::event::Key;
 use cursive::traits::{Boxable, Identifiable};
 use cursive::view::View;
-use cursive::views::{BoxView, Dialog, LinearLayout, TextView};
+use cursive::views::{BoxView, Dialog, LinearLayout, OnEventView, TextView};
 use cursive::Cursive;
 
-use crate::tui::constants::{TABLE_PEER_STATUS, VIEW_PEER_SYNC};
+use crate::tui::constants::{MAIN_MENU, TABLE_PEER_STATUS, VIEW_PEER_SYNC};
 use crate::tui::table::{TableView, TableViewItem};
 use crate::tui::types::TUIStatusListener;
 
@@ -134,7 +135,6 @@ impl TUIStatusListener for TUIPeerView {
 			LinearLayout::new(Orientation::Vertical)
 				.child(
 					LinearLayout::new(Orientation::Horizontal)
-						.child(TextView::new("Total Peers: "))
 						.child(TextView::new("  ").with_id("peers_total")),
 				)
 				.child(
@@ -149,6 +149,12 @@ impl TUIStatusListener for TUIPeerView {
 				),
 		)
 		.with_id(VIEW_PEER_SYNC);
+
+		let peer_status_view =
+			OnEventView::new(peer_status_view).on_pre_event(Key::Esc, move |c| {
+				let _ = c.focus_id(MAIN_MENU);
+			});
+
 		Box::new(peer_status_view)
 	}
 
@@ -172,7 +178,15 @@ impl TUIStatusListener for TUIPeerView {
 			},
 		);
 		let _ = c.call_on_id("peers_total", |t: &mut TextView| {
-			t.set_content(stats.peer_stats.len().to_string());
+			t.set_content(format!(
+				"Total Peers: {} (Outbound: {})",
+				stats.peer_stats.len(),
+				stats
+					.peer_stats
+					.iter()
+					.filter(|x| x.direction == "Outbound")
+					.count(),
+			));
 		});
 		let _ = c.call_on_id("longest_work_peer", |t: &mut TextView| {
 			t.set_content(lp_str);

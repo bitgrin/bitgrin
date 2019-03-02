@@ -16,7 +16,6 @@
 
 use num::FromPrimitive;
 use std::io::{Read, Write};
-use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
 use std::time;
 
 use crate::core::core::hash::Hash;
@@ -25,7 +24,7 @@ use crate::core::pow::Difficulty;
 use crate::core::ser::{self, FixedLength, Readable, Reader, StreamingReader, Writeable, Writer};
 use crate::core::{consensus, global};
 use crate::types::{
-	Capabilities, Error, ReasonForBan, MAX_BLOCK_HEADERS, MAX_LOCATORS, MAX_PEER_ADDRS,
+	Capabilities, Error, PeerAddr, ReasonForBan, MAX_BLOCK_HEADERS, MAX_LOCATORS, MAX_PEER_ADDRS,
 };
 use crate::util::read_write::read_exact;
 
@@ -39,10 +38,6 @@ pub const USER_AGENT: &'static str = concat!("MW/BitGrin ", env!("CARGO_PKG_VERS
 const OTHER_MAGIC: [u8; 2] = [73, 43];
 const FLOONET_MAGIC: [u8; 2] = [83, 59];
 const MAINNET_MAGIC: [u8; 2] = [97, 61];
-
-/// Max theoretical size of a block filled with outputs.
-const MAX_BLOCK_SIZE: u64 =
-	(consensus::MAX_BLOCK_WEIGHT / consensus::BLOCK_OUTPUT_WEIGHT * 708) as u64;
 
 /// Types of messages.
 /// Note: Values here are *important* so we should only add new values at the
@@ -74,6 +69,11 @@ enum_from_primitive! {
 	}
 }
 
+/// Max theoretical size of a block filled with outputs.
+fn max_block_size() -> u64 {
+	(global::max_block_weight() / consensus::BLOCK_OUTPUT_WEIGHT * 708) as u64
+}
+
 // Max msg size for each msg type.
 fn max_msg_size(msg_type: Type) -> u64 {
 	match msg_type {
@@ -88,11 +88,11 @@ fn max_msg_size(msg_type: Type) -> u64 {
 		Type::Header => 365,
 		Type::Headers => 2 + 365 * MAX_BLOCK_HEADERS as u64,
 		Type::GetBlock => 32,
-		Type::Block => MAX_BLOCK_SIZE,
+		Type::Block => max_block_size(),
 		Type::GetCompactBlock => 32,
-		Type::CompactBlock => MAX_BLOCK_SIZE / 10,
-		Type::StemTransaction => MAX_BLOCK_SIZE,
-		Type::Transaction => MAX_BLOCK_SIZE,
+		Type::CompactBlock => max_block_size() / 10,
+		Type::StemTransaction => max_block_size(),
+		Type::Transaction => max_block_size(),
 		Type::TxHashSetRequest => 40,
 		Type::TxHashSetArchive => 64,
 		Type::BanReason => 64,
@@ -160,18 +160,18 @@ pub fn read_message<T: Readable>(stream: &mut dyn Read, msg_type: Type) -> Resul
 	read_body(&header, stream)
 }
 
-pub fn write_to_buf<T: Writeable>(msg: T, msg_type: Type) -> Vec<u8> {
+pub fn write_to_buf<T: Writeable>(msg: T, msg_type: Type) -> Result<Vec<u8>, Error> {
 	// prepare the body first so we know its serialized length
 	let mut body_buf = vec![];
-	ser::serialize(&mut body_buf, &msg).unwrap();
+	ser::serialize(&mut body_buf, &msg)?;
 
 	// build and serialize the header using the body size
 	let mut msg_buf = vec![];
 	let blen = body_buf.len() as u64;
-	ser::serialize(&mut msg_buf, &MsgHeader::new(msg_type, blen)).unwrap();
+	ser::serialize(&mut msg_buf, &MsgHeader::new(msg_type, blen))?;
 	msg_buf.append(&mut body_buf);
 
-	msg_buf
+	Ok(msg_buf)
 }
 
 pub fn write_message<T: Writeable>(
@@ -179,7 +179,7 @@ pub fn write_message<T: Writeable>(
 	msg: T,
 	msg_type: Type,
 ) -> Result<(), Error> {
-	let buf = write_to_buf(msg, msg_type);
+	let buf = write_to_buf(msg, msg_type)?;
 	stream.write_all(&buf[..])?;
 	Ok(())
 }
@@ -253,9 +253,9 @@ pub struct Hand {
 	/// may be needed
 	pub total_difficulty: Difficulty,
 	/// network address of the sender
-	pub sender_addr: SockAddr,
+	pub sender_addr: PeerAddr,
 	/// network address of the receiver
-	pub receiver_addr: SockAddr,
+	pub receiver_addr: PeerAddr,
 	/// name of version of the software
 	pub user_agent: String,
 }
@@ -268,11 +268,11 @@ impl Writeable for Hand {
 			[write_u32, self.capabilities.bits()],
 			[write_u64, self.nonce]
 		);
-		self.total_difficulty.write(writer).unwrap();
-		self.sender_addr.write(writer).unwrap();
-		self.receiver_addr.write(writer).unwrap();
-		writer.write_bytes(&self.user_agent).unwrap();
-		self.genesis.write(writer).unwrap();
+		self.total_difficulty.write(writer)?;
+		self.sender_addr.write(writer)?;
+		self.receiver_addr.write(writer)?;
+		writer.write_bytes(&self.user_agent)?;
+		self.genesis.write(writer)?;
 		Ok(())
 	}
 }
@@ -282,8 +282,8 @@ impl Readable for Hand {
 		let (version, capab, nonce) = ser_multiread!(reader, read_u32, read_u32, read_u64);
 		let capabilities = Capabilities::from_bits_truncate(capab);
 		let total_diff = Difficulty::read(reader)?;
-		let sender_addr = SockAddr::read(reader)?;
-		let receiver_addr = SockAddr::read(reader)?;
+		let sender_addr = PeerAddr::read(reader)?;
+		let receiver_addr = PeerAddr::read(reader)?;
 		let ua = reader.read_bytes_len_prefix()?;
 		let user_agent = String::from_utf8(ua).map_err(|_| ser::Error::CorruptedData)?;
 		let genesis = Hash::read(reader)?;
@@ -323,9 +323,9 @@ impl Writeable for Shake {
 			[write_u32, self.version],
 			[write_u32, self.capabilities.bits()]
 		);
-		self.total_difficulty.write(writer).unwrap();
-		writer.write_bytes(&self.user_agent).unwrap();
-		self.genesis.write(writer).unwrap();
+		self.total_difficulty.write(writer)?;
+		writer.write_bytes(&self.user_agent)?;
+		self.genesis.write(writer)?;
 		Ok(())
 	}
 }
@@ -372,14 +372,14 @@ impl Readable for GetPeerAddrs {
 /// GetPeerAddrs.
 #[derive(Debug)]
 pub struct PeerAddrs {
-	pub peers: Vec<SockAddr>,
+	pub peers: Vec<PeerAddr>,
 }
 
 impl Writeable for PeerAddrs {
 	fn write<W: Writer>(&self, writer: &mut W) -> Result<(), ser::Error> {
 		writer.write_u32(self.peers.len() as u32)?;
 		for p in &self.peers {
-			p.write(writer).unwrap();
+			p.write(writer)?;
 		}
 		Ok(())
 	}
@@ -393,10 +393,9 @@ impl Readable for PeerAddrs {
 		} else if peer_count == 0 {
 			return Ok(PeerAddrs { peers: vec![] });
 		}
-		// let peers = try_map_vec!([0..peer_count], |_| SockAddr::read(reader));
 		let mut peers = Vec::with_capacity(peer_count as usize);
 		for _ in 0..peer_count {
-			peers.push(SockAddr::read(reader)?);
+			peers.push(PeerAddr::read(reader)?);
 		}
 		Ok(PeerAddrs { peers: peers })
 	}
@@ -427,58 +426,6 @@ impl Readable for PeerError {
 			code: code,
 			message: message,
 		})
-	}
-}
-
-/// Only necessary so we can implement Readable and Writeable. Rust disallows
-/// implementing traits when both types are outside of this crate (which is the
-/// case for SocketAddr and Readable/Writeable).
-#[derive(Debug)]
-pub struct SockAddr(pub SocketAddr);
-
-impl Writeable for SockAddr {
-	fn write<W: Writer>(&self, writer: &mut W) -> Result<(), ser::Error> {
-		match self.0 {
-			SocketAddr::V4(sav4) => {
-				ser_multiwrite!(
-					writer,
-					[write_u8, 0],
-					[write_fixed_bytes, &sav4.ip().octets().to_vec()],
-					[write_u16, sav4.port()]
-				);
-			}
-			SocketAddr::V6(sav6) => {
-				writer.write_u8(1)?;
-				for seg in &sav6.ip().segments() {
-					writer.write_u16(*seg)?;
-				}
-				writer.write_u16(sav6.port())?;
-			}
-		}
-		Ok(())
-	}
-}
-
-impl Readable for SockAddr {
-	fn read(reader: &mut dyn Reader) -> Result<SockAddr, ser::Error> {
-		let v4_or_v6 = reader.read_u8()?;
-		if v4_or_v6 == 0 {
-			let ip = reader.read_fixed_bytes(4)?;
-			let port = reader.read_u16()?;
-			Ok(SockAddr(SocketAddr::V4(SocketAddrV4::new(
-				Ipv4Addr::new(ip[0], ip[1], ip[2], ip[3]),
-				port,
-			))))
-		} else {
-			let ip = try_iter_map_vec!(0..8, |_| reader.read_u16());
-			let port = reader.read_u16()?;
-			Ok(SockAddr(SocketAddr::V6(SocketAddrV6::new(
-				Ipv6Addr::new(ip[0], ip[1], ip[2], ip[3], ip[4], ip[5], ip[6], ip[7]),
-				port,
-				0,
-				0,
-			))))
-		}
 	}
 }
 
@@ -537,8 +484,8 @@ pub struct Ping {
 
 impl Writeable for Ping {
 	fn write<W: Writer>(&self, writer: &mut W) -> Result<(), ser::Error> {
-		self.total_difficulty.write(writer).unwrap();
-		self.height.write(writer).unwrap();
+		self.total_difficulty.write(writer)?;
+		self.height.write(writer)?;
 		Ok(())
 	}
 }
@@ -564,8 +511,8 @@ pub struct Pong {
 
 impl Writeable for Pong {
 	fn write<W: Writer>(&self, writer: &mut W) -> Result<(), ser::Error> {
-		self.total_difficulty.write(writer).unwrap();
-		self.height.write(writer).unwrap();
+		self.total_difficulty.write(writer)?;
+		self.height.write(writer)?;
 		Ok(())
 	}
 }
@@ -590,7 +537,7 @@ pub struct BanReason {
 impl Writeable for BanReason {
 	fn write<W: Writer>(&self, writer: &mut W) -> Result<(), ser::Error> {
 		let ban_reason_i32 = self.ban_reason as i32;
-		ban_reason_i32.write(writer).unwrap();
+		ban_reason_i32.write(writer)?;
 		Ok(())
 	}
 }

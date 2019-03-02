@@ -21,12 +21,13 @@ use chrono::prelude::{DateTime, Utc};
 use chrono::{Duration, MIN_DATE};
 use rand::{thread_rng, Rng};
 use std::collections::HashMap;
-use std::net::{SocketAddr, ToSocketAddrs};
+use std::net::ToSocketAddrs;
 use std::sync::{mpsc, Arc};
 use std::{cmp, str, thread, time};
 
 use crate::core::global;
 use crate::p2p;
+use crate::p2p::types::PeerAddr;
 use crate::p2p::ChainAdapter;
 use crate::pool::DandelionConfig;
 use crate::util::{Mutex, StopState};
@@ -45,8 +46,8 @@ pub fn connect_and_monitor(
 	p2p_server: Arc<p2p::Server>,
 	capabilities: p2p::Capabilities,
 	dandelion_config: DandelionConfig,
-	seed_list: Box<dyn Fn() -> Vec<SocketAddr> + Send>,
-	preferred_peers: Option<Vec<SocketAddr>>,
+	seed_list: Box<dyn Fn() -> Vec<PeerAddr> + Send>,
+	preferred_peers: Option<Vec<PeerAddr>>,
 	stop_state: Arc<Mutex<StopState>>,
 ) {
 	let _ = thread::Builder::new()
@@ -71,7 +72,7 @@ pub fn connect_and_monitor(
 			let mut prev_ping = Utc::now();
 			let mut start_attempt = 0;
 
-			let mut connecting_history: HashMap<SocketAddr, DateTime<Utc>> = HashMap::new();
+			let mut connecting_history: HashMap<PeerAddr, DateTime<Utc>> = HashMap::new();
 
 			loop {
 				if stop_state.lock().is_stopped() {
@@ -133,8 +134,8 @@ pub fn connect_and_monitor(
 fn monitor_peers(
 	peers: Arc<p2p::Peers>,
 	config: p2p::P2PConfig,
-	tx: mpsc::Sender<SocketAddr>,
-	preferred_peers_list: Option<Vec<SocketAddr>>,
+	tx: mpsc::Sender<PeerAddr>,
+	preferred_peers_list: Option<Vec<PeerAddr>>,
 ) {
 	// regularly check if we need to acquire more peers  and if so, gets
 	// them from db
@@ -149,7 +150,7 @@ fn monitor_peers(
 				let interval = Utc::now().timestamp() - x.last_banned;
 				// Unban peer
 				if interval >= config.ban_window() {
-					peers.unban_peer(&x.addr);
+					peers.unban_peer(x.addr);
 					debug!(
 						"monitor_peers: unbanned {} after {} seconds",
 						x.addr, interval
@@ -179,14 +180,13 @@ fn monitor_peers(
 	// maintenance step first, clean up p2p server peers
 	peers.clean_peers(config.peer_max_count() as usize);
 
-	// not enough peers, getting more from db
-	if peers.peer_count() >= config.peer_min_preferred_count() {
+	if peers.healthy_peers_mix() {
 		return;
 	}
 
 	// loop over connected peers
 	// ask them for their list of peers
-	let mut connected_peers: Vec<SocketAddr> = vec![];
+	let mut connected_peers: Vec<PeerAddr> = vec![];
 	for p in peers.connected_peers() {
 		trace!(
 			"monitor_peers: {}:{} ask {} for more peers",
@@ -199,19 +199,16 @@ fn monitor_peers(
 	}
 
 	// Attempt to connect to preferred peers if there is some
-	match preferred_peers_list {
-		Some(preferred_peers) => {
-			for p in preferred_peers {
-				if !connected_peers.is_empty() {
-					if !connected_peers.contains(&p) {
-						tx.send(p).unwrap();
-					}
-				} else {
+	if let Some(preferred_peers) = preferred_peers_list {
+		for p in preferred_peers {
+			if !connected_peers.is_empty() {
+				if !connected_peers.contains(&p) {
 					tx.send(p).unwrap();
 				}
+			} else {
+				tx.send(p).unwrap();
 			}
 		}
-		None => debug!("monitor_peers: no preferred peers"),
 	}
 
 	// take a random defunct peer and mark it healthy: over a long period any
@@ -229,7 +226,7 @@ fn monitor_peers(
 		config.peer_max_count() as usize,
 	);
 
-	for p in new_peers.iter().filter(|p| !peers.is_known(&p.addr)) {
+	for p in new_peers.iter().filter(|p| !peers.is_known(p.addr)) {
 		trace!(
 			"monitor_peers: on {}:{}, queue to soon try {}",
 			config.host,
@@ -243,17 +240,15 @@ fn monitor_peers(
 fn update_dandelion_relay(peers: Arc<p2p::Peers>, dandelion_config: DandelionConfig) {
 	// Dandelion Relay Updater
 	let dandelion_relay = peers.get_dandelion_relay();
-	if dandelion_relay.is_empty() {
+	if let Some((last_added, _)) = dandelion_relay {
+		let dandelion_interval = Utc::now().timestamp() - last_added;
+		if dandelion_interval >= dandelion_config.relay_secs.unwrap() as i64 {
+			debug!("monitor_peers: updating expired dandelion relay");
+			peers.update_dandelion_relay();
+		}
+	} else {
 		debug!("monitor_peers: no dandelion relay updating");
 		peers.update_dandelion_relay();
-	} else {
-		for last_added in dandelion_relay.keys() {
-			let dandelion_interval = Utc::now().timestamp() - last_added;
-			if dandelion_interval >= dandelion_config.relay_secs.unwrap() as i64 {
-				debug!("monitor_peers: updating expired dandelion relay");
-				peers.update_dandelion_relay();
-			}
-		}
 	}
 }
 
@@ -261,9 +256,9 @@ fn update_dandelion_relay(peers: Arc<p2p::Peers>, dandelion_config: DandelionCon
 // otherwise use the seeds provided.
 fn connect_to_seeds_and_preferred_peers(
 	peers: Arc<p2p::Peers>,
-	tx: mpsc::Sender<SocketAddr>,
-	seed_list: Box<dyn Fn() -> Vec<SocketAddr>>,
-	peers_preferred_list: Option<Vec<SocketAddr>>,
+	tx: mpsc::Sender<PeerAddr>,
+	seed_list: Box<dyn Fn() -> Vec<PeerAddr>>,
+	peers_preferred_list: Option<Vec<PeerAddr>>,
 ) {
 	// check if we have some peers in db
 	// look for peers that are able to give us other peers (via PEER_LIST capability)
@@ -299,17 +294,25 @@ fn listen_for_addrs(
 	peers: Arc<p2p::Peers>,
 	p2p: Arc<p2p::Server>,
 	capab: p2p::Capabilities,
-	rx: &mpsc::Receiver<SocketAddr>,
-	connecting_history: &mut HashMap<SocketAddr, DateTime<Utc>>,
+	rx: &mpsc::Receiver<PeerAddr>,
+	connecting_history: &mut HashMap<PeerAddr, DateTime<Utc>>,
 ) {
-	if peers.peer_count() >= p2p.config.peer_max_count() {
-		// clean the rx messages to avoid accumulating
-		for _ in rx.try_iter() {}
+	// Pull everything currently on the queue off the queue.
+	// Does not block so addrs may be empty.
+	// We will take(max_peers) from this later but we want to drain the rx queue
+	// here to prevent it backing up.
+	let addrs: Vec<PeerAddr> = rx.try_iter().collect();
+
+	// If we have a healthy number of outbound peers then we are done here.
+	if peers.peer_count() > peers.peer_outbound_count() && peers.healthy_peers_mix() {
 		return;
 	}
 
+	// Try to connect to (up to max peers) peer addresses.
+	// Note: We drained the rx queue earlier to keep it under control.
+	// Even if there are many addresses to try we will only try a bounded number of them.
 	let connect_min_interval = 30;
-	for addr in rx.try_iter() {
+	for addr in addrs.into_iter().take(p2p.config.peer_max_count() as usize) {
 		// ignore the duplicate connecting to same peer within 30 seconds
 		let now = Utc::now();
 		if let Some(last_connect_time) = connecting_history.get(&addr) {
@@ -330,7 +333,7 @@ fn listen_for_addrs(
 		let p2p_c = p2p.clone();
 		let _ = thread::Builder::new()
 			.name("peer_connect".to_string())
-			.spawn(move || match p2p_c.connect(&addr) {
+			.spawn(move || match p2p_c.connect(addr) {
 				Ok(p) => {
 					let _ = p.send_peer_request(capab);
 					let _ = peers_c.update_state(addr, p2p::State::Healthy);
@@ -356,9 +359,9 @@ fn listen_for_addrs(
 	}
 }
 
-pub fn dns_seeds() -> Box<dyn Fn() -> Vec<SocketAddr> + Send> {
+pub fn dns_seeds() -> Box<dyn Fn() -> Vec<PeerAddr> + Send> {
 	Box::new(|| {
-		let mut addresses: Vec<SocketAddr> = vec![];
+		let mut addresses: Vec<PeerAddr> = vec![];
 		let net_seeds = if global::is_floonet() {
 			FLOONET_DNS_SEEDS
 		} else {
@@ -372,7 +375,7 @@ pub fn dns_seeds() -> Box<dyn Fn() -> Vec<SocketAddr> + Send> {
 					&mut (addrs
 						.map(|mut addr| {
 							addr.set_port(if global::is_floonet() { 18514 } else { 8514 });
-							addr
+							PeerAddr(addr)
 						})
 						.filter(|addr| !temp_addresses.contains(addr))
 						.collect()),
@@ -387,26 +390,6 @@ pub fn dns_seeds() -> Box<dyn Fn() -> Vec<SocketAddr> + Send> {
 
 /// Convenience function when the seed list is immediately known. Mostly used
 /// for tests.
-pub fn predefined_seeds(addrs_str: Vec<String>) -> Box<dyn Fn() -> Vec<SocketAddr> + Send> {
-	Box::new(move || {
-		addrs_str
-			.iter()
-			.map(|s| s.parse().unwrap())
-			.collect::<Vec<_>>()
-	})
-}
-
-/// Convenience function when the seed list is immediately known. Mostly used
-/// for tests.
-pub fn preferred_peers(addrs_str: Vec<String>) -> Option<Vec<SocketAddr>> {
-	if addrs_str.is_empty() {
-		None
-	} else {
-		Some(
-			addrs_str
-				.iter()
-				.map(|s| s.parse().unwrap())
-				.collect::<Vec<_>>(),
-		)
-	}
+pub fn predefined_seeds(addrs: Vec<PeerAddr>) -> Box<dyn Fn() -> Vec<PeerAddr> + Send> {
+	Box::new(move || addrs.clone())
 }

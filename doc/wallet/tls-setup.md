@@ -17,7 +17,20 @@ tls_certificate_file = "/path/to/my/cerificate/fullchain.pem"
 tls_certificate_key =  "/path/to/my/cerificate/privkey.pem"
 ```
 
-If you have Stratum server enabled (you run a miner) make sure that wallet listener URL starts with `https` in node config (by default `~/.bitgrin/bitgrin-server.toml`):
+And update `api_listen_interface` to your static IP if you want to lock your wallet only to external interface
+
+```toml
+api_listen_interface = "3.3.3.3"
+```
+
+Or, in case you are using DynDNS or `localhost` in order to comunicate with your wallet, just put `0.0.0.0` as mentioned in the inline instruction.
+
+```toml
+api_listen_interface = "0.0.0.0"
+```
+
+If you have Stratum server enabled (you run a miner) make sure that wallet listener URL starts with `https` in node config (by default `~/.grin/grin-server.toml`):
+
 
 ```toml
 wallet_listener_url = "https://bitgrin1.example.com:18515"
@@ -57,12 +70,14 @@ Now you have the certificate files but only root user can read it. We run bitgri
 ```sh
 sudo groupadd tls-cert
 sudo usermod -a -G tls-cert ubuntu
-chgrp -R tls-cert /etc/letsencrypt
-chmod -R g=rX /etc/letsencrypt
+sudo chgrp -R tls-cert /etc/letsencrypt
+sudo chmod -R g=rX /etc/letsencrypt
 sudo chmod 2755 /etc/letsencrypt
 ```
 
 The last step is needed for renewal, it makes sure that all new files will have the same group ownership.
+
+Now you need to logout so the user's group membership modification can take place.
 
 ### Update wallet config
 Refer to `I have a TLS certificate already` because you have it now. Use the folowing values:

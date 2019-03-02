@@ -40,4 +40,3 @@ bitgrin_chain = { path = "../chain", version = "1.0.0" }
 
 [dev-dependencies]
 bitgrin_store = { path = "../store", version = "1.0.0" }
-#bitgrin_config = { path = "../config", version = "1.0.0" }
