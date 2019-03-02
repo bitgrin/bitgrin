@@ -1,6 +1,6 @@
 #!/bin/bash
 
-repo_slug="mimblewimble/bitgrin"
+repo_slug="bitgrin/bitgrin"
 token="$GITHUB_TOKEN"
 export CHANGELOG_GITHUB_TOKEN="$token"
 
