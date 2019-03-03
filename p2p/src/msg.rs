@@ -66,6 +66,10 @@ enum_from_primitive! {
 		BanReason = 18,
 		GetTransaction = 19,
 		TransactionKernel = 20,
+		/// Use a large offset for BitGrin specific msgs in the event we
+		/// need to share new p2p types with upstream core changes.
+		SlateSetRequest = 10000,
+		SlateSetArchive = 10001,
 	}
 }
 
@@ -98,6 +102,8 @@ fn max_msg_size(msg_type: Type) -> u64 {
 		Type::BanReason => 64,
 		Type::GetTransaction => 32,
 		Type::TransactionKernel => 32,
+		Type::SlateSetRequest => 40,
+		Type::SlateSetArchive => 4_096,
 	}
 }
 
@@ -608,6 +614,56 @@ impl Readable for TxHashSetArchive {
 		Ok(TxHashSetArchive {
 			hash,
 			height,
+			bytes,
+		})
+	}
+}
+
+/// Request to get an archive of the full Slatepool store, required to sync
+/// a new node.
+pub struct SlateSetRequest {
+	/// Hash of the slate set that should be provided
+	pub hash: Hash
+}
+
+impl Writeable for SlateSetRequest {
+	fn write<W: Writer>(&self, writer: &mut W) -> Result<(), ser::Error> {
+		self.hash.write(writer)?;
+		Ok(())
+	}
+}
+
+impl Readable for SlateSetRequest {
+	fn read(reader: &mut dyn Reader) -> Result<SlateSetRequest, ser::Error> {
+		Ok(SlateSetRequest {
+			hash: Hash::read(reader)?,
+		})
+	}
+}
+
+/// Response to a Slatepool archive request
+pub struct SlateSetArchive {
+	/// A unique hash for this slate
+	pub hash: Hash,
+	/// Size in bytes of the archive
+	pub bytes: u64,
+}
+
+impl Writeable for SlateSetArchive {
+	fn write<W: Writer>(&self, writer: &mut W) -> Result<(), ser::Error> {
+		self.hash.write(writer)?;
+		ser_multiwrite!(writer, [write_u64, self.bytes]);
+		Ok(())
+	}
+}
+
+impl Readable for SlateSetArchive {
+	fn read(reader: &mut dyn Reader) -> Result<SlateSetArchive, ser::Error> {
+		let hash = Hash::read(reader)?;
+		let bytes = reader.read_u64()?;
+
+		Ok(SlateSetArchive {
+			hash,
 			bytes,
 		})
 	}

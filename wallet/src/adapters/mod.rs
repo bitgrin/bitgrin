@@ -16,11 +16,13 @@ mod file;
 mod http;
 mod keybase;
 mod null;
+mod slatepool;
 
 pub use self::file::FileWalletCommAdapter;
 pub use self::http::HTTPWalletCommAdapter;
 pub use self::keybase::KeybaseWalletCommAdapter;
 pub use self::null::NullWalletCommAdapter;
+pub use self::slatepool::SlatepoolWalletCommAdapter;
 
 use crate::libwallet::slate::Slate;
 use crate::libwallet::Error;

@@ -32,7 +32,7 @@ use crate::error::{Error, ErrorKind};
 use crate::{controller, display, HTTPNodeClient, WalletConfig, WalletInst, WalletSeed};
 use crate::{
 	FileWalletCommAdapter, HTTPWalletCommAdapter, KeybaseWalletCommAdapter, LMDBBackend,
-	NodeClient, NullWalletCommAdapter,
+	NodeClient, NullWalletCommAdapter, SlatepoolWalletCommAdapter,
 };
 
 /// Arguments common to all wallet commands
@@ -259,6 +259,7 @@ pub fn send(
 				"file" => FileWalletCommAdapter::new(),
 				"keybase" => KeybaseWalletCommAdapter::new(),
 				"self" => NullWalletCommAdapter::new(),
+				"slatepool" => SlatepoolWalletCommAdapter::new(),
 				_ => NullWalletCommAdapter::new(),
 			};
 			if adapter.supports_sync() {

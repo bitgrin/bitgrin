@@ -44,6 +44,8 @@ const SERVER_LOG_FILE_NAME: &'static str = "bitgrin-server.log";
 const WALLET_LOG_FILE_NAME: &'static str = "bitgrin-wallet.log";
 const BITGRIN_HOME: &'static str = ".bitgrin";
 const BITGRIN_CHAIN_DIR: &'static str = "chain_data";
+/// Slate pool directory
+const BITGRIN_SLATEPOOL_DIR: &'static str = "slatepool";
 /// Wallet data directory
 pub const BITGRIN_WALLET_DIR: &'static str = "wallet_data";
 /// API secret file name
@@ -300,6 +302,9 @@ impl GlobalConfig {
 	/// Update paths
 	pub fn update_paths(&mut self, bitgrin_home: &PathBuf) {
 		// need to update server chain path
+		let mut slatepool_path = bitgrin_home.clone();
+		slatepool_path.push(BITGRIN_SLATEPOOL_DIR);
+		self.members.as_mut().unwrap().server.slatepool_path = Some(slatepool_path.to_str().unwrap().to_owned());
 		let mut chain_path = bitgrin_home.clone();
 		chain_path.push(BITGRIN_CHAIN_DIR);
 		self.members.as_mut().unwrap().server.db_root = chain_path.to_str().unwrap().to_owned();

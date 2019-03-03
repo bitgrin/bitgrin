@@ -42,8 +42,8 @@ pub mod test_framework;
 mod types;
 
 pub use crate::adapters::{
-	FileWalletCommAdapter, HTTPWalletCommAdapter, KeybaseWalletCommAdapter, NullWalletCommAdapter,
-	WalletCommAdapter,
+	FileWalletCommAdapter, HTTPWalletCommAdapter, KeybaseWalletCommAdapter, NullWalletCommAdapter, SlatepoolWalletCommAdapter,
+	WalletCommAdapter
 };
 pub use crate::error::{Error, ErrorKind};
 pub use crate::libwallet::slate::Slate;

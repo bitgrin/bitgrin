@@ -126,6 +126,12 @@ pub struct ServerConfig {
 	/// Directory under which the rocksdb stores will be created
 	pub db_root: String,
 
+	/// Directory under which the slatepool stores will be created
+	pub slatepool_path: Option<String>,
+
+	// Whether or not slatepool is enabled
+	pub slatepool_enabled: Option<bool>,
+
 	/// Network address for the Rest API HTTP server.
 	pub api_http_addr: String,
 
@@ -185,6 +191,8 @@ impl Default for ServerConfig {
 	fn default() -> ServerConfig {
 		ServerConfig {
 			db_root: "bitgrin_chain".to_string(),
+			slatepool_path: Some("slatepool".to_string()),
+			slatepool_enabled: Some(true),
 			api_http_addr: "127.0.0.1:8513".to_string(),
 			api_secret_path: Some(".api_secret".to_string()),
 			tls_certificate_file: None,

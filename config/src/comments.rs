@@ -63,6 +63,23 @@ fn comments() -> HashMap<String, String> {
 	);
 
 	retval.insert(
+		"slatepool_path".to_string(),
+		"
+#the directory, relative to current, in which the slate pool
+#is stored
+"
+		.to_string(),
+	);
+
+	retval.insert(
+		"slatepool_enabled".to_string(),
+		"
+#enable the slatepool true/false
+"
+		.to_string(),
+	);
+
+	retval.insert(
 		"db_root".to_string(),
 		"
 #the directory, relative to current, in which the bitgrin blockchain
