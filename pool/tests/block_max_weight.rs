@@ -25,9 +25,9 @@ use self::core::pow::Difficulty;
 use self::keychain::{ExtKeychain, Keychain};
 use self::util::RwLock;
 use crate::common::*;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_util as util;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_util as util;
 use std::sync::Arc;
 
 #[test]
