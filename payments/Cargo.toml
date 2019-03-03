@@ -1,0 +1,28 @@
+[package]
+name = "bitgrin_payments"
+version = "1.0.0"
+authors = ["BitGrin Developers <bitgrin@protonmail.com>"]
+description = "Payment implementation for bitgrin, a simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
+license = "Apache-2.0"
+repository = "https://github.com/bitgrin/bitgrin"
+keywords = [ "crypto", "bitgrin", "mimblewimble" ]
+workspace = ".."
+edition = "2018"
+
+[dependencies]
+bitgrin_core = { path = "../core", version = "1.0.0" }
+bitgrin_store = { path = "../store", version = "1.0.0" }
+bitgrin_util = { path = "../util", version = "1.0.0" }
+bitgrin_wallet = { path = "../wallet", version = "1.0.0" }
+
+# crust = { git = "https://github.com/bitgrin/crust", version = "0.32.1" }
+crust = { path = "../../crust", version = "0.32.4" }
+maidsafe_utilities = { git = "https://github.com/bitgrin/maidsafe_utilities" }
+safe_crypto = { git = "https://github.com/bitgrin/safe_crypto" }
+clap = "2.32.0"
+rand = "0.6.5"
+unwrap = "1.2.1"
+log = "0.4.3"
+serde = "1.0.69"
+serde_derive = "1.0.69"
+serde_json = "1.0.22"
