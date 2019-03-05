@@ -87,6 +87,8 @@ pub struct JobTemplate {
 	job_id: u64,
 	difficulty: u64,
 	pre_pow: String,
+	pub xn: Option<String>,
+	pub cleanjob: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -154,6 +156,7 @@ pub struct Worker {
 	error: bool,
 	authenticated: bool,
 	buffer: String,
+	needs_job: bool,
 }
 
 impl Worker {
@@ -167,6 +170,7 @@ impl Worker {
 			error: false,
 			authenticated: false,
 			buffer: String::with_capacity(4096),
+			needs_job: false,
 		}
 	}
 
@@ -176,6 +180,10 @@ impl Worker {
 		match self.stream.read_line(&mut self.buffer) {
 			Ok(_) => {
 				let res = self.buffer.clone();
+				if res == "" {
+					return None;
+				}
+				trace!("read_message: {}", res);
 				self.buffer.clear();
 				return Some(res);
 			}
@@ -197,6 +205,7 @@ impl Worker {
 
 	// Send Message to the worker
 	fn write_message(&mut self, mut message: String) {
+		trace!("write_message: {}", message);
 		// Write and Flush the message
 		if !message.ends_with("\n") {
 			message += "\n";
@@ -207,7 +216,7 @@ impl Worker {
 			Duration::from_secs(1),
 		) {
 			Ok(_) => match self.stream.flush() {
-				Ok(_) => {}
+				Ok(_) => { }
 				Err(e) => {
 					warn!(
 						"(Server ID: {}) Error in connection with stratum client: {}",
@@ -284,6 +293,8 @@ impl StratumServer {
 			job_id: (self.current_block_versions.len() - 1) as u64,
 			difficulty: self.minimum_share_difficulty,
 			pre_pow,
+			xn: Some(String::from("")),
+			cleanjob: Some(false),
 		};
 		return job_template;
 	}
@@ -295,14 +306,19 @@ impl StratumServer {
 			match workers_l[num].read_message() {
 				Some(the_message) => {
 					// Decompose the request from the JSONRpc wrapper
+					if the_message == "" {
+						return;
+					}
+					trace!("handle_rpc_request: {}", the_message);
 					let request: RpcRequest = match serde_json::from_str(&the_message) {
 						Ok(request) => request,
 						Err(e) => {
 							// not a valid JSON RpcRequest - disconnect the worker
 							warn!(
-								"(Server ID: {}) Failed to parse JSONRpc: {} - {:?}",
+								"(Server ID: {}) Failed to parse JSONRpc: {} - {} - {:?}",
 								self.id,
 								e.description(),
+								the_message,
 								the_message.as_bytes(),
 							);
 							workers_l[num].error = true;
@@ -322,7 +338,9 @@ impl StratumServer {
 					stratum_stats.worker_stats[worker_stats_id].last_seen = SystemTime::now();
 
 					// Call the handler function for requested method
-					let response = match request.method.as_str() {
+					let method_str = request.method.as_str();
+					trace!("Method: {}", method_str);
+					let response = match method_str {
 						"login" => {
 							if self.current_block_versions.is_empty() {
 								continue;
@@ -345,6 +363,7 @@ impl StratumServer {
 						}
 						"keepalive" => self.handle_keepalive(),
 						"getjobtemplate" => {
+							workers_l[num].needs_job = true;
 							if self.sync_state.is_syncing() {
 								let e = RpcError {
 									code: -32000,
@@ -427,6 +446,7 @@ impl StratumServer {
 
 	// Handle GETJOBTEMPLATE message
 	fn handle_getjobtemplate(&self) -> Result<Value, Value> {
+		trace!("handle_getjobtemplate");
 		// Build a JobTemplate from a BlockHeader and return JSON
 		let job_template = self.build_block_template();
 		let response = serde_json::to_value(&job_template).unwrap();
@@ -445,6 +465,7 @@ impl StratumServer {
 	// Handle LOGIN message
 	fn handle_login(&self, params: Option<Value>, worker: &mut Worker) -> Result<Value, Value> {
 		let params: LoginParams = parse_params(params)?;
+		trace!("handle_login {}/{}:{}", params.login, params.pass, params.agent);
 		worker.login = Some(params.login);
 		// XXX TODO Future - Validate password?
 		worker.agent = params.agent;
@@ -463,6 +484,7 @@ impl StratumServer {
 		worker: &mut Worker,
 		worker_stats: &mut WorkerStats,
 	) -> Result<(Value, bool), Value> {
+		trace!("handle_submit");
 		// Validate parameters
 		let params: SubmitParams = parse_params(params)?;
 
@@ -646,6 +668,7 @@ impl StratumServer {
 	// Broadcast a jobtemplate RpcRequest to all connected workers - no response
 	// expected
 	fn broadcast_job(&mut self) {
+		trace!("broadcast_job");
 		// Package new block into RpcRequest
 		let job_template = self.build_block_template();
 		let job_template_json = serde_json::to_string(&job_template).unwrap();
@@ -667,7 +690,9 @@ impl StratumServer {
 		//       to choose one for themselves
 		let mut workers_l = self.workers.lock();
 		for num in 0..workers_l.len() {
-			workers_l[num].write_message(job_request_json.clone());
+			if workers_l[num].needs_job {
+				workers_l[num].write_message(job_request_json.clone());
+			}
 		}
 	}
 
@@ -804,6 +829,10 @@ fn parse_params<T>(params: Option<Value>) -> Result<T, Value>
 where
 	for<'de> T: serde::Deserialize<'de>,
 {
+	match(params.clone()) {
+		Some(p) => trace!("parse_params: {}", p),
+		None => (),
+	}
 	params
 		.and_then(|v| serde_json::from_value(v).ok())
 		.ok_or_else(|| {
