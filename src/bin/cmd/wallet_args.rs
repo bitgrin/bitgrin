@@ -293,8 +293,15 @@ pub fn parse_recover_args(
 				else {
 					phrase = prompt_recovery_phrase()?;
 				}
-				println!("Please provide a new password for the recovered wallet");
-				(prompt_password_confirm(), Some(phrase.to_owned()), Some(phrase.to_owned()))
+				let mut pass: ZeroingString;
+				if g_args.password.is_some() {
+					pass = g_args.password.clone().unwrap();
+				}
+				else {
+					println!("Please provide a new password for the recovered wallet");
+					pass = prompt_password_confirm();
+				}
+				(pass, Some(phrase.to_owned()), Some(phrase.to_owned()))
 			}
 		}
 	};
