@@ -77,6 +77,7 @@ pub fn init(g_args: &GlobalArgs, args: InitArgs) -> Result<(), Error> {
 pub struct RecoverArgs {
 	pub recovery_phrase: Option<ZeroingString>,
 	pub passphrase: ZeroingString,
+	pub phrase: Option<ZeroingString>,
 }
 
 /// Check whether seed file exists

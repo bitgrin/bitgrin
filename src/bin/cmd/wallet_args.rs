@@ -267,9 +267,9 @@ pub fn parse_recover_args(
 	g_args: &command::GlobalArgs,
 	args: &ArgMatches,
 ) -> Result<command::RecoverArgs, ParseError> {
-	let (passphrase, recovery_phrase) = {
+	let (passphrase, recovery_phrase, phrase) = {
 		match args.is_present("display") {
-			true => (prompt_password(&g_args.password), None),
+			true => (prompt_password(&g_args.password), None, None),
 			false => {
 				let cont = {
 					if command::wallet_seed_exists(config).is_err() {
@@ -281,15 +281,27 @@ pub fn parse_recover_args(
 				if !cont {
 					return Err(ParseError::CancelledError);
 				}
-				let phrase = prompt_recovery_phrase()?;
+				// Check to see if recovery phrased passed as arg
+				let recovery_phrase_str = match args.value_of("phrase") {
+					Some(p) => Some(p),
+					None => None,
+				};
+				let mut phrase: ZeroingString;
+				if recovery_phrase_str.is_some() {
+					phrase = ZeroingString::from(recovery_phrase_str.unwrap().to_string());
+				}
+				else {
+					phrase = prompt_recovery_phrase()?;
+				}
 				println!("Please provide a new password for the recovered wallet");
-				(prompt_password_confirm(), Some(phrase.to_owned()))
+				(prompt_password_confirm(), Some(phrase.to_owned()), Some(phrase.to_owned()))
 			}
 		}
 	};
 	Ok(command::RecoverArgs {
 		passphrase: passphrase,
 		recovery_phrase: recovery_phrase,
+		phrase: phrase,
 	})
 }
 

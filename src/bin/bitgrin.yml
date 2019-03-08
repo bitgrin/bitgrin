@@ -297,6 +297,11 @@ subcommands:
                   short: d
                   long: display
                   takes_value: false
+              - phrase:
+                  help: Phrase to recover from
+                  short: p
+                  long: phrase
+                  takes_value: true
         - restore:
             about: Restores a wallet contents from a seed file
         - check:
