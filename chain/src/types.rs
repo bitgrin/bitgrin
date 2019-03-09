@@ -170,4 +170,6 @@ pub enum BlockStatus {
 	/// Block updates the chain head via a (potentially disruptive) "reorg".
 	/// Previous block was not our previous chain head.
 	Reorg,
+	/// Block does not meet integrity criteria
+	ChainIntegrityFailure,
 }

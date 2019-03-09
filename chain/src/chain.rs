@@ -272,11 +272,43 @@ impl Chain {
 	fn determine_status(&self, head: Option<Tip>, prev_head: Tip) -> BlockStatus {
 		// We have more work if the chain head is updated.
 		let is_more_work = head.is_some();
-
 		let mut is_next_block = false;
 		if let Some(head) = head {
 			if head.prev_block_h == prev_head.last_block_h {
 				is_next_block = true;
+
+				// Verify chain integrity
+				let bitgrin_2 = "4c37bb19c526509cc502828115542cb2f0b120efbabc0af2e84c24d00b6e6133";
+				let bitgrin_1k = "0002c0a5cc90c4b588e08f00c7b98bcf8c3b2498ca2ef31002a0b9551d162e7b";
+				let bitgrin_10k = "00000ef10084128281796f948bcb8562bb996c087e15ec2f3726654ace8e1983";
+				let bitgrin_20k = "00002df8586eb2e65982c02162ce16c3d8bd28f6bf8e2646a4d57cb4d3a40e7d";
+				let bitgrin_30k = "0001b7875409afbd3bcaa1d0cf3af6e1d8a98ba31714e95fc22a9b5c70129fd4";
+				let bitgrin_40k = "000227e48810ad9924bedf88c224e358ecc6411ed9a87587dd79f13feaf64448";
+				if(head.height > 1) {
+					// Rewind until block hash is confirmed
+					let mut head_iter = self.get_block_header(&head.prev_block_h).unwrap();
+					while head_iter.height >= 1 {
+						head_iter = self.get_block_header(&head_iter.prev_hash).unwrap();
+						if (head_iter.height == 2) && (head_iter.hash().to_hex() != bitgrin_2) {
+							return BlockStatus::ChainIntegrityFailure;
+						}
+						if (head_iter.height == 1_000) && (head_iter.hash().to_hex() != bitgrin_1k) {
+							return BlockStatus::ChainIntegrityFailure;
+						}
+						if (head_iter.height == 10_000) && (head_iter.hash().to_hex() != bitgrin_10k) {
+							return BlockStatus::ChainIntegrityFailure;
+						}
+						if (head_iter.height == 20_000) && (head_iter.hash().to_hex() != bitgrin_20k) {
+							return BlockStatus::ChainIntegrityFailure;
+						}
+						if (head_iter.height == 30_000) && (head_iter.hash().to_hex() != bitgrin_30k) {
+							return BlockStatus::ChainIntegrityFailure;
+						}
+						if (head_iter.height == 40_000) && (head_iter.hash().to_hex() != bitgrin_40k) {
+							return BlockStatus::ChainIntegrityFailure;
+						}
+					}
+				}
 			}
 		}
 
@@ -324,6 +356,9 @@ impl Chain {
 		match maybe_new_head {
 			Ok(head) => {
 				let status = self.determine_status(head.clone(), prev_head);
+				if(status == BlockStatus::ChainIntegrityFailure) {
+					return Err(ErrorKind::Other("Chain integrity check failed".to_string()).into());
+				}
 
 				// notifying other parts of the system of the update
 				self.adapter.block_accepted(&b, status, opts);
@@ -541,15 +576,75 @@ impl Chain {
 		}
 	}
 
+	fn validate_hash_checkpoint(&self, hash_str: &str, checkpoint_height: u64) -> bool {
+		let h = Hash::from_hex(hash_str);
+		match h {
+			Ok(hash) => {
+				match self.get_block_header(&hash) {
+					Ok(header) => {
+						return header.height == checkpoint_height;
+					},
+					Err(e) => {
+						if(self.head().unwrap().height < checkpoint_height) {
+							// The block is not in our chain, but this
+							// is simply because the chain is not synchronized
+							// this far yet, is not a chain validation error
+							return true;
+						}
+						// This is an invalid chain
+						return false;
+					},
+				}
+			},
+			Err(err) => {
+				return false;
+			},
+		}
+		return false;
+	}
+
 	/// Validate the current chain state.
 	pub fn validate(&self, fast_validation: bool) -> Result<(), Error> {
 		let header = self.store.head_header()?;
-
+		
 		// Lets just treat an "empty" node that just got started up as valid.
 		if header.height == 0 {
 			return Ok(());
 		}
 
+		// Verify chain is correct
+		let grin_hash = "00000798ee3d720f3983fd6fc170b71322922d5521a1ec599b1ab442f5fc8212";
+		let bitgrin_1k = "0002c0a5cc90c4b588e08f00c7b98bcf8c3b2498ca2ef31002a0b9551d162e7b";
+		let bitgrin_10k = "00000ef10084128281796f948bcb8562bb996c087e15ec2f3726654ace8e1983";
+		let bitgrin_20k = "00002df8586eb2e65982c02162ce16c3d8bd28f6bf8e2646a4d57cb4d3a40e7d";
+		let bitgrin_30k = "0001b7875409afbd3bcaa1d0cf3af6e1d8a98ba31714e95fc22a9b5c70129fd4";
+		let bitgrin_40k = "000227e48810ad9924bedf88c224e358ecc6411ed9a87587dd79f13feaf64448";
+
+		if(self.validate_hash_checkpoint(grin_hash, 5)) {
+			error!("Consensus failure due to synchronization with Grin chain isntead of BitGrin chain.");
+			return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
+		}
+		if(!self.validate_hash_checkpoint(bitgrin_1k, 1_000)) {
+			error!("Consensus failure at checkpoint 1,000");
+			return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
+		}
+		if(!self.validate_hash_checkpoint(bitgrin_10k, 10_000)) {
+			error!("Consensus failure at checkpoint 10,000");
+			return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
+		}
+		if(!self.validate_hash_checkpoint(bitgrin_20k, 20_000)) {
+			error!("Consensus failure at checkpoint 20,000");
+			return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
+		}
+		if(!self.validate_hash_checkpoint(bitgrin_30k, 30_000)) {
+			error!("Consensus failure at checkpoint 30,000");
+			return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
+		}
+		if(!self.validate_hash_checkpoint(bitgrin_40k, 40_000)) {
+			error!("Consensus failure at checkpoint 40,000");
+			return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
+		}
+		
 		let mut txhashset = self.txhashset.write();
 
 		// Now create an extension from the txhashset and validate against the

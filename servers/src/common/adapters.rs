@@ -636,7 +636,15 @@ impl ChainAdapter for ChainToPoolAndNetAdapter {
 					b.header.height,
 					b.header.total_difficulty(),
 				);
-			}
+			},
+			BlockStatus::ChainIntegrityFailure => {
+				debug!(
+					"block_accepted (integrity failed? how are we here?): {:?} at {} (diff: {})",
+					b.hash(),
+					b.header.height,
+					b.header.total_difficulty(),
+				);
+			},
 		}
 
 		// not broadcasting blocks received through sync
