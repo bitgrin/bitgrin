@@ -11,5 +11,6 @@ bitgrin.log
 wallet.seed
 test_output
 wallet_data
+bg_wallet_data
 wallet/db
 .idea/

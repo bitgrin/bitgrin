@@ -52,7 +52,7 @@ After checking out bitgrin, building and using, these are the folders you'll hav
   Low-level rust utilities.
 - `wallet`\
   Simple command line wallet implementation. Will generate:
-  - `wallet_data` - a database storing your "outputs", that once confirmed and matured, can be spent with the [`bitgrin wallet send`](wallet/usage.md) command. (locally created, *not* in git)
+  - `bg_wallet_data` - a database storing your "outputs", that once confirmed and matured, can be spent with the [`bitgrin wallet send`](wallet/usage.md) command. (locally created, *not* in git)
   - `wallet.seed` - your secret wallet seed. (locally created, *not* in git)
 
 ## bitgrin dependencies

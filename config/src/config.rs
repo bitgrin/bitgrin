@@ -43,9 +43,9 @@ pub const WALLET_CONFIG_FILE_NAME: &'static str = "bitgrin-wallet.toml";
 const SERVER_LOG_FILE_NAME: &'static str = "bitgrin-server.log";
 const WALLET_LOG_FILE_NAME: &'static str = "bitgrin-wallet.log";
 const BITGRIN_HOME: &'static str = ".bitgrin";
-const BITGRIN_CHAIN_DIR: &'static str = "chain_data";
+const BITGRIN_CHAIN_DIR: &'static str = "bg_chain_data";
 /// Wallet data directory
-pub const BITGRIN_WALLET_DIR: &'static str = "wallet_data";
+pub const BITGRIN_WALLET_DIR: &'static str = "bg_wallet_data";
 /// API secret file name
 pub const API_SECRET_FILE_NAME: &'static str = ".api_secret";
 

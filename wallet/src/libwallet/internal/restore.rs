@@ -393,7 +393,7 @@ where
 	C: NodeClient,
 	K: Keychain,
 {
-	// Don't proceed if wallet_data has anything in it
+	// Don't proceed if bg_wallet_data has anything in it
 	let is_empty = wallet.iter().next().is_none();
 	if !is_empty {
 		error!("Not restoring. Please back up and remove existing db directory first.");
