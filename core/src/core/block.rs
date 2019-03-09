@@ -657,13 +657,7 @@ impl Block {
 		)?;
 
 
-// TODOBG: remove this one, its false
-		if self.header.height == 1_000 {
-			let expected_hash = "lololol";
-			if self.header.hash().to_hex() != expected_hash {
-				return Err(Error::IntegrityCheck);
-			}
-		}
+
 
 		// Check for chain consistency, avoids connection to invalid chains/forks
 		if self.header.height == 2 {
