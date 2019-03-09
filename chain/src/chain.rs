@@ -284,7 +284,7 @@ impl Chain {
 				let bitgrin_20k = "00002df8586eb2e65982c02162ce16c3d8bd28f6bf8e2646a4d57cb4d3a40e7d";
 				let bitgrin_30k = "0001b7875409afbd3bcaa1d0cf3af6e1d8a98ba31714e95fc22a9b5c70129fd4";
 				let bitgrin_40k = "000227e48810ad9924bedf88c224e358ecc6411ed9a87587dd79f13feaf64448";
-				if(head.height > 1) {
+				if((head.height > 1 && head.height < 100) || (head.height % 1_000 == 0)) {
 					// Rewind until block hash is confirmed
 					let mut head_iter = self.get_block_header(&head.prev_block_h).unwrap();
 					while head_iter.height >= 1 {
@@ -357,6 +357,7 @@ impl Chain {
 			Ok(head) => {
 				let status = self.determine_status(head.clone(), prev_head);
 				if(status == BlockStatus::ChainIntegrityFailure) {
+					debug!("Chain integrity check failed in block");
 					return Err(ErrorKind::Other("Chain integrity check failed".to_string()).into());
 				}
 
