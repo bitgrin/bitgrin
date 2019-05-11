@@ -44,13 +44,13 @@ pub const MAX_PEER_ADDRS: u32 = 256;
 pub const MAX_LOCATORS: u32 = 20;
 
 /// How long a banned peer should be banned for
-const BAN_WINDOW: i64 = 10800;
+const BAN_WINDOW: i64 = 3080;
 
 /// The max peer count
-const PEER_MAX_COUNT: u32 = 25;
+const PEER_MAX_COUNT: u32 = 150;
 
 /// min preferred peer count
-const PEER_MIN_PREFERRED_COUNT: u32 = 8;
+const PEER_MIN_PREFERRED_COUNT: u32 = 24;
 
 #[derive(Debug)]
 pub enum Error {
