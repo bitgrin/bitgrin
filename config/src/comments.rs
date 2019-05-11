@@ -222,7 +222,7 @@ fn comments() -> HashMap<String, String> {
 #will *never* connect to peers in deny list
 #peers_deny = [\"192.168.0.3:8514\", \"192.168.0.4:8514\"]
 #a list of preferred peers to connect to
-peers_preferred = [\"18.212.122.156:8514\", \"3.93.64.52:8514\", \"35.205.149.77:8514\", \"34.76.143.174:8514\"]
+peers_preferred = [\"18.212.122.156:8514\", \"3.93.64.52:8514\", \"35.205.149.77:8514\", \"34.76.143.174:8514\", \"18.162.124.104\", \"3.8.15.100\"]
 
 #how long a banned peer should stay banned
 #ban_window = 3800
