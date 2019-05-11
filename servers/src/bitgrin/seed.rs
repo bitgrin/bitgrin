@@ -265,11 +265,13 @@ fn connect_to_seeds_and_preferred_peers(
 	let peers = peers.find_peers(p2p::State::Healthy, p2p::Capabilities::PEER_LIST, 100);
 
 	// if so, get their addresses, otherwise use our seeds
-	let mut peer_addrs = if peers.len() > 3 {
-		peers.iter().map(|p| p.addr).collect::<Vec<_>>()
-	} else {
-		seed_list()
-	};
+	// let mut peer_addrs = if peers.len() > 3 {
+	// 	peers.iter().map(|p| p.addr).collect::<Vec<_>>()
+	// } else {
+	// 	seed_list()
+	// };
+	let mut peer_addrs = peers.iter().map(|p| p.addr).collect::<Vec<_>>();
+	peer_addrs.append(&mut seed_list());
 
 	// If we have preferred peers add them to the connection
 	match peers_preferred_list {
