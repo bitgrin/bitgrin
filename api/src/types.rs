@@ -45,6 +45,8 @@ pub struct Tip {
 	pub prev_block_to_last: String,
 	// Total difficulty accumulated on that fork
 	pub total_difficulty: u64,
+	// Total emission of the chain
+	pub total_emission:  u64,
 }
 
 impl Tip {
@@ -54,6 +56,7 @@ impl Tip {
 			last_block_pushed: util::to_hex(tip.last_block_h.to_vec()),
 			prev_block_to_last: util::to_hex(tip.prev_block_h.to_vec()),
 			total_difficulty: tip.total_difficulty.to_num(),
+			total_emission: tip.height * 5 as u64,
 		}
 	}
 }

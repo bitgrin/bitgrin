@@ -157,7 +157,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "bitgrin"
-version = "1.0.4"
+version = "1.0.6"
 dependencies = [
  "bitgrin_api 1.0.0",
  "bitgrin_chain 1.0.0",
