@@ -1,6 +1,6 @@
 [package]
 name = "bitgrin"
-version = "1.0.4"
+version = "1.0.6"
 authors = ["BitGrin Developers <bitgrin@protonmail.com>"]
 description = "Simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
