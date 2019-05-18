@@ -216,6 +216,10 @@ fn monitor_peers(
 	if defuncts.len() > 0 {
 		thread_rng().shuffle(&mut defuncts);
 		let _ = peers.update_state(defuncts[0].addr, p2p::State::Healthy);
+		trace!(
+			"monitor_peers: mark random defunct {} as healthy",
+			defuncts[0].addr
+		)
 	}
 
 	// find some peers from our db
@@ -264,12 +268,9 @@ fn connect_to_seeds_and_preferred_peers(
 	// look for peers that are able to give us other peers (via PEER_LIST capability)
 	let peers = peers.find_peers(p2p::State::Healthy, p2p::Capabilities::PEER_LIST, 100);
 
-	// if so, get their addresses, otherwise use our seeds
-	let mut peer_addrs = if peers.len() > 3 {
-		peers.iter().map(|p| p.addr).collect::<Vec<_>>()
-	} else {
-		seed_list()
-	};
+	// if so, get their addresses and append seeds
+	let mut peer_addrs = peers.iter().map(|p| p.addr).collect::<Vec<_>>();
+	peer_addrs.append(&mut seed_list());
 
 	// If we have preferred peers add them to the connection
 	match peers_preferred_list {
@@ -311,7 +312,7 @@ fn listen_for_addrs(
 	// Try to connect to (up to max peers) peer addresses.
 	// Note: We drained the rx queue earlier to keep it under control.
 	// Even if there are many addresses to try we will only try a bounded number of them.
-	let connect_min_interval = 30;
+	let connect_min_interval = 10;
 	for addr in addrs.into_iter().take(p2p.config.peer_max_count() as usize) {
 		// ignore the duplicate connecting to same peer within 30 seconds
 		let now = Utc::now();
