@@ -211,15 +211,17 @@ fn monitor_peers(
 		}
 	}
 
-	// take a random defunct peer and mark it healthy: over a long period any
+	// take up to 3 random defunct peers and mark them healthy: over a long period any
 	// peer will see another as defunct eventually, gives us a chance to retry
-	if defuncts.len() > 0 {
-		thread_rng().shuffle(&mut defuncts);
-		let _ = peers.update_state(defuncts[0].addr, p2p::State::Healthy);
-		trace!(
-			"monitor_peers: mark random defunct {} as healthy",
-			defuncts[0].addr
-		)
+	for _ in 0..3 {
+		if defuncts.len() > 0 {
+			thread_rng().shuffle(&mut defuncts);
+			let _ = peers.update_state(defuncts[0].addr, p2p::State::Healthy);
+			trace!(
+				"monitor_peers: mark random defunct {} as healthy",
+				defuncts[0].addr
+			)
+		}
 	}
 
 	// find some peers from our db
