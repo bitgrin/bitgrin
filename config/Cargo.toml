@@ -18,7 +18,7 @@ dirs = "1.0.3"
 
 bitgrin_core = { path = "../core", version = "1.0.0" }
 bitgrin_servers = { path = "../servers", version = "1.0.0" }
-bitgrin_p2p = { path = "../p2p", version = "1.0.0" }
+bitgrin_p2p = { path = "../p2p", version = "1.0.7" }
 bitgrin_util = { path = "../util", version = "1.0.0" }
 bitgrin_wallet = { path = "../wallet", version = "1.0.0" }
 

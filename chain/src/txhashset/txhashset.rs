@@ -221,8 +221,11 @@ impl TxHashSet {
 	/// Derives the MMR pos from the height (insertion index) and retrieves the header hash.
 	/// Looks the header up in the db by hash.
 	pub fn get_header_by_height(&self, height: u64) -> Result<BlockHeader, Error> {
+		debug!("TxHashSet::::get_header_by_height: {}", height);
 		let hash = self.get_header_hash_by_height(height)?;
+		debug!("TxHashSet::hash: {}", hash);
 		let header = self.commit_index.get_block_header(&hash)?;
+		debug!("TxHashSet::header height: {}", header.height);
 		Ok(header)
 	}
 

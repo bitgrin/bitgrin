@@ -52,9 +52,9 @@ impl Hash {
 impl fmt::Debug for Hash {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		let hash_hex = self.to_hex();
-		const NUM_SHOW: usize = 12;
+		//const NUM_SHOW: usize = 12;
 
-		write!(f, "{}", &hash_hex[..NUM_SHOW])
+		write!(f, "{}", &hash_hex)
 	}
 }
 

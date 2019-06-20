@@ -176,6 +176,20 @@ where
 {
 	let data = send_request(req)?;
 	serde_json::from_str(&data).map_err(|e| {
+		error!("error parsing: {}", data);
+		if e.is_io() {
+			error!("JSON IO Error");
+		}
+		if e.is_syntax() {
+			error!("JSON Syntax Error");
+		}
+		if e.is_data() {
+			error!("JSON Data Error");
+		}
+		if e.is_eof() {
+			error!("JSON EOF Error");
+		}
+		error!("line: {} column: {}", e.line(), e.column());
 		e.context(ErrorKind::ResponseError("Cannot parse response".to_owned()))
 			.into()
 	})
@@ -187,6 +201,20 @@ where
 {
 	Box::new(send_request_async(req).and_then(|data| {
 		serde_json::from_str(&data).map_err(|e| {
+			error!("error parsing: {}", data);
+			if e.is_io() {
+				error!("JSON IO Error");
+			}
+			if e.is_syntax() {
+				error!("JSON Syntax Error");
+			}
+			if e.is_data() {
+				error!("JSON Data Error");
+			}
+			if e.is_eof() {
+				error!("JSON EOF Error");
+			}
+			error!("line: {} column: {}", e.line(), e.column());
 			e.context(ErrorKind::ResponseError("Cannot parse response".to_owned()))
 				.into()
 		})

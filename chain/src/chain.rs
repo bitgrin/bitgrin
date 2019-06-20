@@ -1225,6 +1225,7 @@ impl Chain {
 
 	/// Gets a block header by hash
 	pub fn get_block(&self, h: &Hash) -> Result<Block, Error> {
+		debug!("Chain::get_block: {}", h);
 		self.store
 			.get_block(h)
 			.map_err(|e| ErrorKind::StoreErr(e, "chain get block".to_owned()).into())
@@ -1232,6 +1233,7 @@ impl Chain {
 
 	/// Gets a block header by hash
 	pub fn get_block_header(&self, h: &Hash) -> Result<BlockHeader, Error> {
+		debug!("Chain::get_block_header: {}", h);
 		self.store
 			.get_block_header(h)
 			.map_err(|e| ErrorKind::StoreErr(e, "chain get header".to_owned()).into())
@@ -1255,6 +1257,7 @@ impl Chain {
 	/// Note: Takes a read lock on the txhashset.
 	/// Take care not to call this repeatedly in a tight loop.
 	pub fn get_header_by_height(&self, height: u64) -> Result<BlockHeader, Error> {
+		debug!("Chain::get_header_by_height({})", height);
 		let hash = self.get_header_hash_by_height(height)?;
 		self.get_block_header(&hash)
 	}

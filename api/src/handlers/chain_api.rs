@@ -41,6 +41,7 @@ impl ChainHandler {
 
 impl Handler for ChainHandler {
 	fn get(&self, _req: Request<Body>) -> ResponseFuture {
+		debug!("ChainHandler::get");
 		result_to_response(self.get_tip())
 	}
 }
