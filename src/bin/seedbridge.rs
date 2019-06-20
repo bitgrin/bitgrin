@@ -65,13 +65,15 @@ fn try_get_seed_hash(url: &str) -> Result<Hash, Error> {
 }
 
 pub fn seed_bridge() -> Result<Hash, Error> {
+    let seed_url_1 = "http://mainseed.bitgrin.io:8513/v1/blocks/{}";
+    let seed_url_2 = "http://mainseed2.bitgrin.io:8513/v1/blocks/{}";
 	let block_num = 190027;
-	let url = format!("http://mainseed.bitgrina.io:8513/v1/blocks/{}", block_num);
+	let url = format!(seed_url_1, block_num);
 	match try_get_seed_hash(&url) {
 		Ok(res) => Ok(res),
 		Err(e) => {
 			println!("Could not get main seed hash from mainseed, trying mainseed2...");
-			let url2 = format!("http://mainseed2.bitgrin.io:8513/v1/blocks/{}", block_num);
+			let url2 = format!(seed_url_2, block_num);
 			try_get_seed_hash(&url2)
 		}
 	}
