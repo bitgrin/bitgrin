@@ -15,3 +15,4 @@ bg_wallet_data
 wallet/db
 .idea/
 /releases/
+.vscode/
