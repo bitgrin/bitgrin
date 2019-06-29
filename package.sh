@@ -5,7 +5,7 @@ if [[ $# -eq 0 ]] ; then
     exit 1
 fi
 
-#cargo build --release
+cargo build --release
 mkdir -p "releases/v$1/bitgrin-$1/"
 cp ./target/release/bitgrin "releases/v$1/bitgrin-$1/"
 
