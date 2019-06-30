@@ -15,13 +15,15 @@
 use crate::api::TLSConfig;
 use crate::util::file::get_first_line;
 use crate::util::{Mutex, ZeroingString};
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_wallet::{
+	command, instantiate_wallet, NodeClient, WalletConfig, WalletInst, WalletSeed,
+};
+use bitgrin_wallet::{Error, ErrorKind};
 /// Argument parsing and error handling for wallet commands
 use clap::ArgMatches;
 use failure::Fail;
-use bitgrin_core as core;
-use bitgrin_keychain as keychain;
-use bitgrin_wallet::{command, instantiate_wallet, NodeClient, WalletConfig, WalletInst, WalletSeed};
-use bitgrin_wallet::{Error, ErrorKind};
 use linefeed::terminal::Signal;
 use linefeed::{Interface, ReadResult};
 use rpassword;
@@ -289,15 +291,13 @@ pub fn parse_recover_args(
 				let mut phrase: ZeroingString;
 				if recovery_phrase_str.is_some() {
 					phrase = ZeroingString::from(recovery_phrase_str.unwrap().to_string());
-				}
-				else {
+				} else {
 					phrase = prompt_recovery_phrase()?;
 				}
 				let mut pass: ZeroingString;
 				if g_args.password.is_some() {
 					pass = g_args.password.clone().unwrap();
-				}
-				else {
+				} else {
 					println!("Please provide a new password for the recovered wallet");
 					pass = prompt_password_confirm();
 				}

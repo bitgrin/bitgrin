@@ -82,16 +82,13 @@ impl<'a> UTXOView<'a> {
 			if let Some(hash) = self.output_pmmr.get_hash(pos) {
 				if hash == input.hash_with_index(pos - 1) {
 					return Ok(());
-				}
-				else {
+				} else {
 					debug!("Could not get hash with index {}", pos - 1);
 				}
-			}
-			else {
+			} else {
 				debug!("Could not get hash from pmmr");
 			}
-		}
-		else {
+		} else {
 			debug!("Could not get output pos");
 		}
 		Err(ErrorKind::Commitment801(input.commitment()).into())

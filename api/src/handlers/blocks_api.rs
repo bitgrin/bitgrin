@@ -108,8 +108,7 @@ impl BlockHandler {
 				Ok(header) => return Ok(header.hash()),
 				Err(_) => return Err(ErrorKind::NotFound)?,
 			}
-		}
-		else {
+		} else {
 			debug!("Didn't parse height");
 		}
 		check_block_param(&input)?;

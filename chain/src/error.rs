@@ -18,8 +18,8 @@ use crate::core::ser;
 use crate::keychain;
 use crate::util::secp;
 use crate::util::secp::pedersen::Commitment;
-use failure::{Backtrace, Context, Fail};
 use bitgrin_store as store;
+use failure::{Backtrace, Context, Fail};
 use std::fmt::{self, Display};
 use std::io;
 

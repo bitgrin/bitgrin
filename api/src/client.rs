@@ -37,11 +37,15 @@ pub fn get<'a, T>(url: &'a str, api_secret: Option<String>) -> Result<T, Error>
 where
 	for<'de> T: Deserialize<'de>,
 {
-	handle_request(build_request(url, "GET", api_secret, None,)?, None)
+	handle_request(build_request(url, "GET", api_secret, None)?, None)
 }
 
 //
-pub fn get_with_timeout<'a, T>(url: &'a str, api_secret: Option<String>, _timeout: u64) -> Result<T, Error>
+pub fn get_with_timeout<'a, T>(
+	url: &'a str,
+	api_secret: Option<String>,
+	_timeout: u64,
+) -> Result<T, Error>
 where
 	for<'de> T: Deserialize<'de>,
 {
@@ -230,10 +234,13 @@ where
 	}))
 }
 
-fn send_request_async(req: Request<Body>, _timeout: Option<u64>) -> Box<dyn Future<Item = String, Error = Error> + Send> {
+fn send_request_async(
+	req: Request<Body>,
+	_timeout: Option<u64>,
+) -> Box<dyn Future<Item = String, Error = Error> + Send> {
 	let https_connector = hyper_rustls::HttpsConnector::new(1);
 	let client = Client::builder().build::<_, Body>(https_connector);
-	
+
 	Box::new(
 		client
 			.request(req)

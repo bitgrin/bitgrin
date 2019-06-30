@@ -14,8 +14,8 @@
 
 use crate::cmd::wallet_args;
 use crate::config::GlobalWalletConfig;
-use clap::ArgMatches;
 use bitgrin_wallet::{self, HTTPNodeClient, WalletConfig, WalletSeed};
+use clap::ArgMatches;
 use std::path::PathBuf;
 use std::thread;
 use std::time::Duration;

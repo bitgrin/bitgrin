@@ -14,14 +14,14 @@
 //! Test wallet command line works as expected
 #[cfg(test)]
 mod wallet_tests {
-	use clap;
 	use bitgrin_util as util;
 	use bitgrin_wallet;
+	use clap;
 
 	use bitgrin_wallet::test_framework::{self, LocalWalletClient, WalletProxy};
 
-	use clap::{App, ArgMatches};
 	use bitgrin_util::Mutex;
+	use clap::{App, ArgMatches};
 	use std::sync::Arc;
 	use std::thread;
 	use std::time::Duration;
@@ -265,7 +265,9 @@ mod wallet_tests {
 		                         This part should all be truncated";
 
 		// Update info and check
-		let arg_vec = vec!["bitgrin", "wallet", "-p", "password", "-a", "mining", "info"];
+		let arg_vec = vec![
+			"bitgrin", "wallet", "-p", "password", "-a", "mining", "info",
+		];
 		execute_command(&app, test_dir, "wallet1", &client1, arg_vec)?;
 
 		// try a file exchange
@@ -334,7 +336,9 @@ mod wallet_tests {
 		bh += 10;
 
 		// update info for each
-		let arg_vec = vec!["bitgrin", "wallet", "-p", "password", "-a", "mining", "info"];
+		let arg_vec = vec![
+			"bitgrin", "wallet", "-p", "password", "-a", "mining", "info",
+		];
 		execute_command(&app, test_dir, "wallet1", &client1, arg_vec)?;
 
 		let arg_vec = vec![

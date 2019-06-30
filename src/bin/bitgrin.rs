@@ -22,13 +22,13 @@ extern crate log;
 use crate::config::config::{SERVER_CONFIG_FILE_NAME, WALLET_CONFIG_FILE_NAME};
 use crate::core::global;
 use crate::util::init_logger;
-use clap::App;
 use bitgrin_api as api;
 use bitgrin_config as config;
 use bitgrin_core as core;
 use bitgrin_p2p as p2p;
 use bitgrin_servers as servers;
 use bitgrin_util as util;
+use clap::App;
 use std::process::exit;
 
 mod cmd;

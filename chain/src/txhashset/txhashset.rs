@@ -30,9 +30,9 @@ use crate::txhashset::{RewindableKernelView, UTXOView};
 use crate::types::{Tip, TxHashSetRoots, TxHashsetWriteStatus};
 use crate::util::secp::pedersen::{Commitment, RangeProof};
 use crate::util::{file, secp_static, zip};
-use croaring::Bitmap;
 use bitgrin_store;
 use bitgrin_store::pmmr::{PMMRBackend, PMMR_FILES};
+use croaring::Bitmap;
 use std::collections::HashSet;
 use std::fs::{self, File};
 use std::path::{Path, PathBuf};
@@ -160,7 +160,7 @@ impl TxHashSet {
 		self.rproof_pmmr_h.backend.release_files();
 		self.kernel_pmmr_h.backend.release_files();
 	}
-	
+
 	/// Check if an output is unspent.
 	/// We look in the index to find the output MMR pos.
 	/// Then we check the entry in the output MMR and confirm the hash matches.
@@ -945,7 +945,9 @@ impl<'a> Extension<'a> {
 			}
 
 			if output_pos != rproof_pos {
-				return Err(ErrorKind::Other(format!("output vs rproof MMRs different pos")).into());
+				return Err(
+					ErrorKind::Other(format!("output vs rproof MMRs different pos")).into(),
+				);
 			}
 		}
 
