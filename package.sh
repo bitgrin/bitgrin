@@ -5,15 +5,22 @@ if [[ $# -eq 0 ]] ; then
     exit 1
 fi
 
-#cargo build --release
+cargo build --release
 mkdir -p "releases/v$1/bitgrin-$1/"
 cp ./target/release/bitgrin "releases/v$1/bitgrin-$1/"
 
+echo "$OSTYPE"
+
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    echo 'linux'
+    echo 'Linux'
     cd "./releases/v$1"
     zip -r "../BitGrin-Linux-$1.zip" "./bitgrin-$1"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    echo 'Mac OS'
+    cd "./releases/v$1"
+    zip -r "../BitGrin-Mac-OS-$1.zip" "./bitgrin-$1"
 else
+    echo 'Windows'
     cp ./bats/* "releases/v$1/bitgrin-$1/"
     "C:\Program Files\7-Zip\7z" a -r -tzip "./releases/BitGrin-Windows-10-64Bit-$1.zip" "./releases/v$1/bitgrin-$1"
 fi
