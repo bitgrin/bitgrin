@@ -18,12 +18,13 @@ use crate::core::consensus::HeaderInfo;
 use crate::core::core::hash::{Hash, Hashed};
 use crate::core::core::{Block, BlockHeader, BlockSums};
 use crate::core::pow::Difficulty;
-use crate::lmdb;
 use crate::types::Tip;
 use crate::util::secp::pedersen::Commitment;
 use bitgrin_store as store;
 use bitgrin_store::{option_to_not_found, to_key, Error};
 use croaring::Bitmap;
+use bitgrin_store as store;
+use bitgrin_store::{option_to_not_found, to_key, Error, SerIterator};
 use std::sync::Arc;
 
 const STORE_SUBPATH: &'static str = "chain";
@@ -45,8 +46,8 @@ pub struct ChainStore {
 
 impl ChainStore {
 	/// Create new chain store
-	pub fn new(db_env: Arc<lmdb::Environment>) -> Result<ChainStore, Error> {
-		let db = store::Store::open(db_env, STORE_SUBPATH);
+	pub fn new(db_root: &str) -> Result<ChainStore, Error> {
+		let db = store::Store::new(db_root, None, Some(STORE_SUBPATH.clone()), None)?;
 		Ok(ChainStore { db })
 	}
 }
@@ -274,7 +275,7 @@ impl<'a> Batch<'a> {
 	/// Clear all entries from the output_pos index (must be rebuilt after).
 	pub fn clear_output_pos(&self) -> Result<(), Error> {
 		let key = to_key(COMMIT_POS_PREFIX, &mut "".to_string().into_bytes());
-		for (k, _) in self.db.iter::<u64>(&key).unwrap() {
+		for (k, _) in self.db.iter::<u64>(&key)? {
 			self.db.delete(&k)?;
 		}
 		Ok(())
@@ -380,6 +381,12 @@ impl<'a> Batch<'a> {
 		Ok(Batch {
 			db: self.db.child()?,
 		})
+	}
+
+	/// An iterator to all block in db
+	pub fn blocks_iter(&self) -> Result<SerIterator<Block>, Error> {
+		let key = to_key(BLOCK_PREFIX, &mut "".to_string().into_bytes());
+		self.db.iter(&key)
 	}
 }
 

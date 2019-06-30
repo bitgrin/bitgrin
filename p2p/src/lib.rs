@@ -25,10 +25,10 @@ extern crate bitflags;
 
 #[macro_use]
 extern crate enum_primitive;
-use lmdb_zero as lmdb;
 
 #[macro_use]
 extern crate bitgrin_core as core;
+use bitgrin_chain as chain;
 use bitgrin_util as util;
 
 #[macro_use]

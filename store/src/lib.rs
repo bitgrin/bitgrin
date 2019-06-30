@@ -27,11 +27,12 @@ use failure;
 extern crate failure_derive;
 #[macro_use]
 extern crate bitgrin_core as core;
+extern crate bitgrin_util as util;
 
 //use bitgrin_core as core;
 
 pub mod leaf_set;
-mod lmdb;
+pub mod lmdb;
 pub mod pmmr;
 pub mod prune_list;
 pub mod types;

@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/bitgrin/bitgrin.svg?branch=master)](https://travis-ci.org/bitgrin/bitgrin)
+[![Release Version](https://img.shields.io/github/release/mimblewimble/grin.svg)](https://github.com/bitgrin/bitgrin/releases)
 
 # BitGrin
 

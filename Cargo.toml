@@ -1,7 +1,5 @@
 [package]
-name = "bitgrin"
-version = "1.0.7"
-authors = ["BitGrin Developers <bitgrin@protonmail.com>"]
+version = "2.0.0-beta.2"
 description = "Simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
@@ -12,7 +10,7 @@ build = "src/build/build.rs"
 edition = "2018"
 
 [workspace]
-members = ["api", "chain", "config", "core", "keychain", "p2p", "servers", "store", "util", "pool", "wallet"]
+members = ["api", "chain", "config", "core", "keychain", "p2p", "servers", "store", "util", "pool"]
 exclude = ["etc/gen_gen"]
 
 [[bin]]
@@ -23,48 +21,38 @@ path = "src/bin/bitgrin.rs"
 blake2-rfc = "0.2"
 chrono = "0.4.4"
 clap = { version = "2.31", features = ["yaml"] }
-rpassword = "2.0.0"
 ctrlc = { version = "3.1", features = ["termination"] }
 humansize = "1.1.0"
 serde = "1"
 serde_json = "1"
 log = "0.4"
 term = "0.5"
-linefeed = "0.5"
 failure = "0.1"
 failure_derive = "0.1"
 tokio = "0.1.7"
 tokio-core = "0.1.17"
 
-bitgrin_api = { path = "./api", version = "1.0.0" }
-bitgrin_config = { path = "./config", version = "1.0.0" }
-bitgrin_core = { path = "./core", version = "1.0.0" }
-bitgrin_keychain = { path = "./keychain", version = "1.0.0" }
-bitgrin_p2p = { path = "./p2p", version = "1.0.7" }
-bitgrin_servers = { path = "./servers", version = "1.0.0" }
-bitgrin_util = { path = "./util", version = "1.0.0" }
-bitgrin_wallet = { path = "./wallet", version = "1.0.0" }
-hyper = "0.12"
-hyper-timeout-connector = "0.1.0"
-tokio-timer = "0.2.11"
-reqwest = "0.9"
+bitgrin_api = { path = "./api", version = "2.0.0-beta.2" }
+bitgrin_config = { path = "./config", version = "2.0.0-beta.2" }
+bitgrin_core = { path = "./core", version = "2.0.0-beta.2" }
+bitgrin_keychain = { path = "./keychain", version = "2.0.0-beta.2" }
+bitgrin_p2p = { path = "./p2p", version = "2.0.0-beta.2" }
+bitgrin_servers = { path = "./servers", version = "2.0.0-beta.2" }
+bitgrin_util = { path = "./util", version = "2.0.0-beta.2" }
 
 
 [target.'cfg(windows)'.dependencies]
-cursive = { version = "0.10.0", default-features = false, features = ["pancurses-backend"] }
+cursive = { version = "0.12", default-features = false, features = ["pancurses-backend"] }
 [target.'cfg(windows)'.dependencies.pancurses]
 version = "0.16.0"
 features = ["win32"]
 [target.'cfg(unix)'.dependencies]
-cursive = "0.9.0"
+cursive = "0.12"
 
 
 [build-dependencies]
 built = "0.3"
-reqwest = "0.9"
-flate2 = "1.0"
-tar = "0.4"
 
 [dev-dependencies]
-bitgrin_chain = { path = "./chain", version = "1.0.0" }
-bitgrin_store = { path = "./store", version = "1.0.0" }
+bitgrin_chain = { path = "./chain", version = "2.0.0-beta.2" }
+bitgrin_store = { path = "./store", version = "2.0.0-beta.2" }

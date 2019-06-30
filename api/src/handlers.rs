@@ -19,40 +19,30 @@ mod pool_api;
 mod server_api;
 mod transactions_api;
 mod utils;
+mod version_api;
 
-use crate::router::{Router, RouterError};
-
-// Server
-use self::server_api::IndexHandler;
-use self::server_api::StatusHandler;
-
-// Blocks
 use self::blocks_api::BlockHandler;
 use self::blocks_api::HeaderHandler;
-
-// TX Set
-use self::transactions_api::TxHashSetHandler;
-
-// Chain
 use self::chain_api::ChainCompactHandler;
 use self::chain_api::ChainHandler;
 use self::chain_api::ChainValidationHandler;
 use self::chain_api::OutputHandler;
-
-// Pool Handlers
-use self::pool_api::PoolInfoHandler;
-use self::pool_api::PoolPushHandler;
-
-// Peers
 use self::peers_api::PeerHandler;
 use self::peers_api::PeersAllHandler;
 use self::peers_api::PeersConnectedHandler;
-
-use crate::auth::BasicAuthMiddleware;
+use self::pool_api::PoolInfoHandler;
+use self::pool_api::PoolPushHandler;
+use self::server_api::IndexHandler;
+use self::server_api::KernelDownloadHandler;
+use self::server_api::StatusHandler;
+use self::transactions_api::TxHashSetHandler;
+use self::version_api::VersionHandler;
+use crate::auth::{BasicAuthMiddleware, GRIN_BASIC_REALM};
 use crate::chain;
 use crate::p2p;
 use crate::pool;
 use crate::rest::*;
+use crate::router::{Router, RouterError};
 use crate::util;
 use crate::util::RwLock;
 use std::net::SocketAddr;
@@ -76,11 +66,10 @@ pub fn start_rest_apis(
 ) -> bool {
 	let mut apis = ApiServer::new();
 	let mut router = build_router(chain, tx_pool, peers).expect("unable to build API router");
-	if api_secret.is_some() {
-		let api_basic_auth =
-			"Basic ".to_string() + &util::to_base64(&("bitgrin:".to_string() + &api_secret.unwrap()));
-		let basic_realm = "Basic realm=BitGrinAPI".to_string();
-		let basic_auth_middleware = Arc::new(BasicAuthMiddleware::new(api_basic_auth, basic_realm));
+	if let Some(api_secret) = api_secret {
+		let api_basic_auth = format!("Basic {}", util::to_base64(&format!("bitgrin:{}", api_secret)));
+		let basic_auth_middleware =
+			Arc::new(BasicAuthMiddleware::new(api_basic_auth, &GRIN_BASIC_REALM));
 		router.add_middleware(basic_auth_middleware);
 	}
 
@@ -103,23 +92,27 @@ pub fn build_router(
 ) -> Result<Router, RouterError> {
 	let route_list = vec![
 		"get blocks".to_string(),
+		"get headers".to_string(),
 		"get chain".to_string(),
 		"post chain/compact".to_string(),
-		"post chain/validate".to_string(),
-		"get chain/outputs".to_string(),
+		"get chain/validate".to_string(),
+		"get chain/outputs/byids?id=xxx,yyy,zzz".to_string(),
+		"get chain/outputs/byheight?start_height=101&end_height=200".to_string(),
 		"get status".to_string(),
 		"get txhashset/roots".to_string(),
 		"get txhashset/lastoutputs?n=10".to_string(),
 		"get txhashset/lastrangeproofs".to_string(),
 		"get txhashset/lastkernels".to_string(),
 		"get txhashset/outputs?start_index=1&max=100".to_string(),
+		"get txhashset/merkleproof?n=1".to_string(),
 		"get pool".to_string(),
-		"post pool/push".to_string(),
+		"post pool/push_tx".to_string(),
 		"post peers/a.b.c.d:p/ban".to_string(),
 		"post peers/a.b.c.d:p/unban".to_string(),
 		"get peers/all".to_string(),
 		"get peers/connected".to_string(),
 		"get peers/a.b.c.d".to_string(),
+		"get version".to_string(),
 	];
 	let index_handler = IndexHandler { list: route_list };
 
@@ -146,6 +139,9 @@ pub fn build_router(
 		chain: Arc::downgrade(&chain),
 		peers: Arc::downgrade(&peers),
 	};
+	let kernel_download_handler = KernelDownloadHandler {
+		peers: Arc::downgrade(&peers),
+	};
 	let txhashset_handler = TxHashSetHandler {
 		chain: Arc::downgrade(&chain),
 	};
@@ -164,6 +160,9 @@ pub fn build_router(
 	let peer_handler = PeerHandler {
 		peers: Arc::downgrade(&peers),
 	};
+	let version_handler = VersionHandler {
+		chain: Arc::downgrade(&chain),
+	};
 
 	let mut router = Router::new();
 
@@ -176,10 +175,12 @@ pub fn build_router(
 	router.add_route("/v1/chain/validate", Arc::new(chain_validation_handler))?;
 	router.add_route("/v1/txhashset/*", Arc::new(txhashset_handler))?;
 	router.add_route("/v1/status", Arc::new(status_handler))?;
+	router.add_route("/v1/kerneldownload", Arc::new(kernel_download_handler))?;
 	router.add_route("/v1/pool", Arc::new(pool_info_handler))?;
-	router.add_route("/v1/pool/push", Arc::new(pool_push_handler))?;
+	router.add_route("/v1/pool/push_tx", Arc::new(pool_push_handler))?;
 	router.add_route("/v1/peers/all", Arc::new(peers_all_handler))?;
 	router.add_route("/v1/peers/connected", Arc::new(peers_connected_handler))?;
 	router.add_route("/v1/peers/**", Arc::new(peer_handler))?;
+	router.add_route("/v1/version", Arc::new(version_handler))?;
 	Ok(router)
 }

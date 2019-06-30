@@ -10,7 +10,6 @@ cargo-fuzz = true
 [dependencies]
 bitgrin_core = { path = ".."}
 bitgrin_keychain = { path = "../../keychain"}
-bitgrin_wallet = { path = "../../wallet"}
 [dependencies.libfuzzer-sys]
 git = "https://github.com/rust-fuzz/libfuzzer-sys.git"
 

@@ -1,8 +1,5 @@
 [package]
-name = "bitgrin_api"
-version = "1.0.0"
-authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
-description = "APIs for bitgrin, a simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
+version = "2.0.0-beta.2"
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
 keywords = [ "crypto", "bitgrin", "mimblewimble" ]
@@ -31,9 +28,9 @@ futures = "0.1.21"
 rustls = "0.13"
 url = "1.7.0"
 
-bitgrin_core = { path = "../core", version = "1.0.0" }
-bitgrin_chain = { path = "../chain", version = "1.0.0" }
-bitgrin_p2p = { path = "../p2p", version = "1.0.7" }
-bitgrin_pool = { path = "../pool", version = "1.0.0" }
-bitgrin_store = { path = "../store", version = "1.0.0" }
-bitgrin_util = { path = "../util", version = "1.0.0" }
+grin_core = { path = "../core", version = "2.0.0-beta.2" }
+grin_chain = { path = "../chain", version = "2.0.0-beta.2" }
+grin_p2p = { path = "../p2p", version = "2.0.0-beta.2" }
+grin_pool = { path = "../pool", version = "2.0.0-beta.2" }
+grin_store = { path = "../store", version = "2.0.0-beta.2" }
+grin_util = { path = "../util", version = "2.0.0-beta.2" }

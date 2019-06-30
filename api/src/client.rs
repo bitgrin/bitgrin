@@ -20,7 +20,7 @@ use crate::util::to_base64;
 use failure::{Fail, ResultExt};
 use futures::future::{err, ok, Either};
 use http::uri::{InvalidUri, Uri};
-use hyper::header::{ACCEPT, AUTHORIZATION, USER_AGENT};
+use hyper::header::{ACCEPT, AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
 use hyper::rt::{Future, Stream};
 use hyper::{Body, Client, Request};
 use hyper_rustls;
@@ -138,8 +138,8 @@ where
 	}
 }
 
-fn build_request<'a>(
-	url: &'a str,
+fn build_request(
+	url: &str,
 	method: &str,
 	api_secret: Option<String>,
 	body: Option<String>,
@@ -149,9 +149,8 @@ fn build_request<'a>(
 			.into()
 	})?;
 	let mut builder = Request::builder();
-	if api_secret.is_some() {
-		let basic_auth =
-			"Basic ".to_string() + &to_base64(&("bitgrin:".to_string() + &api_secret.unwrap()));
+	if let Some(api_secret) = api_secret {
+		let basic_auth = format!("Basic {}", to_base64(&format!("bitgrin:{}", api_secret)));
 		builder.header(AUTHORIZATION, basic_auth);
 	}
 
@@ -160,6 +159,7 @@ fn build_request<'a>(
 		.uri(uri)
 		.header(USER_AGENT, "bitgrin-client")
 		.header(ACCEPT, "application/json")
+		.header(CONTENT_TYPE, "application/json")
 		.body(match body {
 			None => Body::empty(),
 			Some(json) => json.into(),
@@ -169,7 +169,7 @@ fn build_request<'a>(
 		})
 }
 
-fn create_post_request<IN>(
+pub fn create_post_request<IN>(
 	url: &str,
 	api_secret: Option<String>,
 	input: &IN,
@@ -247,9 +247,11 @@ fn send_request_async(
 			.map_err(|e| ErrorKind::RequestError(format!("Cannot make request: {}", e)).into())
 			.and_then(|resp| {
 				if !resp.status().is_success() {
-					Either::A(err(ErrorKind::RequestError(
-						"Wrong response code".to_owned(),
-					)
+					Either::A(err(ErrorKind::RequestError(format!(
+						"Wrong response code: {} with data {:?}",
+						resp.status(),
+						resp.body()
+					))
 					.into()))
 				} else {
 					Either::B(
@@ -266,8 +268,9 @@ fn send_request_async(
 	)
 }
 
-fn send_request(req: Request<Body>, _timeout: Option<u64>) -> Result<String, Error> {
-	let task = send_request_async(req, _timeout);
-	let mut rt = Runtime::new().unwrap();
+pub fn send_request(req: Request<Body>) -> Result<String, Error> {
+	let task = send_request_async(req);
+	let mut rt =
+		Runtime::new().context(ErrorKind::Internal("can't create Tokio runtime".to_owned()))?;
 	Ok(rt.block_on(task)?)
 }

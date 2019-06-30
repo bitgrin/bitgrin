@@ -1,7 +1,5 @@
 [package]
-name = "bitgrin_util"
-version = "1.0.0"
-authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
+version = "2.0.0-beta.2"
 description = "Simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
@@ -14,7 +12,7 @@ backtrace = "0.3"
 base64 = "0.9"
 byteorder = "1"
 lazy_static = "1"
-rand = "0.5"
+rand = "0.6"
 serde = "1"
 serde_derive = "1"
 log4rs = { version = "0.8.1", features = ["rolling_file_appender", "compound_policy", "size_trigger", "fixed_window_roller"] }
@@ -22,11 +20,11 @@ log = "0.4"
 walkdir = "2"
 zip = { version = "0.4", default-features = false }
 parking_lot = {version = "0.6"}
-zeroize = "0.5.2"
+zeroize = "0.9"
 
 [dependencies.grin_secp256k1zkp]
 #git = "https://github.com/mimblewimble/rust-secp256k1-zkp"
 #tag = "bitgrin_integration_29"
 #path = "../../rust-secp256k1-zkp"
-version = "0.7.4"
+version = "0.7.7"
 features = ["bullet-proof-sizing"]

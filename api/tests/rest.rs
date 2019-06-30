@@ -2,9 +2,9 @@ use bitgrin_api as api;
 use bitgrin_util as util;
 
 use crate::api::*;
-use hyper::{Body, Request};
+use hyper::{Body, Request, StatusCode};
 use std::net::SocketAddr;
-use std::sync::atomic::{AtomicUsize, Ordering, ATOMIC_USIZE_INIT};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::{thread, time};
 
@@ -27,7 +27,7 @@ pub struct CounterMiddleware {
 impl CounterMiddleware {
 	fn new() -> CounterMiddleware {
 		CounterMiddleware {
-			counter: ATOMIC_USIZE_INIT,
+			counter: AtomicUsize::new(0),
 		}
 	}
 
@@ -43,7 +43,10 @@ impl Handler for CounterMiddleware {
 		mut handlers: Box<dyn Iterator<Item = HandlerObj>>,
 	) -> ResponseFuture {
 		self.counter.fetch_add(1, Ordering::SeqCst);
-		handlers.next().unwrap().call(req, handlers)
+		match handlers.next() {
+			Some(h) => h.call(req, handlers),
+			None => return response(StatusCode::INTERNAL_SERVER_ERROR, "no handler found"),
+		}
 	}
 }
 

@@ -21,12 +21,11 @@ use self::core::libtx;
 use self::core::pow::{self, Difficulty};
 use self::core::{consensus, genesis};
 use self::keychain::{ExtKeychain, ExtKeychainPath, Keychain};
-use self::util::{Mutex, RwLock, StopState};
+use self::util::RwLock;
 use chrono::Duration;
 use bitgrin_chain as chain;
 use bitgrin_core as core;
 use bitgrin_keychain as keychain;
-use bitgrin_store as store;
 use bitgrin_util as util;
 use std::fs;
 use std::sync::Arc;
@@ -41,32 +40,26 @@ fn setup(dir_name: &str) -> Chain {
 	global::set_mining_mode(ChainTypes::AutomatedTesting);
 	let genesis_block = pow::mine_genesis_block().unwrap();
 	let verifier_cache = Arc::new(RwLock::new(LruVerifierCache::new()));
-	let db_env = Arc::new(store::new_env(dir_name.to_string()));
 	chain::Chain::init(
 		dir_name.to_string(),
-		db_env,
 		Arc::new(NoopAdapter {}),
 		genesis_block,
 		pow::verify_size,
 		verifier_cache,
 		false,
-		Arc::new(Mutex::new(StopState::new())),
 	)
 	.unwrap()
 }
 
 fn reload_chain(dir_name: &str) -> Chain {
 	let verifier_cache = Arc::new(RwLock::new(LruVerifierCache::new()));
-	let db_env = Arc::new(store::new_env(dir_name.to_string()));
 	chain::Chain::init(
 		dir_name.to_string(),
-		db_env,
 		Arc::new(NoopAdapter {}),
 		genesis::genesis_dev(),
 		pow::verify_size,
 		verifier_cache,
 		false,
-		Arc::new(Mutex::new(StopState::new())),
 	)
 	.unwrap()
 }
@@ -81,9 +74,16 @@ fn data_files() {
 
 		for n in 1..4 {
 			let prev = chain.head_header().unwrap();
-			let next_header_info = consensus::next_difficulty(1, chain.difficulty_iter());
+			let next_header_info = consensus::next_difficulty(1, chain.difficulty_iter().unwrap());
 			let pk = ExtKeychainPath::new(1, n as u32, 0, 0, 0).to_identifier();
-			let reward = libtx::reward::output(&keychain, &pk, 0, n).unwrap();
+			let reward = libtx::reward::output(
+				&keychain,
+				&libtx::ProofBuilder::new(&keychain),
+				&pk,
+				0,
+				false /*height arg issue*/,
+			)
+			.unwrap();
 			let mut b =
 				core::core::Block::new(&prev, vec![], next_header_info.clone().difficulty, reward)
 					.unwrap();
@@ -112,6 +112,8 @@ fn data_files() {
 		let chain = reload_chain(chain_dir);
 		chain.validate(false).unwrap();
 	}
+	// Cleanup chain directory
+	clean_output_dir(chain_dir);
 }
 
 fn _prepare_block(kc: &ExtKeychain, prev: &BlockHeader, chain: &Chain, diff: u64) -> Block {
@@ -160,7 +162,8 @@ fn _prepare_block_nosum(
 
 	let fees = txs.iter().map(|tx| tx.fee()).sum();
 	let height = prev.height + 1;
-	let reward = libtx::reward::output(kc, &key_id, fees, height).unwrap();
+	let reward =
+		libtx::reward::output(kc, &libtx::ProofBuilder::new(kc), &key_id, fees, false/*height arg issue*/).unwrap();
 	let mut b = match core::core::Block::new(
 		prev,
 		txs.into_iter().cloned().collect(),
