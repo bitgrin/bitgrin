@@ -1,4 +1,5 @@
 [package]
+name = "bitgrin_util"
 version = "2.0.0-beta.2"
 description = "Simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
 license = "Apache-2.0"

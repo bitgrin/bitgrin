@@ -170,4 +170,5 @@ pub enum BlockStatus {
 	/// Block updates the chain head via a (potentially disruptive) "reorg".
 	/// Previous block was not our previous chain head.
 	Reorg(u64),
+	ChainIntegrityFailure,
 }

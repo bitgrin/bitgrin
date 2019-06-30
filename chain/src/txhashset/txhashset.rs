@@ -30,8 +30,6 @@ use crate::txhashset::{RewindableKernelView, UTXOView};
 use crate::types::{Tip, TxHashSetRoots, TxHashsetWriteStatus};
 use crate::util::secp::pedersen::{Commitment, RangeProof};
 use crate::util::{file, secp_static, zip};
-use bitgrin_store;
-use bitgrin_store::pmmr::{PMMRBackend, PMMR_FILES};
 use croaring::Bitmap;
 use bitgrin_store;
 use bitgrin_store::pmmr::{clean_files_by_prefix, PMMRBackend, PMMR_FILES};

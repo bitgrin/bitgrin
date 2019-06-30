@@ -13,8 +13,6 @@
 // limitations under the License.
 
 //! High level JSON/HTTP client API
-//! extern crate hyper_timeout_connector;
-
 use crate::rest::{Error, ErrorKind};
 use crate::util::to_base64;
 use failure::{Fail, ResultExt};
@@ -37,19 +35,7 @@ pub fn get<'a, T>(url: &'a str, api_secret: Option<String>) -> Result<T, Error>
 where
 	for<'de> T: Deserialize<'de>,
 {
-	handle_request(build_request(url, "GET", api_secret, None)?, None)
-}
-
-//
-pub fn get_with_timeout<'a, T>(
-	url: &'a str,
-	api_secret: Option<String>,
-	_timeout: u64,
-) -> Result<T, Error>
-where
-	for<'de> T: Deserialize<'de>,
-{
-	handle_request(build_request(url, "GET", api_secret, None)?, Some(_timeout))
+	handle_request(build_request(url, "GET", api_secret, None)?)
 }
 
 /// Helper function to easily issue an async HTTP GET request against a given
@@ -70,7 +56,7 @@ where
 /// building and response code checking.
 pub fn get_no_ret(url: &str, api_secret: Option<String>) -> Result<(), Error> {
 	let req = build_request(url, "GET", api_secret, None)?;
-	send_request(req, None)?;
+	send_request(req)?;
 	Ok(())
 }
 
@@ -84,7 +70,7 @@ where
 	for<'de> OUT: Deserialize<'de>,
 {
 	let req = create_post_request(url, api_secret, input)?;
-	handle_request(req, None)
+	handle_request(req)
 }
 
 /// Helper function to easily issue an async HTTP POST request with the
@@ -116,7 +102,7 @@ where
 	IN: Serialize,
 {
 	let req = create_post_request(url, api_secret, input)?;
-	send_request(req, None)?;
+	send_request(req)?;
 	Ok(())
 }
 
@@ -133,7 +119,7 @@ where
 	IN: Serialize,
 {
 	match create_post_request(url, api_secret, input) {
-		Ok(req) => Box::new(send_request_async(req, None).and_then(|_| ok(()))),
+		Ok(req) => Box::new(send_request_async(req).and_then(|_| ok(()))),
 		Err(e) => Box::new(err(e)),
 	}
 }
@@ -183,11 +169,11 @@ where
 	build_request(url, "POST", api_secret, Some(json))
 }
 
-fn handle_request<T>(req: Request<Body>, _timeout: Option<u64>) -> Result<T, Error>
+fn handle_request<T>(req: Request<Body>) -> Result<T, Error>
 where
 	for<'de> T: Deserialize<'de>,
 {
-	let data = send_request(req, _timeout)?;
+	let data = send_request(req)?;
 	serde_json::from_str(&data).map_err(|e| {
 		error!("error parsing: {}", data);
 		if e.is_io() {
@@ -212,7 +198,7 @@ fn handle_request_async<T>(req: Request<Body>) -> ClientResponseFuture<T>
 where
 	for<'de> T: Deserialize<'de> + Send + 'static,
 {
-	Box::new(send_request_async(req, None).and_then(|data| {
+	Box::new(send_request_async(req).and_then(|data| {
 		serde_json::from_str(&data).map_err(|e| {
 			error!("error parsing: {}", data);
 			if e.is_io() {
@@ -236,7 +222,6 @@ where
 
 fn send_request_async(
 	req: Request<Body>,
-	_timeout: Option<u64>,
 ) -> Box<dyn Future<Item = String, Error = Error> + Send> {
 	let https_connector = hyper_rustls::HttpsConnector::new(1);
 	let client = Client::builder().build::<_, Body>(https_connector);

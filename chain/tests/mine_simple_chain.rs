@@ -30,11 +30,11 @@ use bitgrin_chain::{BlockStatus, ChainAdapter, Options};
 use bitgrin_core as core;
 use bitgrin_keychain as keychain;
 use bitgrin_util as util;
-use grin_chain as chain;
-use grin_chain::{BlockStatus, ChainAdapter, Options};
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_util as util;
+use bitgrin_chain as chain;
+use bitgrin_chain::{BlockStatus, ChainAdapter, Options};
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_util as util;
 use std::fs;
 use std::sync::Arc;
 

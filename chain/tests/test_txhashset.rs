@@ -15,7 +15,7 @@
 use bitgrin_chain as chain;
 use bitgrin_core as core;
 
-use grin_util as util;
+use bitgrin_util as util;
 
 use std::collections::HashSet;
 use std::fs::{self, File, OpenOptions};
@@ -27,7 +27,7 @@ use crate::chain::store::ChainStore;
 use crate::chain::txhashset;
 use crate::core::core::BlockHeader;
 use crate::util::file;
-use grin_core::core::hash::Hashed;
+use bitgrin_core::core::hash::Hashed;
 
 fn clean_output_dir(dir_name: &str) {
 	let _ = fs::remove_dir_all(dir_name);

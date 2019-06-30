@@ -14,6 +14,8 @@
 
 //! Main for building the binary of a BitGrin peer-to-peer node.
 
+## !!!!!! This is a WIP, use the debug branch to build from source !!!!!! ##
+
 #[macro_use]
 extern crate clap;
 
@@ -29,12 +31,6 @@ use bitgrin_p2p as p2p;
 use bitgrin_servers as servers;
 use bitgrin_util as util;
 use clap::App;
-use bitgrin_api as api;
-use bitgrin_config as config;
-use bitgrin_core as core;
-use bitgrin_p2p as p2p;
-use bitgrin_servers as servers;
-use bitgrin_util as util;
 
 mod cmd;
 pub mod tui;

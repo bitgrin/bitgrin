@@ -21,7 +21,7 @@ use self::core::ser;
 use self::core::ser::{FixedLength, PMMRable, Readable, Reader, Writeable, Writer};
 use croaring;
 use croaring::Bitmap;
-use grin_core as core;
+use bitgrin_core as core;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct TestElem(pub [u32; 4]);

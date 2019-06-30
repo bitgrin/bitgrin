@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use grin_store as store;
-use grin_util as util;
+use bitgrin_store as store;
+use bitgrin_util as util;
 
-use grin_core::ser::{self, Readable, Reader, Writeable, Writer};
+use bitgrin_core::ser::{self, Readable, Reader, Writeable, Writer};
 
 use std::fs;
 

@@ -26,7 +26,6 @@ extern crate serde_derive;
 #[macro_use]
 extern crate log;
 
-use defuncts.shuffle(&mut thread_rng());grin_util as util;
 use bitgrin_api as api;
 use bitgrin_chain as chain;
 use bitgrin_core as core;

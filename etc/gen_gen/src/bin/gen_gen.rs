@@ -27,7 +27,7 @@ use serde_json;
 use cuckoo_miner as cuckoo;
 use bitgrin_chain as chain;
 use bitgrin_core as core;
-use grin_miner_plugin as plugin;
+use bitgrin_miner_plugin as plugin;
 use bitgrin_store as store;
 use bitgrin_util as util;
 use bitgrin_wallet as wallet;

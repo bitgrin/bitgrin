@@ -24,7 +24,7 @@ use crate::libtx::{
 	proof::{self, ProofBuild},
 };
 use crate::util::{secp, static_secp_instance};
-use grin_keychain::SwitchCommitmentType;
+use bitgrin_keychain::SwitchCommitmentType;
 
 /// output a reward output
 pub fn output<K, B>(

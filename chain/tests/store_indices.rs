@@ -20,9 +20,9 @@ use self::core::libtx;
 use self::core::pow::{self, Difficulty};
 use self::keychain::{ExtKeychain, ExtKeychainPath, Keychain};
 use env_logger;
-use grin_chain as chain;
-use grin_core as core;
-use grin_keychain as keychain;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
 use std::fs;
 use std::sync::Arc;
 

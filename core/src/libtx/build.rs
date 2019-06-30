@@ -29,7 +29,7 @@ use crate::core::{Input, Output, OutputFeatures, Transaction, TxKernel};
 use crate::keychain::{BlindSum, BlindingFactor, Identifier, Keychain};
 use crate::libtx::proof::{self, ProofBuild};
 use crate::libtx::{aggsig, Error};
-use grin_keychain::SwitchCommitmentType;
+use bitgrin_keychain::SwitchCommitmentType;
 
 /// Context information available to transaction combinators.
 pub struct Context<'a, K, B>

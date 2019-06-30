@@ -142,6 +142,14 @@ impl ChainEvents for EventLogger {
 					block.header.total_difficulty(),
 				);
 			}
+            BlockStatus::ChainIntegrityFailure => {
+                debug!(
+                    "block_accepted (integrity failure - this should not happen): {:?} at {} (diff: {})",
+                    block.hash(),
+                    block.header.height,
+                    block.header.total_difficulty(),
+                );
+            }
 		}
 	}
 }
@@ -266,6 +274,7 @@ impl ChainEvents for WebHook {
 			BlockStatus::Reorg(_) => "reorg",
 			BlockStatus::Fork => "fork",
 			BlockStatus::Next => "head",
+            BlockStatus::ChainIntegrityFailure => "integrityfailure",
 		};
 
 		// Add additional `depth` field to the JSON in case of reorg

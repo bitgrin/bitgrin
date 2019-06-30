@@ -23,10 +23,10 @@ use self::keychain::{ExtKeychain, ExtKeychainPath, Keychain};
 use self::util::RwLock;
 use chrono::Duration;
 use env_logger;
-use grin_chain as chain;
-use grin_core as core;
-use grin_keychain as keychain;
-use grin_util as util;
+use bitgrin_chain as chain;
+use bitgrin_core as core;
+use bitgrin_keychain as keychain;
+use bitgrin_util as util;
 use std::fs;
 use std::sync::Arc;
 

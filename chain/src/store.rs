@@ -20,8 +20,6 @@ use crate::core::core::{Block, BlockHeader, BlockSums};
 use crate::core::pow::Difficulty;
 use crate::types::Tip;
 use crate::util::secp::pedersen::Commitment;
-use bitgrin_store as store;
-use bitgrin_store::{option_to_not_found, to_key, Error};
 use croaring::Bitmap;
 use bitgrin_store as store;
 use bitgrin_store::{option_to_not_found, to_key, Error, SerIterator};

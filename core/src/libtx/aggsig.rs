@@ -21,7 +21,7 @@ use crate::libtx::error::{Error, ErrorKind};
 use crate::util::secp::key::{PublicKey, SecretKey};
 use crate::util::secp::pedersen::Commitment;
 use crate::util::secp::{self, aggsig, Message, Secp256k1, Signature};
-use grin_keychain::SwitchCommitmentType;
+use bitgrin_keychain::SwitchCommitmentType;
 
 /// Creates a new secure nonce (as a SecretKey), guaranteed to be usable during
 /// aggsig creation.
