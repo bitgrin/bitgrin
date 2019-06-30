@@ -63,9 +63,14 @@ fn log_build_info() {
 	info!("{}", basic_info);
 	debug!("{}", detailed_info);
 }
-
+mod seedbridge;
 fn main() {
 	println!("BitGrin v1.0.7");
+	/*match seedbridge::seed_bridge() {
+		Ok(x) => { println!("OK!: {}", x) },
+		Err(e) => { println!("Err: {:?}", e)},
+	}
+	return;*/
 	let exit_code = real_main();
 	std::process::exit(exit_code);
 }

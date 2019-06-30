@@ -278,33 +278,13 @@ impl Chain {
 				is_next_block = true;
 
 				// Verify chain integrity
-				let bitgrin_2 = "4c37bb19c526509cc502828115542cb2f0b120efbabc0af2e84c24d00b6e6133";
-				let bitgrin_1k = "0002c0a5cc90c4b588e08f00c7b98bcf8c3b2498ca2ef31002a0b9551d162e7b";
-				let bitgrin_10k = "00000ef10084128281796f948bcb8562bb996c087e15ec2f3726654ace8e1983";
-				let bitgrin_20k = "00002df8586eb2e65982c02162ce16c3d8bd28f6bf8e2646a4d57cb4d3a40e7d";
-				let bitgrin_30k = "0001b7875409afbd3bcaa1d0cf3af6e1d8a98ba31714e95fc22a9b5c70129fd4";
-				let bitgrin_40k = "000227e48810ad9924bedf88c224e358ecc6411ed9a87587dd79f13feaf64448";
-				if((head.height > 1 && head.height < 100) || (head.height % 1_000 == 0)) {
+				let bitgrin_150k = "00010a98dcd2a822af5ee55db000b797f1e8b320f6cca4a5e423cc2f8c894520";
+				if (head.height >= 150_000) || (head.height % 10_000 == 0) {
 					// Rewind until block hash is confirmed
 					let mut head_iter = self.get_block_header(&head.prev_block_h).unwrap();
-					while head_iter.height >= 1 {
+					while head_iter.height >= 150_000 {
 						head_iter = self.get_block_header(&head_iter.prev_hash).unwrap();
-						if (head_iter.height == 2) && (head_iter.hash().to_hex() != bitgrin_2) {
-							return BlockStatus::ChainIntegrityFailure;
-						}
-						if (head_iter.height == 1_000) && (head_iter.hash().to_hex() != bitgrin_1k) {
-							return BlockStatus::ChainIntegrityFailure;
-						}
-						if (head_iter.height == 10_000) && (head_iter.hash().to_hex() != bitgrin_10k) {
-							return BlockStatus::ChainIntegrityFailure;
-						}
-						if (head_iter.height == 20_000) && (head_iter.hash().to_hex() != bitgrin_20k) {
-							return BlockStatus::ChainIntegrityFailure;
-						}
-						if (head_iter.height == 30_000) && (head_iter.hash().to_hex() != bitgrin_30k) {
-							return BlockStatus::ChainIntegrityFailure;
-						}
-						if (head_iter.height == 40_000) && (head_iter.hash().to_hex() != bitgrin_40k) {
+						if (head_iter.height == 150_000) && (head_iter.hash().to_hex() != bitgrin_150k) {
 							return BlockStatus::ChainIntegrityFailure;
 						}
 					}
@@ -1225,7 +1205,7 @@ impl Chain {
 
 	/// Gets a block header by hash
 	pub fn get_block(&self, h: &Hash) -> Result<Block, Error> {
-		debug!("Chain::get_block: {}", h);
+		trace!("Chain::get_block: {}", h);
 		self.store
 			.get_block(h)
 			.map_err(|e| ErrorKind::StoreErr(e, "chain get block".to_owned()).into())
@@ -1233,7 +1213,7 @@ impl Chain {
 
 	/// Gets a block header by hash
 	pub fn get_block_header(&self, h: &Hash) -> Result<BlockHeader, Error> {
-		debug!("Chain::get_block_header: {}", h);
+		trace!("Chain::get_block_header: {}", h);
 		self.store
 			.get_block_header(h)
 			.map_err(|e| ErrorKind::StoreErr(e, "chain get header".to_owned()).into())
@@ -1257,7 +1237,7 @@ impl Chain {
 	/// Note: Takes a read lock on the txhashset.
 	/// Take care not to call this repeatedly in a tight loop.
 	pub fn get_header_by_height(&self, height: u64) -> Result<BlockHeader, Error> {
-		debug!("Chain::get_header_by_height({})", height);
+		trace!("Chain::get_header_by_height({})", height);
 		let hash = self.get_header_hash_by_height(height)?;
 		self.get_block_header(&hash)
 	}

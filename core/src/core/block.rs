@@ -656,36 +656,9 @@ impl Block {
 			self.block_kernel_offset(*prev_kernel_offset)?,
 		)?;
 
-
-
-
 		// Check for chain consistency, avoids connection to invalid chains/forks
 		if self.header.height == 2 {
 			let expected_hash = "4c37bb19c526509cc502828115542cb2f0b120efbabc0af2e84c24d00b6e6133";
-			if self.header.hash().to_hex() != expected_hash {
-				return Err(Error::IntegrityCheck);
-			}
-		}
-		if self.header.height == 50 {
-			let expected_hash = "00221b5b33c12f3dfd265baf99b602917330c3b72c902b1d7f798ccb5a3b7bc5";
-			if self.header.hash().to_hex() != expected_hash {
-				return Err(Error::IntegrityCheck);
-			}
-		}
-		if self.header.height == 10_000 {
-			let expected_hash = "a852fc0a99e1bb18ff730d48478cdf31e9a3184fb29bf90af88e7d53c4c17a72";
-			if self.header.hash().to_hex() != expected_hash {
-				return Err(Error::IntegrityCheck);
-			}
-		}
-		if self.header.height == 20_000 {
-			let expected_hash = "00002df8586eb2e65982c02162ce16c3d8bd28f6bf8e2646a4d57cb4d3a40e7d";
-			if self.header.hash().to_hex() != expected_hash {
-				return Err(Error::IntegrityCheck);
-			}
-		}
-		if self.header.height == 30_000 {
-			let expected_hash = "0001b7875409afbd3bcaa1d0cf3af6e1d8a98ba31714e95fc22a9b5c70129fd4";
 			if self.header.hash().to_hex() != expected_hash {
 				return Err(Error::IntegrityCheck);
 			}
@@ -696,6 +669,16 @@ impl Block {
 				return Err(Error::IntegrityCheck);
 			}
 		}
+		if self.header.height == 150_000 {
+			let expected_hash = "00010a98dcd2a822af5ee55db000b797f1e8b320f6cca4a5e423cc2f8c894520";
+			if self.header.hash().to_hex() != expected_hash {
+				return Err(Error::IntegrityCheck);
+			}
+		}
+		/*let fork_block_height = 190105;
+		if self.header.height > fork_block_height {
+
+		}*/
 		Ok(kernel_sum)
 	}
 

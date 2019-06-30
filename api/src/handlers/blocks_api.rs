@@ -85,13 +85,13 @@ pub struct BlockHandler {
 
 impl BlockHandler {
 	fn get_block(&self, h: &Hash) -> Result<BlockPrintable, Error> {
-		debug!("BlockHandler::get_block {}", h);
+		trace!("BlockHandler::get_block {}", h);
 		let block = w(&self.chain).get_block(h).context(ErrorKind::NotFound)?;
 		Ok(BlockPrintable::from_block(&block, w(&self.chain), false))
 	}
 
 	fn get_compact_block(&self, h: &Hash) -> Result<CompactBlockPrintable, Error> {
-		debug!("BlockHandler::get_compact_block");
+		trace!("BlockHandler::get_compact_block");
 		let block = w(&self.chain).get_block(h).context(ErrorKind::NotFound)?;
 		Ok(CompactBlockPrintable::from_compact_block(
 			&block.into(),
@@ -101,7 +101,7 @@ impl BlockHandler {
 
 	// Try to decode the string as a height or a hash.
 	fn parse_input(&self, input: String) -> Result<Hash, Error> {
-		debug!("BlockHandler::parse_input");
+		trace!("BlockHandler::parse_input");
 		if let Ok(height) = input.parse() {
 			debug!("Parsed {}", height);
 			match w(&self.chain).get_header_by_height(height) {

@@ -79,7 +79,7 @@ impl ChainStore {
 
 	/// Get full block.
 	pub fn get_block(&self, h: &Hash) -> Result<Block, Error> {
-		debug!("ChainStore::get_block: {}", h);
+		trace!("ChainStore::get_block: {}", h);
 		option_to_not_found(
 			self.db.get_ser(&to_key(BLOCK_PREFIX, &mut h.to_vec())),
 			&format!("BLOCK: {}", h),
@@ -202,7 +202,7 @@ impl<'a> Batch<'a> {
 
 	/// get block
 	pub fn get_block(&self, h: &Hash) -> Result<Block, Error> {
-		debug!("Batch::get_block: {}", h);
+		trace!("Batch::get_block: {}", h);
 		option_to_not_found(
 			self.db.get_ser(&to_key(BLOCK_PREFIX, &mut h.to_vec())),
 			&format!("Block with hash: {}", h),

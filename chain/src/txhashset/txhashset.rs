@@ -221,11 +221,11 @@ impl TxHashSet {
 	/// Derives the MMR pos from the height (insertion index) and retrieves the header hash.
 	/// Looks the header up in the db by hash.
 	pub fn get_header_by_height(&self, height: u64) -> Result<BlockHeader, Error> {
-		debug!("TxHashSet::::get_header_by_height: {}", height);
+		trace!("TxHashSet::::get_header_by_height: {}", height);
 		let hash = self.get_header_hash_by_height(height)?;
-		debug!("TxHashSet::hash: {}", hash);
+		trace!("TxHashSet::hash: {}", hash);
 		let header = self.commit_index.get_block_header(&hash)?;
-		debug!("TxHashSet::header height: {}", header.height);
+		trace!("TxHashSet::header height: {}", header.height);
 		Ok(header)
 	}
 
@@ -904,11 +904,11 @@ impl<'a> Extension<'a> {
 						.prune(pos)
 						.map_err(|e| ErrorKind::TxHashSetErr(e))?;
 				}
-				Ok(false) => return Err(ErrorKind::AlreadySpent(commit).into()),
+				Ok(false) => return Err(ErrorKind::Commitment800(commit).into()),
 				Err(e) => return Err(ErrorKind::TxHashSetErr(e).into()),
 			}
 		} else {
-			return Err(ErrorKind::AlreadySpent(commit).into());
+			return Err(ErrorKind::CommitmentIntegrity(commit).into());
 		}
 		Ok(())
 	}

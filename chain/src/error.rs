@@ -140,6 +140,15 @@ pub enum ErrorKind {
 	/// Internal Roaring Bitmap error
 	#[fail(display = "Roaring Bitmap error")]
 	Bitmap,
+	/// One of the inputs in the block has already been spent
+	#[fail(display = "Commitment Integrity: {:?}", _0)]
+	CommitmentIntegrity(Commitment),
+	/// One of the inputs in the block has already been spent
+	#[fail(display = "Commitment ERR800: {:?}", _0)]
+	Commitment800(Commitment),
+	/// One of the inputs in the block has already been spent
+	#[fail(display = "Commitment ERR801: {:?}", _0)]
+	Commitment801(Commitment),
 }
 
 impl Display for Error {

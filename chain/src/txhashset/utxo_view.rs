@@ -53,6 +53,7 @@ impl<'a> UTXOView<'a> {
 		}
 
 		for input in block.inputs() {
+			debug!("Validate block inputs...");
 			self.validate_input(input)?;
 		}
 		Ok(())
@@ -67,6 +68,7 @@ impl<'a> UTXOView<'a> {
 		}
 
 		for input in tx.inputs() {
+			debug!("Validate tx inputs...");
 			self.validate_input(input)?;
 		}
 		Ok(())
@@ -81,9 +83,18 @@ impl<'a> UTXOView<'a> {
 				if hash == input.hash_with_index(pos - 1) {
 					return Ok(());
 				}
+				else {
+					debug!("Could not get hash with index {}", pos - 1);
+				}
+			}
+			else {
+				debug!("Could not get hash from pmmr");
 			}
 		}
-		Err(ErrorKind::AlreadySpent(input.commitment()).into())
+		else {
+			debug!("Could not get output pos");
+		}
+		Err(ErrorKind::Commitment801(input.commitment()).into())
 	}
 
 	// Output is valid if it would not result in a duplicate commitment in the output MMR.
