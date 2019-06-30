@@ -18,8 +18,8 @@
 - [merkle](merkle.md) - Technical explanation of bitgrin's favorite kind of merkle trees
 - [merkle_proof graph](merkle_proof/merkle_proof.png) - Example merkle proof with pruning applied
 - [pruning](pruning.md) - Technical explanation of pruning
-- [stratum](stratum.md) - Technical explanation of BitGrin Stratum RPC protocol
-- [transaction UML](wallet/transaction/basic-transaction-wf.png) - UML of an interactive transaction (aggregating transaction without `lock_height`)
+- [stratum](stratum.md) - Technical explanation of Grin Stratum RPC protocol
+- [transaction UML](grin-wallet/blob/master/doc/transaction/basic-transaction-wf.png) - UML of an interactive transaction (aggregating transaction without `lock_height`)
 
 ## Build and use
 

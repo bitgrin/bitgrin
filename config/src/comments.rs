@@ -131,6 +131,44 @@ fn comments() -> HashMap<String, String> {
 	);
 
 	retval.insert(
+		"[server.webhook_config]".to_string(),
+		"
+#########################################
+### WEBHOOK CONFIGURATION             ###
+#########################################
+"
+		.to_string(),
+	);
+
+	retval.insert(
+		"nthreads".to_string(),
+		"
+#The url where a POST request will be sent when a new block is accepted by our node.
+#block_accepted_url = \"http://127.0.0.1:8080/acceptedblock\"
+
+#The url where a POST request will be sent when a new transaction is received by a peer.
+#tx_received_url = \"http://127.0.0.1:8080/tx\"
+
+#The url where a POST request will be sent when a new header is received by a peer.
+#header_received_url = \"http://127.0.0.1:8080/header\"
+
+#The url where a POST request will be sent when a new block is received by a peer.
+#block_received_url = \"http://127.0.0.1:8080/block\"
+
+#The number of worker threads that will be assigned to making the http requests.
+"
+		.to_string(),
+	);
+
+	retval.insert(
+		"timeout".to_string(),
+		"
+#The timeout of the http request in seconds.
+"
+		.to_string(),
+	);
+
+	retval.insert(
 		"[server.dandelion_config]".to_string(),
 		"
 #########################################
@@ -141,9 +179,17 @@ fn comments() -> HashMap<String, String> {
 	);
 
 	retval.insert(
-		"relay_secs".to_string(),
+		"epoch_secs".to_string(),
 		"
-#dandelion relay time (choose new relay peer every n secs)
+#dandelion epoch duration
+"
+		.to_string(),
+	);
+
+	retval.insert(
+		"aggregation_secs".to_string(),
+		"
+#dandelion aggregation period in secs
 "
 		.to_string(),
 	);
@@ -156,13 +202,6 @@ fn comments() -> HashMap<String, String> {
 		.to_string(),
 	);
 
-	retval.insert(
-		"patience_secs".to_string(),
-		"
-#run dandelion stem/fluff processing every n secs (stem tx aggregation in this window)
-"
-		.to_string(),
-	);
 	retval.insert(
 		"stem_probability".to_string(),
 		"
@@ -228,7 +267,7 @@ peers_preferred = [\"18.212.122.156:8514\", \"3.93.64.52:8514\", \"35.205.149.77
 #ban_window = 3800
 
 #maximum number of peers
-#peer_max_count = 75
+#peer_max_count = 125
 
 #preferred minimum number of peers (we'll actively keep trying to add peers
 #until we get to at least this number
@@ -512,6 +551,14 @@ peers_preferred = [\"18.212.122.156:8514\", \"3.93.64.52:8514\", \"35.205.149.77
 		"
 #maximum log file size in bytes before performing log rotation
 #comment it to disable log rotation
+"
+		.to_string(),
+	);
+
+	retval.insert(
+		"log_max_files".to_string(),
+		"
+#maximum count of the log files to rotate over
 "
 		.to_string(),
 	);

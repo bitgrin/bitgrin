@@ -6,7 +6,7 @@ The [list of issues](https://github.com/bitgrin/bitgrin/issues) is a good place 
 
 Additional tests are rewarded with an immense amount of positive karma.
 
-More documentation or updates/fixes to existing documentation are also very welcome. 
+More documentation or updates/fixes to existing documentation are also very welcome.
 
 # PR Guidelines
 

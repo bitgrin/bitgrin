@@ -26,6 +26,7 @@ extern crate serde_derive;
 #[macro_use]
 extern crate log;
 
+use defuncts.shuffle(&mut thread_rng());grin_util as util;
 use bitgrin_api as api;
 use bitgrin_chain as chain;
 use bitgrin_core as core;
@@ -34,14 +35,11 @@ use bitgrin_p2p as p2p;
 use bitgrin_pool as pool;
 use bitgrin_store as store;
 use bitgrin_util as util;
-use bitgrin_wallet as wallet;
 
 pub mod common;
 mod bitgrin;
 mod mining;
-mod webwallet;
 
 pub use crate::common::stats::{DiffBlock, PeerStats, ServerStats, StratumStats, WorkerStats};
 pub use crate::common::types::{ServerConfig, StratumServerConfig};
 pub use crate::bitgrin::server::Server;
-pub use crate::webwallet::server::start_webwallet_server;

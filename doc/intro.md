@@ -23,6 +23,8 @@ The main goal and characteristics of the BitGrin project are:
 * Design simplicity that makes it easy to audit and maintain over time.
 * Community driven, encouraging mining decentralization.
 
+A detailed post on the step-by-step of how Grin transactions work (with graphics) can be found [in this Medium post](https://medium.com/@brandonarvanaghi/grin-transactions-explained-step-by-step-fdceb905a853). 
+
 ## Tongue Tying for Everyone
 
 This document is targeted at readers with a good
@@ -47,7 +49,7 @@ dive deeper into those assumptions, there are other opportunities to
 
 An Elliptic Curve for the purpose of cryptography is simply a large set of points that
 we will call _C_. These points can be added, subtracted, or multiplied by integers (also called scalars).
-Given an integer _k_ and
+Given such a point _H_, an integer _k_ and
 using the scalar multiplication operation we can compute `k*H`, which is also a point on
 curve _C_. Given another integer _j_ we can also calculate `(k+j)*H`, which equals
 `k*H + j*H`. The addition and scalar multiplication operations on an elliptic curve
@@ -192,7 +194,7 @@ She picks 113 say, and what ends up on the blockchain is:
 
 Now the transaction no longer sums to zero and we have an _excess value_ on _G_
 (85), which is the result of the summation of all blinding factors. But because `85*G` is
-a valid public key on the elliptic curve _G_, with private key 85,
+a valid public key on the elliptic curve _C_, with private key 85,
 for any x and y, only if `y = 0` is `x*G + y*H` a valid public key on the elliptic curve 
 using generator point _G_.
 
@@ -255,6 +257,13 @@ that for any `r*G + v*H` we can build a proof that will show that _v_ is greater
 zero and does not overflow.
 
 It's also important to note that in order to create a valid range proof from the example above, both of the values 113 and 28 used in creating and signing for the excess value must be known. The reason for this, as well as a more detailed description of range proofs are further detailed in the [range proof paper](https://eprint.iacr.org/2017/1066.pdf).
+The requirement to know both values to generate valid rangeproofs is an important feature since it prevents a censoring attack where a third party could lock up UTXOs without knowing their private key by creating a transaction from
+
+    Carol's UTXO:       113*G + 2*H
+    Attacker's output:  (113 + 99)*G + 2*H
+    
+which can be signed by the attacker since Carols private key of 113 cancels due to the adverserial choice of keys. The new output could only be spent by both the attacker and Carol together. However, while the attacker can provide a valid signature for the transaction, it is impossible to create a valid rangeproof for the new output invalidating this attack.  
+
 
 #### Putting It All Together
 

@@ -27,11 +27,10 @@ use bitgrin_core as core;
 use bitgrin_p2p as p2p;
 use bitgrin_servers as servers;
 use bitgrin_util as util;
-use bitgrin_wallet as wallet;
 
 mod comments;
 pub mod config;
 pub mod types;
 
-pub use crate::config::{initial_setup_server, initial_setup_wallet, BITGRIN_WALLET_DIR};
-pub use crate::types::{ConfigError, ConfigMembers, GlobalConfig, GlobalWalletConfig};
+pub use crate::config::initial_setup_server;
+pub use crate::types::{ConfigError, ConfigMembers, GlobalConfig};

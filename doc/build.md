@@ -1,6 +1,6 @@
 # BitGrin - Build, Configuration, and Running
 
-*Read this in other languages: [Español](build_ES.md).*
+*Read this in other languages: [Español](build_ES.md), [Korean](build_KR.md), [日本語](build_JP.md).*
 
 ## Supported Platforms
 
@@ -14,7 +14,7 @@ What's working so far?
 
 ## Requirements
 
-* rust 1.31+ (use [rustup]((https://www.rustup.rs/))- i.e. `curl https://sh.rustup.rs -sSf | sh; source $HOME/.cargo/env`)
+* rust 1.34+ (use [rustup]((https://www.rustup.rs/))- i.e. `curl https://sh.rustup.rs -sSf | sh; source $HOME/.cargo/env`)
   * if rust is already installed, you can simply update version with `rustup update`
 * clang
 * ncurses and libs (ncurses, ncursesw5)

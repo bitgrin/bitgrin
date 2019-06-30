@@ -1,8 +1,5 @@
 [package]
-name = "bitgrin_config"
-version = "1.0.0"
-authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
-description = "Configuration for bitgrin, a simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
+version = "2.0.0-beta.2"
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
 keywords = [ "crypto", "bitgrin", "mimblewimble" ]
@@ -10,17 +7,16 @@ workspace = ".."
 edition = "2018"
 
 [dependencies]
-rand = "0.5"
+rand = "0.6"
 serde = "1"
 serde_derive = "1"
 toml = "0.4"
 dirs = "1.0.3"
 
-bitgrin_core = { path = "../core", version = "1.0.0" }
-bitgrin_servers = { path = "../servers", version = "1.0.0" }
-bitgrin_p2p = { path = "../p2p", version = "1.0.7" }
-bitgrin_util = { path = "../util", version = "1.0.0" }
-bitgrin_wallet = { path = "../wallet", version = "1.0.0" }
+bitgrin_core = { path = "../core", version = "2.0.0-beta.2" }
+bitgrin_servers = { path = "../servers", version = "2.0.0-beta.2" }
+bitgrin_p2p = { path = "../p2p", version = "2.0.0-beta.2" }
+bitgrin_util = { path = "../util", version = "2.0.0-beta.2" }
 
 [dev-dependencies]
 pretty_assertions = "0.5.1"

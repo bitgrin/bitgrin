@@ -1,8 +1,5 @@
 [package]
-name = "bitgrin_p2p"
-version = "1.0.7"
-authors = ["BitGrin Developers <mimblewimble@lists.launchpad.net>"]
-description = "Chain implementation for bitgrin, a simple, private and scalable cryptocurrency implementation based on the MimbleWimble chain format."
+version = "2.0.0-beta.2"
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
 keywords = [ "crypto", "bitgrin", "mimblewimble" ]
@@ -13,18 +10,19 @@ edition = "2018"
 bitflags = "1"
 bytes = "0.4"
 enum_primitive = "0.1"
-lmdb-zero = "0.4.4"
 net2 = "0.2"
 num = "0.1"
-rand = "0.5"
+rand = "0.6"
 serde = "1"
 serde_derive = "1"
+tempfile = "3.0.5"
 log = "0.4"
 chrono = { version = "0.4.4", features = ["serde"] }
 
-bitgrin_core = { path = "../core", version = "1.0.0" }
-bitgrin_store = { path = "../store", version = "1.0.0" }
-bitgrin_util = { path = "../util", version = "1.0.0" }
+bitgrin_core = { path = "../core", version = "2.0.0-beta.2" }
+bitgrin_store = { path = "../store", version = "2.0.0-beta.2" }
+bitgrin_util = { path = "../util", version = "2.0.0-beta.2" }
+bitgrin_chain = { path = "../chain", version = "2.0.0-beta.2" }
 
 [dev-dependencies]
-bitgrin_pool = { path = "../pool", version = "1.0.0" }
+bitgrin_pool = { path = "../pool", version = "2.0.0-beta.2" }
