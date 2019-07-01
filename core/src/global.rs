@@ -24,7 +24,7 @@ use crate::consensus::{
 };
 use crate::core::block::HeaderVersion;
 use crate::pow::{
-	self, new_cuckaroo_ctx, new_cuckarood_ctx, new_cuckatoo_ctx, EdgeType, PoWContext,
+	self, new_cuckaroo_ctx, new_cuckatoo_ctx, EdgeType, PoWContext,
 };
 /// An enum collecting sets of parameters used throughout the
 /// code wherever mining is needed. This should allow for
@@ -147,7 +147,7 @@ pub fn set_mining_mode(mode: ChainTypes) {
 /// Return either a cuckoo context or a cuckatoo context
 /// Single change point
 pub fn create_pow_context<T>(
-	height: u64,
+	_height: u64,
 	edge_bits: u8,
 	proof_size: usize,
 	max_sols: u32,
@@ -157,19 +157,13 @@ where
 {
 	let chain_type = CHAIN_TYPE.read().clone();
 	match chain_type {
-		// Mainnet has Cuckaroo(d)29 for AR and Cuckatoo31+ for AF
-		ChainTypes::Mainnet if edge_bits > 29 => new_cuckatoo_ctx(edge_bits, proof_size, max_sols),
-		ChainTypes::Mainnet if valid_header_version(height, HeaderVersion::new(2)) => {
-			new_cuckarood_ctx(edge_bits, proof_size)
-		}
-		ChainTypes::Mainnet => new_cuckaroo_ctx(edge_bits, proof_size),
+		// Mainnet has Cuckaroo29 for AR and Cuckatoo30+ for AF
+		ChainTypes::Mainnet if edge_bits == 29 => new_cuckaroo_ctx(edge_bits, proof_size),
+		ChainTypes::Mainnet => new_cuckatoo_ctx(edge_bits, proof_size, max_sols),
 
 		// Same for Floonet
-		ChainTypes::Floonet if edge_bits > 29 => new_cuckatoo_ctx(edge_bits, proof_size, max_sols),
-		ChainTypes::Floonet if valid_header_version(height, HeaderVersion::new(2)) => {
-			new_cuckarood_ctx(edge_bits, proof_size)
-		}
-		ChainTypes::Floonet => new_cuckaroo_ctx(edge_bits, proof_size),
+		ChainTypes::Floonet if edge_bits == 29 => new_cuckaroo_ctx(edge_bits, proof_size),
+		ChainTypes::Floonet => new_cuckatoo_ctx(edge_bits, proof_size, max_sols),
 
 		// Everything else is Cuckatoo only
 		_ => new_cuckatoo_ctx(edge_bits, proof_size, max_sols),

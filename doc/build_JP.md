@@ -59,8 +59,8 @@ grinはデバッグモードでもビルド可能(`--release`を付けない状�
 
 * `target/release/grin` - grinの実行ファイル
 
-grinのデータ、設定ファイル、ログファイルはデフォルトでは(ホームディレクトリ配下の)`~/.grin`のディレクトリに格納されている。
-全ての設定値は`~/.grin/main/grin-server.toml`を編集することで変更可能。
+grinのデータ、設定ファイル、ログファイルはデフォルトでは(ホームディレクトリ配下の)`~/.bitgrin`のディレクトリに格納されている。
+全ての設定値は`~/.bitgrin/main/grin-server.toml`を編集することで変更可能。
 
 データファイルをカレントディレクトリに出力することも可能。
 そのためには以下のコマンドを実行。
@@ -69,8 +69,8 @@ grinのデータ、設定ファイル、ログファイルはデフォルトで�
 grin server config
 ```
 
-カレントディレクトリに`grin-server.toml`がある場合、カレントディレクトリにデータが出力される。
-grinを`grin-server.toml`を含むディレクトリで起動する場合、デフォルトである`~/.grin/main/grin-server.toml`よりも優先される。
+カレントディレクトリに`bitgrin-server.toml`がある場合、カレントディレクトリにデータが出力される。
+grinを`bitgrin-server.toml`を含むディレクトリで起動する場合、デフォルトである`~/.bitgrin/main/grin-server.toml`よりも優先される。
 
 テスト中はgrinのバイナリにpathを通す:
 
@@ -107,15 +107,15 @@ floonetを使用する場合、代わりに`etc/Dockerfile.floonet`を指定。
 コンテナ内で実行する場合、grinのキャッシュをバインドマウントすることも可能。
 
 ```sh
-docker run -it -d -v $HOME/.grin:/root/.grin grin
+docker run -it -d -v $HOME/.bitgrin:/root/.bitgrin bitgrin
 ```
-dockerの名前付きボリュームを使用する場合、代わりに`-v dotgrin:/root/.grin`を指定。
+dockerの名前付きボリュームを使用する場合、代わりに`-v dotbitgrin:/root/.bitgrin`を指定。
 ボリュームが作成される前に、名前付きボリュームがコピーされる。
 
 ## クロスプラットフォームビルド
 
-rust(cargo)はあらゆるプラットフォームでビルド可能なので、`grin`をバリデーションノードとして省電力なデバイスで実行することも可能である。
-x86のLinux上で`grin`をクロスコンパイルしARMバイナリを作成し、Raspberry Piで実行することも可能。
+rust(cargo)はあらゆるプラットフォームでビルド可能なので、`bitgrin`をバリデーションノードとして省電力なデバイスで実行することも可能である。
+x86のLinux上で`bitgrin`をクロスコンパイルしARMバイナリを作成し、Raspberry Piで実行することも可能。
 
 ## grinの使用
 

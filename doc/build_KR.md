@@ -59,10 +59,10 @@ Grin은 Debug 모드로 Build 할 수 있습니다. (`--release` 플래그가 �
 
 성공적으로 빌드한다면:
 
-* `target/release/grin` - 메인 grin 바이너리 디렉토리가 생성됩니다.
+* `target/release/bitgrin` - 메인 grin 바이너리 디렉토리가 생성됩니다.
 
-모든 데이터, 설정, 로그 파일들은 기본적으로 숨겨진 `~/.grin` 디렉토리에 생성되고 사용됩니다. (user home 디렉토리 안에 있습니다.)
-`~/.grin/main/grin-server.toml` 을 수정해서 모든 설정값들을 바꿀 수 있습니다.
+모든 데이터, 설정, 로그 파일들은 기본적으로 숨겨진 `~/.bitgrin` 디렉토리에 생성되고 사용됩니다. (user home 디렉토리 안에 있습니다.)
+`~/.bitgrin/main/grin-server.toml` 을 수정해서 모든 설정값들을 바꿀 수 있습니다.
 
 Grin은 현재 디렉토리 내에서도 데이터 파일들을 만들 수 있습니다. 밑에 있는 Bash 명령어를 작동하세요.
 
@@ -70,9 +70,9 @@ Grin은 현재 디렉토리 내에서도 데이터 파일들을 만들 수 있�
 grin server config
 ```
 
-이 명령어는 `grin-server.toml`를 현재 디렉토리에서 생성합니다.
+이 명령어는 `bitgrin-server.toml`를 현재 디렉토리에서 생성합니다.
 이 파일은 현재 디렉토리 내의 모든 데이터에 대해서 사용하도록 미리 구성되어 있습니다.
-`grin-server.toml` 파일이 있는 디렉토리에서 grin을 실행하면 기본값`~ / .grin / main / grin-server.toml` 대신 그 파일의 값을 사용하게됩니다.
+`bitgrin-server.toml` 파일이 있는 디렉토리에서 grin을 실행하면 기본값`~ / .bitgrin / main / bitgrin-server.toml` 대신 그 파일의 값을 사용하게됩니다.
 
 Testing 중에서는 Grin 바이너리를 이렇게 path 에 삽입 할 수도 있습니다.
 
@@ -80,38 +80,38 @@ Testing 중에서는 Grin 바이너리를 이렇게 path 에 삽입 할 수도 �
 export PATH=`pwd`/target/release:$PATH
 ```
 
-만약 Grin을 root 디렉토리에서 실행한다고 가정하면, `grin` 명령어를 바로 실행할 수 있습니다. (`grin help` 명령어를 통해서 좀 더 많은 옵션을 알아보세요.)
+만약 Grin을 root 디렉토리에서 실행한다고 가정하면, `bitgrin` 명령어를 바로 실행할 수 있습니다. (`bitgrin help` 명령어를 통해서 좀 더 많은 옵션을 알아보세요.)
 
 ## 설정하기
 
-Grin 은 기본적으로 설정되어 있는 올바른 값으로 실행하고 `grin-server.toml`를 통해 추가로 설정하는 것이 가능합니다.
+Grin 은 기본적으로 설정되어 있는 올바른 값으로 실행하고 `bitgrin-server.toml`를 통해 추가로 설정하는 것이 가능합니다.
 Grin이 처음 실행될때 설정파일이 생성되고 각 사용가능한 옵션에 대한 매뉴얼을 포함하고 있습니다.
 
-`grin-server.toml` 파일을 통해 모든 Grin 서버 구성을 수행하는 것이 좋지만,
-커맨드 라인 명령어를 사용하면 `grin-server.toml` 파일의 모든설정을 덮어쓰는 것이 가능합니다.
+`bitgrin-server.toml` 파일을 통해 모든 Grin 서버 구성을 수행하는 것이 좋지만,
+커맨드 라인 명령어를 사용하면 `bitgrin-server.toml` 파일의 모든설정을 덮어쓰는 것이 가능합니다.
 
 Grin을 작동시키는 명령어에 대한 도움말은 다음 명령어를 실행하세요.
 
 ```sh
-grin help
-grin wallet help
-grin client help
+bitgrin help
+bitgrin wallet help
+bitgrin client help
 ```
 
 ## Docker 사용하기
 
 ```sh
-docker build -t grin -f etc/Dockerfile .
+docker build -t bitgrin -f etc/Dockerfile .
 ```
 
 floonet을 사용하려면 `etc/Dockerfile.floonet` 을 사용하세요.
 container 안에서 grin cache를 bind-mount로 사용 할 수 있습니다.
 
 ```sh
-docker run -it -d -v $HOME/.grin:/root/.grin grin
+docker run -it -d -v $HOME/.bitgrin:/root/.bitgrin bitgrin
 ```
 
-Docker를 named volume으로 사용하는 것을 선호한다면 `-v dotgrin:/root/.grin` 명령어를 대신 사용할 수 있습니다.
+Docker를 named volume으로 사용하는 것을 선호한다면 `-v dotbitgrin:/root/.bitgrin` 명령어를 대신 사용할 수 있습니다.
 named volume샤용시 volume 생성시 기본 설정을 복사합니다.
 
 ## 크로스 플랫폼 빌드
