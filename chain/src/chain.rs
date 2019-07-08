@@ -30,7 +30,7 @@ use crate::store;
 use crate::txhashset;
 use crate::txhashset::TxHashSet;
 use crate::types::{
-	BlockStatus, ChainAdapter, NoStatus, Options, Tip, TxHashSetRoots, TxHashsetWriteStatus,
+	BlockStatus, ChainAdapter, NoStatus, Options, Tip, TxHashSetRoots, TxHashsetWriteStatus, BlockPrintable
 };
 use crate::util::secp::pedersen::{Commitment, RangeProof};
 use crate::util::RwLock;
@@ -42,6 +42,8 @@ use std::path::PathBuf;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
+
+use reqwest;
 
 /// Orphan pool size is limited by MAX_ORPHAN_SIZE
 pub const MAX_ORPHAN_SIZE: usize = 200;
@@ -249,16 +251,67 @@ impl Chain {
 		res
 	}
 
+	fn try_get_seed_hash(&self, url: &str) -> Result<Hash, Error> {
+		warn!("Chain::try_get_seed_hash");
+		let client = reqwest::Client::builder()
+			.timeout(Duration::from_secs(4))
+			.build();
+		match client {
+			Ok(c) => {
+				let r = c.get(url).send();
+				match r {
+					Ok(mut res) => {
+						let parsed_result: Result<BlockPrintable, reqwest::Error> = res.json();
+						match parsed_result {
+							Ok(parsed) => {
+								error!("Parsed {}", &parsed.header.hash);
+								Hash::from_hex(&parsed.header.hash)
+									.map_err(|_| ErrorKind::SeedHashMismatch.into())
+							}
+							Err(_) => {
+								error!("Error parsing json");
+								Err(ErrorKind::SeedHashUnreachable.into())
+							}
+						}
+					}
+					Err(e) => {
+						error!("Error making web request to seed hash: {}", e);
+						Err(ErrorKind::SeedHashUnreachable.into())
+					}
+				}
+			}
+			Err(e) => {
+				error!("Error creating reqwest client: {}", e);
+				Err(ErrorKind::SeedHashUnreachable.into())
+			}
+		}
+	}
+
+	fn seed_hash_at_height(&self, block_num: u64) -> Result<Hash, Error> {
+		error!("## Chain::seed_hash_at_height {}", block_num);
+		let url = format!("http://mainseed.bitgrin.io:8513/v1/blocks/{}", block_num);
+		match self.try_get_seed_hash(&url) {
+			Ok(res) => Ok(res),
+			Err(_) => {
+				trace!("Could not get main seed hash from mainseed, trying mainseed2...");
+				let url2 = format!("http://mainseed2.bitgrin.io:8513/v1/blocks/{}", block_num);
+				self.try_get_seed_hash(&url2)
+			}
+		}
+	}
+
 	fn determine_status(&self, head: Option<Tip>, prev_head: Tip) -> BlockStatus {
 		// We have more work if the chain head is updated.
 		let is_more_work = head.is_some();
 		let mut is_next_block = false;
 		let mut reorg_depth = None;
+		warn!("## Chain::determine_status");
 		if let Some(head) = head {
 			if head.prev_block_h == prev_head.last_block_h {
 				is_next_block = true;
 
 				// Verify chain integrity
+				warn!("## Chain::Verify chain integrity");
 				let bitgrin_150k =
 					"00010a98dcd2a822af5ee55db000b797f1e8b320f6cca4a5e423cc2f8c894520";
 				if (head.height >= 150_000) || (head.height % 10_000 == 0) {
@@ -274,7 +327,29 @@ impl Chain {
 					}
 				}
 			} else {
+				warn!("## Chain::calculate reorg_depth");
 				reorg_depth = Some(prev_head.height.saturating_sub(head.height) + 1);
+				match reorg_depth {
+					Some(depth) => { warn!("## Chain::reorg_depth {}", depth); }
+					None => { warn!("## Chain::no_reorg_depth_found");  }
+				}
+				// Don't bother checking until 215k, the block height as of this writing
+				// Check every block
+				if (head.height >= 215_000) {
+					warn!("## Chain::check reorg depth");
+					let seed_hash = self.seed_hash_at_height(head.height);
+					match seed_hash {
+						Ok(seed_hash) => {
+							// Seed hash mismatch. Reject this block
+							error!("Integrity failure in seed hash validation! Rejecting blocks.");
+							return BlockStatus::ChainIntegrityFailure;
+						},
+						Err(_) => {
+							// Some issue connecting seed, proceed as if it was correct
+							error!("Seed hash unreachable from Chain");
+						}
+					}
+				}
 			}
 		}
 
@@ -1257,7 +1332,6 @@ impl Chain {
 
 	/// Gets a block header by hash
 	pub fn get_block(&self, h: &Hash) -> Result<Block, Error> {
-		trace!("Chain::get_block: {}", h);
 		self.store
 			.get_block(h)
 			.map_err(|e| ErrorKind::StoreErr(e, "chain get block".to_owned()).into())
@@ -1265,7 +1339,6 @@ impl Chain {
 
 	/// Gets a block header by hash
 	pub fn get_block_header(&self, h: &Hash) -> Result<BlockHeader, Error> {
-		trace!("Chain::get_block_header: {}", h);
 		self.store
 			.get_block_header(h)
 			.map_err(|e| ErrorKind::StoreErr(e, "chain get header".to_owned()).into())
@@ -1289,7 +1362,6 @@ impl Chain {
 	/// Note: Takes a read lock on the txhashset.
 	/// Take care not to call this repeatedly in a tight loop.
 	pub fn get_header_by_height(&self, height: u64) -> Result<BlockHeader, Error> {
-		trace!("Chain::get_header_by_height({})", height);
 		let hash = self.get_header_hash_by_height(height)?;
 		self.get_block_header(&hash)
 	}

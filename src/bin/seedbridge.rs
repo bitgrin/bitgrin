@@ -42,7 +42,7 @@ fn try_get_seed_hash(url: &str) -> Result<Hash, Error> {
 }
 
 pub fn seed_bridge() -> Result<Hash, Error> {
-	let block_num = 190027;
+	let block_num = 215742;
 	let url = format!("http://mainseed.bitgrin.io:8513/v1/blocks/{}", block_num);
 	match try_get_seed_hash(&url) {
 		Ok(res) => Ok(res),
@@ -54,4 +54,9 @@ pub fn seed_bridge() -> Result<Hash, Error> {
 	}
 }
 
-pub fn main() {}
+pub fn main() {
+	match seed_bridge() {
+		Ok(x) => { println!("OK!: {}", x) },
+		Err(e) => { println!("Err: {:?}", e)},
+	}
+}

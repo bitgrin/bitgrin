@@ -149,6 +149,12 @@ pub enum ErrorKind {
 	/// One of the inputs in the block has already been spent
 	#[fail(display = "Commitment ERR801: {:?}", _0)]
 	Commitment801(Commitment),
+	/// A block's hash does not match the seed hash block at height
+	#[fail(display = "Seed block hash mismatch")]
+	SeedHashMismatch,
+	/// Generic seed hash retrieval error
+	#[fail(display = "Seed hash unreachable")]
+	SeedHashUnreachable,
 }
 
 impl Display for Error {
