@@ -15,9 +15,27 @@
 //! Base types that the block chain pipeline requires.
 
 use crate::core::core::hash::{Hash, Hashed, ZERO_HASH};
-use crate::core::core::{Block, BlockHeader};
+//use crate::core::core::{Block, BlockHeader};
+use crate::core::core::{Block};
+use crate::core::{core, ser};
+use crate::core::core::merkle_proof::MerkleProof;
 use crate::core::pow::Difficulty;
-use crate::core::ser;
+use crate::util;
+use crate::util::secp::pedersen;
+use std::sync::Arc;
+use serde;
+use serde::de::MapAccess;
+use serde::ser::SerializeStruct;
+use crate::{Error, Chain};
+use std::fmt;
+
+macro_rules! no_dup {
+	($field:ident) => {
+		if $field.is_some() {
+			return Err(serde::de::Error::duplicate_field("$field"));
+			}
+	};
+}
 
 bitflags! {
 /// Options for block validation
@@ -65,7 +83,7 @@ pub struct Tip {
 
 impl Tip {
 	/// Creates a new tip based on provided header.
-	pub fn from_header(header: &BlockHeader) -> Tip {
+	pub fn from_header(header: &core::BlockHeader) -> Tip {
 		Tip {
 			height: header.height,
 			last_block_h: header.hash(),
@@ -171,4 +189,324 @@ pub enum BlockStatus {
 	/// Previous block was not our previous chain head.
 	Reorg(u64),
 	ChainIntegrityFailure,
+}
+
+
+
+
+/// ****
+/// Just enough info from api crate to recreate BlockPrintable
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum OutputType {
+	Coinbase,
+	Transaction,
+}
+
+// As above, except formatted a bit better for human viewing
+#[derive(Debug, Clone)]
+pub struct OutputPrintable {
+	/// The type of output Coinbase|Transaction
+	pub output_type: OutputType,
+	/// The homomorphic commitment representing the output's amount
+	/// (as hex string)
+	pub commit: pedersen::Commitment,
+	/// Whether the output has been spent
+	pub spent: bool,
+	/// Rangeproof (as hex string)
+	pub proof: Option<String>,
+	/// Rangeproof hash (as hex string)
+	pub proof_hash: String,
+	/// Block height at which the output is found
+	pub block_height: Option<u64>,
+	/// Merkle Proof
+	pub merkle_proof: Option<MerkleProof>,
+	/// MMR Position
+	pub mmr_index: u64,
+}
+
+impl OutputPrintable {
+	pub fn from_output(
+		output: &core::Output,
+		chain: Arc<Chain>,
+		block_header: Option<&core::BlockHeader>,
+		include_proof: bool,
+		include_merkle_proof: bool,
+	) -> Result<OutputPrintable, Error> {
+		let output_type = if output.is_coinbase() {
+			OutputType::Coinbase
+		} else {
+			OutputType::Transaction
+		};
+
+		let out_id = core::OutputIdentifier::from_output(&output);
+		let spent = chain.is_unspent(&out_id).is_err();
+		let block_height = match spent {
+			true => None,
+			false => Some(chain.get_header_for_output(&out_id)?.height),
+		};
+
+		let proof = if include_proof {
+			Some(util::to_hex(output.proof.proof.to_vec()))
+		} else {
+			None
+		};
+
+		// Get the Merkle proof for all unspent coinbase outputs (to verify maturity on
+		// spend). We obtain the Merkle proof by rewinding the PMMR.
+		// We require the rewind() to be stable even after the PMMR is pruned and
+		// compacted so we can still recreate the necessary proof.
+		let mut merkle_proof = None;
+		if include_merkle_proof && output.is_coinbase() && !spent {
+			if let Some(block_header) = block_header {
+				merkle_proof = chain.get_merkle_proof(&out_id, &block_header).ok();
+			}
+		};
+
+		let output_pos = chain.get_output_pos(&output.commit).unwrap_or(0);
+
+		Ok(OutputPrintable {
+			output_type,
+			commit: output.commit,
+			spent,
+			proof,
+			proof_hash: util::to_hex(output.proof.hash().to_vec()),
+			block_height,
+			merkle_proof,
+			mmr_index: output_pos,
+		})
+	}
+
+	
+
+	pub fn commit(&self) -> Result<pedersen::Commitment, ser::Error> {
+		Ok(self.commit.clone())
+	}
+
+	pub fn range_proof(&self) -> Result<pedersen::RangeProof, ser::Error> {
+		let proof_str = match self.proof.clone() {
+			Some(p) => p,
+			None => return Err(ser::Error::HexError(format!("output range_proof missing"))),
+		};
+
+		let p_vec = util::from_hex(proof_str)
+			.map_err(|_| ser::Error::HexError(format!("invalud output range_proof")))?;
+		let mut p_bytes = [0; util::secp::constants::MAX_PROOF_SIZE];
+		for i in 0..p_bytes.len() {
+			p_bytes[i] = p_vec[i];
+		}
+		Ok(pedersen::RangeProof {
+			proof: p_bytes,
+			plen: p_bytes.len(),
+		})
+	}
+}
+
+impl serde::ser::Serialize for OutputPrintable {
+	fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+	where
+		S: serde::ser::Serializer,
+	{
+		let mut state = serializer.serialize_struct("OutputPrintable", 7)?;
+		state.serialize_field("output_type", &self.output_type)?;
+		state.serialize_field("commit", &util::to_hex(self.commit.0.to_vec()))?;
+		state.serialize_field("spent", &self.spent)?;
+		state.serialize_field("proof", &self.proof)?;
+		state.serialize_field("proof_hash", &self.proof_hash)?;
+		state.serialize_field("block_height", &self.block_height)?;
+
+		let hex_merkle_proof = &self.merkle_proof.clone().map(|x| x.to_hex());
+		state.serialize_field("merkle_proof", &hex_merkle_proof)?;
+		state.serialize_field("mmr_index", &self.mmr_index)?;
+
+		state.end()
+	}
+}
+
+impl<'de> serde::de::Deserialize<'de> for OutputPrintable {
+	fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+	where
+		D: serde::de::Deserializer<'de>,
+	{
+		#[derive(Deserialize)]
+		#[serde(field_identifier, rename_all = "snake_case")]
+		enum Field {
+			OutputType,
+			Commit,
+			Spent,
+			Proof,
+			ProofHash,
+			BlockHeight,
+			MerkleProof,
+			MmrIndex,
+		}
+
+		struct OutputPrintableVisitor;
+
+		impl<'de> serde::de::Visitor<'de> for OutputPrintableVisitor {
+			type Value = OutputPrintable;
+
+			fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+				formatter.write_str("a print able Output")
+			}
+
+			fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+			where
+				A: MapAccess<'de>,
+			{
+				let mut output_type = None;
+				let mut commit = None;
+				let mut spent = None;
+				let mut proof = None;
+				let mut proof_hash = None;
+				let mut block_height = None;
+				let mut merkle_proof = None;
+				let mut mmr_index = None;
+
+				while let Some(key) = map.next_key()? {
+					match key {
+						Field::OutputType => {
+							no_dup!(output_type);
+							output_type = Some(map.next_value()?)
+						}
+						Field::Commit => {
+							no_dup!(commit);
+
+							let val: String = map.next_value()?;
+							let vec =
+								util::from_hex(val.clone()).map_err(serde::de::Error::custom)?;
+							commit = Some(pedersen::Commitment::from_vec(vec));
+						}
+						Field::Spent => {
+							no_dup!(spent);
+							spent = Some(map.next_value()?)
+						}
+						Field::Proof => {
+							no_dup!(proof);
+							proof = map.next_value()?
+						}
+						Field::ProofHash => {
+							no_dup!(proof_hash);
+							proof_hash = Some(map.next_value()?)
+						}
+						Field::BlockHeight => {
+							no_dup!(block_height);
+							block_height = Some(map.next_value()?)
+						}
+						Field::MerkleProof => {
+							no_dup!(merkle_proof);
+							if let Some(hex) = map.next_value::<Option<String>>()? {
+								if let Ok(res) = MerkleProof::from_hex(&hex) {
+									merkle_proof = Some(res);
+								} else {
+									merkle_proof = Some(MerkleProof::empty());
+								}
+							}
+						}
+						Field::MmrIndex => {
+							no_dup!(mmr_index);
+							mmr_index = Some(map.next_value()?)
+						}
+					}
+				}
+
+				if output_type.is_none()
+					|| commit.is_none() || spent.is_none()
+					|| proof_hash.is_none()
+					|| mmr_index.is_none()
+				{
+					return Err(serde::de::Error::custom("invalid output"));
+				}
+
+				Ok(OutputPrintable {
+					output_type: output_type.unwrap(),
+					commit: commit.unwrap(),
+					spent: spent.unwrap(),
+					proof: proof,
+					proof_hash: proof_hash.unwrap(),
+					block_height: block_height,
+					merkle_proof: merkle_proof,
+					mmr_index: mmr_index.unwrap(),
+				})
+			}
+		}
+
+		const FIELDS: &'static [&'static str] = &[
+			"output_type",
+			"commit",
+			"spent",
+			"proof",
+			"proof_hash",
+			"mmr_index",
+		];
+		deserializer.deserialize_struct("OutputPrintable", FIELDS, OutputPrintableVisitor)
+	}
+}
+
+// Printable representation of a block
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct TxKernelPrintable {
+	pub features: String,
+	pub fee: u64,
+	pub lock_height: u64,
+	pub excess: String,
+	pub excess_sig: String,
+}
+
+// Just the information required for wallet reconstruction
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct BlockHeaderInfo {
+	// Hash
+	pub hash: String,
+	/// Height of this block since the genesis block (height 0)
+	pub height: u64,
+	/// Hash of the block previous to this in the chain.
+	pub previous: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct BlockHeaderPrintable {
+	// Hash
+	pub hash: String,
+	/// Version of the block
+	pub version: u16,
+	/// Height of this block since the genesis block (height 0)
+	pub height: u64,
+	/// Hash of the block previous to this in the chain.
+	pub previous: String,
+	/// Root hash of the header MMR at the previous header.
+	pub prev_root: String,
+	/// rfc3339 timestamp at which the block was built.
+	pub timestamp: String,
+	/// Merklish root of all the commitments in the TxHashSet
+	pub output_root: String,
+	/// Merklish root of all range proofs in the TxHashSet
+	pub range_proof_root: String,
+	/// Merklish root of all transaction kernels in the TxHashSet
+	pub kernel_root: String,
+	/// Nonce increment used to mine this block.
+	pub nonce: u64,
+	/// Size of the cuckoo graph
+	pub edge_bits: u8,
+	/// Nonces of the cuckoo solution
+	pub cuckoo_solution: Vec<u64>,
+	/// Total accumulated difficulty since genesis block
+	pub total_difficulty: u64,
+	/// Variable difficulty scaling factor for secondary proof of work
+	pub secondary_scaling: u32,
+	/// Total kernel offset since genesis block
+	pub total_kernel_offset: String,
+}
+
+// Printable representation of a block
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct BlockPrintable {
+	/// The block header
+	pub header: BlockHeaderPrintable,
+	// Input transactions
+	pub inputs: Vec<String>,
+	/// A printable version of the outputs
+	pub outputs: Vec<OutputPrintable>,
+	/// A printable version of the transaction kernels
+	pub kernels: Vec<TxKernelPrintable>,
 }
