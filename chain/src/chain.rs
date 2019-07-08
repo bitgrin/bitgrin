@@ -43,6 +43,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
+use std::env;
 use reqwest;
 
 /// Orphan pool size is limited by MAX_ORPHAN_SIZE
@@ -319,17 +320,53 @@ impl Chain {
 				// Don't bother checking until 220.2k, the block height as of this writing + 3 days
 				// Check every block
 				if (head.height >= 220_200) {
-					warn!("## Chain::check reorg depth");
-					let seed_hash = self.seed_hash_at_height(head.height);
-					match seed_hash {
-						Ok(seed_hash) => {
-							// Seed hash mismatch. Reject this block
-							error!("Integrity failure in seed hash validation! Rejecting blocks.");
-							return BlockStatus::ChainIntegrityFailure;
+					let reorg_max_count = match env::var("BITGRIN_MAX_REORG") {
+						Ok(val) => {
+							match val.parse::<i32>() {
+								Ok(max_count) => {
+									if max_count > 1 {
+										// Mature node
+										Some(max_count)
+									}
+									else {
+										None
+									}
+								},
+								Err(_) => None,
+							}
 						},
-						Err(_) => {
-							// Some issue connecting seed, proceed as if it was correct
-							error!("Seed hash unreachable from Chain");
+						Err(_) => None,
+					};
+					warn!("## Chain::check reorg depth MATURE_BITGRIN_NODE: {}", reorg_max_count.is_some());
+					match reorg_max_count {
+						None => {
+							// Full synchronizing node
+							let seed_hash = self.seed_hash_at_height(head.height);
+							match seed_hash {
+								Ok(seed_hash) => {
+									// Seed hash mismatch. Reject this block
+									error!("Integrity failure in seed hash validation! Rejecting blocks.");
+									return BlockStatus::ChainIntegrityFailure;
+								},
+								Err(_) => {
+									// Some issue connecting seed, proceed as if it was correct
+									error!("Seed hash unreachable from Chain");
+								}
+							}
+						}
+						Some(max_count) => {
+							// Mature node
+							if reorg_depth.is_some() {
+								let r_depth = reorg_depth.unwrap() as i32;
+								if(r_depth >= max_count) {
+									// Reject reorgs beyond BITGRIN_MAX_REORG env var
+									error!("Rejected reorg with depth {} given reorg max {}.", r_depth, max_count);
+									return BlockStatus::ChainIntegrityFailure;
+								}
+							}
+							else {
+								error!("Mature node couldn't get reorg depth, ignoring...");
+							}
 						}
 					}
 				}

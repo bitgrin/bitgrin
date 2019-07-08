@@ -14,7 +14,7 @@
 
 //! Main for building the binary of a BitGrin peer-to-peer node.
 
-## !!!!!! This is a WIP, use the debug branch to build from source !!!!!! ##
+//## !!!!!! This is a WIP, use the debug branch to build from source !!!!!! ##
 
 #[macro_use]
 extern crate clap;
