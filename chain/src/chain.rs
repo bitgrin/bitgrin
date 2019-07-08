@@ -309,23 +309,6 @@ impl Chain {
 		if let Some(head) = head {
 			if head.prev_block_h == prev_head.last_block_h {
 				is_next_block = true;
-
-				// Verify chain integrity
-				warn!("## Chain::Verify chain integrity");
-				let bitgrin_150k =
-					"00010a98dcd2a822af5ee55db000b797f1e8b320f6cca4a5e423cc2f8c894520";
-				if (head.height >= 150_000) || (head.height % 10_000 == 0) {
-					// Rewind until block hash is confirmed
-					let mut head_iter = self.get_block_header(&head.prev_block_h).unwrap();
-					while head_iter.height >= 150_000 {
-						head_iter = self.get_block_header(&head_iter.prev_hash).unwrap();
-						if (head_iter.height == 150_000)
-							&& (head_iter.hash().to_hex() != bitgrin_150k)
-						{
-							return BlockStatus::ChainIntegrityFailure;
-						}
-					}
-				}
 			} else {
 				warn!("## Chain::calculate reorg_depth");
 				reorg_depth = Some(prev_head.height.saturating_sub(head.height) + 1);
