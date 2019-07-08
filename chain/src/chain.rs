@@ -333,9 +333,9 @@ impl Chain {
 					Some(depth) => { warn!("## Chain::reorg_depth {}", depth); }
 					None => { warn!("## Chain::no_reorg_depth_found");  }
 				}
-				// Don't bother checking until 215k, the block height as of this writing
+				// Don't bother checking until 220.2k, the block height as of this writing + 3 days
 				// Check every block
-				if (head.height >= 215_000) {
+				if (head.height >= 220_200) {
 					warn!("## Chain::check reorg depth");
 					let seed_hash = self.seed_hash_at_height(head.height);
 					match seed_hash {
