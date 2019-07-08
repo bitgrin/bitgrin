@@ -46,7 +46,7 @@ pub fn read_exact(
 			Ok(0) => {
 				return Err(io::Error::new(
 					io::ErrorKind::ConnectionAborted,
-					"read_exact",
+					"read_exact 0 buf",
 				));
 			}
 			Ok(n) => {
@@ -57,10 +57,13 @@ pub fn read_exact(
 			Err(ref e) if e.kind() == io::ErrorKind::Interrupted => {}
 			Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
 				if read == 0 && !block_on_empty {
-					return Err(io::Error::new(io::ErrorKind::WouldBlock, "read_exact"));
+					return Err(io::Error::new(io::ErrorKind::WouldBlock, "read_exact WouldBlock"));
 				}
 			}
-			Err(e) => return Err(e),
+			Err(e) => {
+				debug!("Unknown read_exact error");
+				return Err(e)
+				},
 		}
 		if !buf.is_empty() {
 			thread::sleep(sleep_time);
@@ -88,7 +91,7 @@ pub fn write_all(stream: &mut dyn Write, mut buf: &[u8], timeout: Duration) -> i
 			Ok(0) => {
 				return Err(io::Error::new(
 					io::ErrorKind::WriteZero,
-					"failed to write whole buffer",
+					"failed to write whole buffer with 0 buf",
 				));
 			}
 			Ok(n) => buf = &buf[n..],

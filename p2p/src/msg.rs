@@ -138,7 +138,7 @@ pub fn read_header(
 ) -> Result<MsgHeaderWrapper, Error> {
 	let mut head = vec![0u8; MsgHeader::LEN];
 	if Some(Type::Hand) == msg_type {
-		read_exact(stream, &mut head, time::Duration::from_millis(10), true)?;
+		read_exact(stream, &mut head, time::Duration::from_millis(100), true)?;
 	} else {
 		read_exact(stream, &mut head, time::Duration::from_secs(10), false)?;
 	}
