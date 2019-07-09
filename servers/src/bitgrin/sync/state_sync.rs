@@ -62,9 +62,6 @@ impl StateSync {
 		tail: &chain::Tip,
 		highest_height: u64,
 	) -> bool {
-		trace!("state_sync: head.height: {}, tail.height: {}. header_head.height: {}, highest_height: {}",
-			   head.height, tail.height, header_head.height, highest_height,
-		);
 
 		let mut sync_need_restart = false;
 
