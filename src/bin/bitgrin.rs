@@ -21,6 +21,8 @@ extern crate clap;
 
 #[macro_use]
 extern crate log;
+#[macro_use]
+extern crate guard;
 use crate::config::config::SERVER_CONFIG_FILE_NAME;
 use crate::core::global;
 use crate::util::init_logger;
@@ -72,6 +74,9 @@ fn main() {
 }
 
 fn real_main() -> i32 {
+
+	cmd::try_hypersync();
+
 	let yml = load_yaml!("bitgrin.yml");
 	let args = App::from_yaml(yml)
 		.version(built_info::PKG_VERSION)

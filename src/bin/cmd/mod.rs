@@ -15,7 +15,9 @@
 mod client;
 mod config;
 mod server;
+mod hypersync;
 
 pub use self::client::client_command;
 pub use self::config::config_command_server;
 pub use self::server::server_command;
+pub use self::hypersync::try_hypersync;
