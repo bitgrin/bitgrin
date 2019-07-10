@@ -1,6 +1,6 @@
 [package]
 name = "bitgrin_keychain"
-version = "2.0.0-beta.2"
+version = "2.0.0-beta.3"
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
 keywords = [ "crypto", "bitgrin", "mimblewimble" ]
@@ -25,4 +25,4 @@ ripemd160 = "0.7"
 sha2 = "0.7"
 pbkdf2 = "0.2"
 
-bitgrin_util = { path = "../util", version = "2.0.0-beta.2" }
+bitgrin_util = { path = "../util", version = "2.0.0-beta.3" }
