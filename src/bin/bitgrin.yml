@@ -13,7 +13,7 @@ args:
       takes_value: false
 subcommands:
   - clean:
-      about: Clean Grin chain data
+      about: Clean Bitgrin chain data
   - wallet:
       about: As of v2.0.0, the wallet has been split into a separate executable. See https://github.com/bitgrin/bitgrin-wallet/releases
       usage: As of v2.0.0, the wallet has been split into a separate executable. See https://github.com/bitgrin/bitgrin-wallet/releases to download
