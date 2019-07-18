@@ -55,7 +55,7 @@ pub struct ChainValidationHandler {
 
 impl Handler for ChainValidationHandler {
 	fn get(&self, _req: Request<Body>) -> ResponseFuture {
-		match w_fut!(&self.chain).validate(true) {
+		match w_fut!(&self.chain).validate(true, true) {
 			Ok(_) => response(StatusCode::OK, "{}"),
 			Err(e) => response(
 				StatusCode::INTERNAL_SERVER_ERROR,

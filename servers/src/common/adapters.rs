@@ -582,7 +582,7 @@ impl NetToChainAdapter {
 			);
 
 			self.chain()
-				.validate(true)
+				.validate(true, true)
 				.expect("chain validation failed, hard stop");
 
 			debug!(
