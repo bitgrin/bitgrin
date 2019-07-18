@@ -21,11 +21,11 @@ subcommands:
   - server:
       about: Control the BitGrin server
       args:
-        - tui_enabled:
-            help: Run with or without TUI, bypassing config
+        - no_tui:
+            help: Run without TUI, bypassing config
             short: t
-            long: tui_enabled
-            takes_value: true
+            long: no_tui
+            takes_value: false
         - config_file:
             help: Path to a bitgrin-server.toml configuration file
             short: c
