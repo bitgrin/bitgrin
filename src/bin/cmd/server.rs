@@ -96,11 +96,9 @@ pub fn server_command(
 		if let Some(port) = a.value_of("port") {
 			server_config.p2p_config.port = port.parse().unwrap();
 		}
-
-		if let Some(tui_enabled) = a.value_of("tui_enabled") {
-			server_config.run_tui = Some(tui_enabled == "true");
+		if a.is_present("no_tui") {
+			server_config.run_tui = Some(false);
 		}
-
 		if let Some(api_port) = a.value_of("api_port") {
 			let default_ip = "0.0.0.0";
 			server_config.api_http_addr = format!("{}:{}", default_ip, api_port);

@@ -68,20 +68,19 @@ fn log_build_info() {
 }
 
 fn main() {
-	println!("BitGrin v2.0.0a");
+	println!("BitGrin v2.0.0-beta-3");
 	let exit_code = real_main();
 	std::process::exit(exit_code);
 }
 
 fn real_main() -> i32 {
-
-	cmd::try_hypersync();
-
 	let yml = load_yaml!("bitgrin.yml");
 	let args = App::from_yaml(yml)
 		.version(built_info::PKG_VERSION)
 		.get_matches();
 	let node_config;
+
+	cmd::try_hypersync();
 
 	// Temporary wallet warning message
 	match args.subcommand() {
