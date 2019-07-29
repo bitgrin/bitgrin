@@ -43,7 +43,7 @@
  #####  Name 
 - Bitgrin
  ##### Main website 
- - https://bitgrin.io
+ - https://bitgrin.dev
 ##### Whitepaper
   - Original Mimblewimble whitepaper by Tom Elvis Jedusor https://github.com/mimblewimble/docs/wiki/MimbleWimble-Origin
   - Version by Andrew Polestra https://download.wpsoftware.net/bitcoin/wizardry/mimblewimble.pdf
@@ -61,7 +61,7 @@
  ##### Number of nodes
 - Everyone can run a node, concurrent node numbers are currently estimated to fluctuate between 50-100.
  ##### Block explorer
-- https://explorer.bitgrin.io
+- https://explorer.bitgrin.dev
 > Note
 > Block explorers are largely useless in Bitgrin as nothing is clear text and everything is completely blinded.
  ##### Source code

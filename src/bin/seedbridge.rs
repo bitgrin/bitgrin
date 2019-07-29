@@ -43,12 +43,12 @@ fn try_get_seed_hash(url: &str) -> Result<Hash, Error> {
 
 pub fn seed_bridge() -> Result<Hash, Error> {
 	let block_num = 215742;
-	let url = format!("http://mainseed.bitgrin.io:8513/v1/blocks/{}", block_num);
+	let url = format!("http://mainseed.bitgrin.dev:8513/v1/blocks/{}", block_num);
 	match try_get_seed_hash(&url) {
 		Ok(res) => Ok(res),
 		Err(_) => {
 			println!("Could not get main seed hash from mainseed, trying mainseed2...");
-			let url2 = format!("http://mainseed2.bitgrin.io:8513/v1/blocks/{}", block_num);
+			let url2 = format!("http://mainseed2.bitgrin.dev:8513/v1/blocks/{}", block_num);
 			try_get_seed_hash(&url2)
 		}
 	}

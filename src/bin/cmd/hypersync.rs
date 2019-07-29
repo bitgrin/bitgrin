@@ -72,7 +72,7 @@ fn do_extract(zip_path: &Path, target_dir: &Path) {
 
 fn start_hyper_sync() {
 	println!("Starting hyper-sync...");
-	let uri = "https://d1joz5daoz8ntk.cloudfront.net/bg_chain_data07182019.zip";
+	let uri = "https://d1joz5daoz8ntk.cloudfront.net/bg_chain_data07282019.zip";
 
 	guard!(let Ok(url) = Url::parse(uri)
 		   else { println!("Hypersync - Cannot parse URL"); return; });
@@ -115,7 +115,7 @@ fn start_hyper_sync() {
 		   else { println!("Hypersync - No db_root."); return; });
 	guard!(let zip_path_root = Path::new(&db_parent_path)
 	       else { println!("Hypersync - No db_parent_path"); return; });
-	guard!(let zip_path = zip_path_root.join("bg_chain_data.zip")
+	guard!(let zip_path = zip_path_root.join("bg_chain_data2.zip")
 	       else { println!("Hypersync - No db_parent_path"); return; });
 
     if zip_path.exists() {
@@ -175,7 +175,7 @@ pub fn try_hypersync() {
 		   else { println!("No db_root."); return; });
 	guard!(let zip_path_root = Path::new(&db_parent_path)
 	       else { println!("No db_parent_path"); return; });
-	guard!(let zip_path = zip_path_root.join("bg_chain_data.zip")
+	guard!(let zip_path = zip_path_root.join("bg_chain_data2.zip")
 	       else { println!("No db_parent_path"); return; });
 
     match should_perform_hyper_sync(db_root, &zip_path) {

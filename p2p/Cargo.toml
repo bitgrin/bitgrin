@@ -1,6 +1,6 @@
 [package]
 name = "bitgrin_p2p"
-version = "2.0.0-beta.3"
+version = "2.0.0-beta.4"
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
 keywords = [ "crypto", "bitgrin", "mimblewimble" ]
@@ -20,10 +20,10 @@ tempfile = "3.0.5"
 log = "0.4"
 chrono = { version = "0.4.4", features = ["serde"] }
 
-bitgrin_core = { path = "../core", version = "2.0.0-beta.3" }
-bitgrin_store = { path = "../store", version = "2.0.0-beta.3" }
-bitgrin_util = { path = "../util", version = "2.0.0-beta.3" }
-bitgrin_chain = { path = "../chain", version = "2.0.0-beta.3" }
+bitgrin_core = { path = "../core", version = "2.0.0-beta.4" }
+bitgrin_store = { path = "../store", version = "2.0.0-beta.4" }
+bitgrin_util = { path = "../util", version = "2.0.0-beta.4" }
+bitgrin_chain = { path = "../chain", version = "2.0.0-beta.4" }
 
 [dev-dependencies]
-bitgrin_pool = { path = "../pool", version = "2.0.0-beta.3" }
+bitgrin_pool = { path = "../pool", version = "2.0.0-beta.4" }

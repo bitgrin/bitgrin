@@ -68,7 +68,7 @@ fn log_build_info() {
 }
 
 fn main() {
-	println!("BitGrin v2.0.0-beta-3");
+	println!("BitGrin v2.0.0-beta-4");
 	let exit_code = real_main();
 	std::process::exit(exit_code);
 }

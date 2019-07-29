@@ -34,12 +34,12 @@ use crate::util::StopState;
 
 // DNS Seeds with contact email associated
 const MAINNET_DNS_SEEDS: &'static [&'static str] = &[
-	"mainseed.bitgrin.io",
-	"mainseed2.bitgrin.io",
+	"mainseed.bitgrin.dev",
+	"mainseed2.bitgrin.dev",
 ];
 const FLOONET_DNS_SEEDS: &'static [&'static str] = &[
-	"flooseed.bitgrin.io",
-	"flooseed2.bitgrin.io",
+	"flooseed.bitgrin.dev",
+	"flooseed2.bitgrin.dev",
 ];
 
 pub fn connect_and_monitor(
@@ -375,7 +375,7 @@ pub fn dns_seeds() -> Box<dyn Fn() -> Vec<PeerAddr> + Send> {
 				Err(e) => debug!("Failed to resolve seed {:?} got error {:?}", dns_seed, e),
 			}
 		}
-		debug!("Retrieved seed addresses: {:?}", addresses);
+		// "18.212.122.156:8514", "3.93.64.52:8514", "35.205.149.77:8514", "18.162.124.104:8514", "3.8.15.100:8514"
 		addresses
 	})
 }

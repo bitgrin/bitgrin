@@ -290,12 +290,12 @@ impl Chain {
 
 	fn seed_hash_at_height(&self, block_num: u64) -> Result<Hash, Error> {
 		error!("## Chain::seed_hash_at_height {}", block_num);
-		let url = format!("http://mainseed.bitgrin.io:8513/v1/blocks/{}", block_num);
+		let url = format!("http://mainseed.bitgrin.dev:8513/v1/blocks/{}", block_num);
 		match self.try_get_seed_hash(&url) {
 			Ok(res) => Ok(res),
 			Err(_) => {
 				trace!("Could not get main seed hash from mainseed, trying mainseed2...");
-				let url2 = format!("http://mainseed2.bitgrin.io:8513/v1/blocks/{}", block_num);
+				let url2 = format!("http://mainseed2.bitgrin.dev:8513/v1/blocks/{}", block_num);
 				self.try_get_seed_hash(&url2)
 			}
 		}
