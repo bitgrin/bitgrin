@@ -9,6 +9,12 @@ cargo build --release
 mkdir -p "releases/v$1/bitgrin-$1/"
 cp ./target/release/bitgrin "releases/v$1/bitgrin-$1/"
 
+# Perform build on wallet as well
+cd ../bitgrin-wallet/
+cargo build --release
+cp target/release/bitgrin-wallet "../bitgrin/releases/v$1/bitgrin-$1/"
+cd ../bitgrin
+
 echo "$OSTYPE"
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
