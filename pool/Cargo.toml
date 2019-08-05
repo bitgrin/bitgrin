@@ -1,6 +1,6 @@
 [package]
 name = "bitgrin_pool"
-version = "2.0.0-beta.4"
+version = "2.0.0-beta.5"
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
 keywords = [ "crypto", "bitgrin", "mimblewimble" ]
@@ -17,10 +17,10 @@ chrono = "0.4.4"
 failure = "0.1"
 failure_derive = "0.1"
 
-bitgrin_core = { path = "../core", version = "2.0.0-beta.4" }
-bitgrin_keychain = { path = "../keychain", version = "2.0.0-beta.4" }
-bitgrin_store = { path = "../store", version = "2.0.0-beta.4" }
-bitgrin_util = { path = "../util", version = "2.0.0-beta.4" }
+bitgrin_core = { path = "../core", version = "2.0.0-beta.5" }
+bitgrin_keychain = { path = "../keychain", version = "2.0.0-beta.5" }
+bitgrin_store = { path = "../store", version = "2.0.0-beta.5" }
+bitgrin_util = { path = "../util", version = "2.0.0-beta.5" }
 
 [dev-dependencies]
-bitgrin_chain = { path = "../chain", version = "2.0.0-beta.4" }
+bitgrin_chain = { path = "../chain", version = "2.0.0-beta.5" }
