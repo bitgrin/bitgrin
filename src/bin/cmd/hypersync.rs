@@ -150,18 +150,21 @@ fn start_hyper_sync() {
 }
 
 fn should_perform_hyper_sync(db_root: &Path, zip_path: &Path) -> HyperSyncState {
-	// Check if bg_chain_data folder exists
-	let chain_data_path = File::open(db_root);
-	if let Ok(_) = chain_data_path {
+	// Check if pmmr data exists
+	let pmmr_data_db_path = db_root.join("header/header_head/pmmr_data.bin");
+	if pmmr_data_db_path.exists() && pmmr_data_db_path.is_file() {
+		println!("NotNeeded");
 		return HyperSyncState::NotNeeded;
 	}
 	else {
 		// if zip exist, skip to extraction
 		let zip_file = File::open(zip_path.clone());
 		if let Ok(_) = zip_file {
+			println!("NeedsExtract");
 			return HyperSyncState::NeedsExtract;
 		}
 		else {
+			println!("NeedsDownload");
 			return HyperSyncState::NeedsDownload;
 		}
 	}
@@ -172,11 +175,11 @@ pub fn try_hypersync() {
 	let server_config =	get_server_config();
 	let db_root = Path::new(&server_config.db_root);
 	guard!(let Some(db_parent_path) = db_root.parent()
-		   else { println!("No db_root."); return; });
+		   else { println!("No db_parent_path."); return; });
 	guard!(let zip_path_root = Path::new(&db_parent_path)
-	       else { println!("No db_parent_path"); return; });
+	       else { println!("No zip_path_root"); return; });
 	guard!(let zip_path = zip_path_root.join("bg_chain_data2.zip")
-	       else { println!("No db_parent_path"); return; });
+	       else { println!("No zip_path"); return; });
 
     match should_perform_hyper_sync(db_root, &zip_path) {
         HyperSyncState::NeedsDownload => { start_hyper_sync(); do_extract(&zip_path, db_root); },
