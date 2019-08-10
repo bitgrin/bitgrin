@@ -81,7 +81,6 @@ fn real_main() -> i32 {
 	let node_config;
 
 	cmd::try_hypersync();
-	return 0;
 
 	// Temporary wallet warning message
 	match args.subcommand() {
