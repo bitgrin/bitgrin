@@ -153,18 +153,15 @@ fn should_perform_hyper_sync(db_root: &Path, zip_path: &Path) -> HyperSyncState 
 	// Check if pmmr data exists
 	let pmmr_data_db_path = db_root.join("header/header_head/pmmr_data.bin");
 	if pmmr_data_db_path.exists() && pmmr_data_db_path.is_file() {
-		println!("NotNeeded");
 		return HyperSyncState::NotNeeded;
 	}
 	else {
 		// if zip exist, skip to extraction
 		let zip_file = File::open(zip_path.clone());
 		if let Ok(_) = zip_file {
-			println!("NeedsExtract");
 			return HyperSyncState::NeedsExtract;
 		}
 		else {
-			println!("NeedsDownload");
 			return HyperSyncState::NeedsDownload;
 		}
 	}
