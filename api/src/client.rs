@@ -225,13 +225,12 @@ where
 fn send_request_async(
 	req: Request<Body>,
 ) -> Box<dyn Future<Item = String, Error = Error> + Send> {
-	let https_connector = hyper_rustls::HttpsConnector::new(1);
+	let https = hyper_rustls::HttpsConnector::new(1);
 	let mut connector = TimeoutConnector::new(https);
 	connector.set_connect_timeout(Some(Duration::from_secs(20)));
 	connector.set_read_timeout(Some(Duration::from_secs(20)));
 	connector.set_write_timeout(Some(Duration::from_secs(20)));
 	let client = Client::builder().build::<_, hyper::Body>(connector);
-
 	Box::new(
 		client
 			.request(req)
