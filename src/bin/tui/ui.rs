@@ -17,7 +17,7 @@
 
 use chrono::prelude::Utc;
 use cursive::direction::Orientation;
-use cursive::theme::BaseColor::{Black, Blue, Cyan, White};
+use cursive::theme::BaseColor::{Black, Blue, Cyan, White, Yellow};
 use cursive::theme::Color::Dark;
 use cursive::theme::PaletteColor::{
 	Background, Highlight, HighlightInactive, Primary, Shadow, View,
@@ -50,8 +50,8 @@ fn modify_theme(theme: &mut Theme) {
 	theme.palette[Shadow] = Dark(Black);
 	theme.palette[View] = Dark(Black);
 	theme.palette[Primary] = Dark(White);
-	theme.palette[Highlight] = Dark(Cyan);
-	theme.palette[HighlightInactive] = Dark(Blue);
+	theme.palette[Highlight] = Dark(Yellow);
+	theme.palette[HighlightInactive] = Dark(Cyan);
 	// also secondary, tertiary, TitlePrimary, TitleSecondary
 }
 
@@ -89,7 +89,7 @@ impl UI {
 				built_info::PKG_VERSION,
 				Server::protocol_version()
 			),
-			Color::Dark(BaseColor::Green),
+			Color::Dark(BaseColor::Yellow),
 		));
 
 		let main_layer = LinearLayout::new(Orientation::Vertical)
