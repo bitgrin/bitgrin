@@ -168,6 +168,10 @@ fn should_perform_hyper_sync(db_root: &Path, zip_path: &Path) -> HyperSyncState 
 }
 
 pub fn try_hypersync() {
+    // No hypersync ARM machine
+    if cfg!(target_arch = "arm") {
+        return;
+    }
     // Retrieve common paths used for hyper-sync stages
 	let server_config =	get_server_config();
 	let db_root = Path::new(&server_config.db_root);
