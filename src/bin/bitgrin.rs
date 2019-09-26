@@ -80,8 +80,6 @@ fn real_main() -> i32 {
 		.get_matches();
 	let node_config;
 
-	cmd::try_hypersync();
-
 	// Temporary wallet warning message
 	match args.subcommand() {
 		("wallet", _) => {
@@ -169,6 +167,7 @@ fn real_main() -> i32 {
 	match args.subcommand() {
 		// server commands and options
 		("server", Some(server_args)) => {
+			cmd::try_hypersync();
 			cmd::server_command(Some(server_args), node_config.unwrap())
 		}
 
@@ -185,9 +184,19 @@ fn real_main() -> i32 {
 			}
 		},
 
+		("fullsync", _) => {
+			let db_root_path = node_config.clone().unwrap().members.unwrap().server.db_root;
+			println!("Cleaning chain data directory: {}", db_root_path);
+			std::fs::remove_dir_all(db_root_path);
+			cmd::server_command(None, node_config.unwrap())
+		},
+
 		// If nothing is specified, try to just use the config file instead
 		// this could possibly become the way to configure most things
 		// with most command line options being phased out
-		_ => cmd::server_command(None, node_config.unwrap()),
+		_ => {
+				cmd::try_hypersync();
+				cmd::server_command(None, node_config.unwrap())
+			},
 	}
 }

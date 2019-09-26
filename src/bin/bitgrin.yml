@@ -15,6 +15,8 @@ args:
 subcommands:
   - clean:
       about: Clean Bitgrin chain data
+  - fullsync:
+      about: Sync from block 0 with no checkpoint
   - wallet:
       about: As of v2.0.0, the wallet has been split into a separate executable. See https://github.com/bitgrin/bitgrin-wallet/releases
       usage: As of v2.0.0, the wallet has been split into a separate executable. See https://github.com/bitgrin/bitgrin-wallet/releases to download
