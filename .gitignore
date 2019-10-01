@@ -16,3 +16,10 @@ wallet/db
 .idea/
 /releases/
 .vscode/
+build/
+debian/.debhelper/
+debian/*.log
+debian/bitgrin.substvars
+debian/bitgrin/usr/
+debian/files
+debian/bitgrin/

@@ -1,0 +1,39 @@
+#!/usr/bin/make -f
+
+ROOTDIR := debian/bitgrin
+
+.PHONY: clean
+clean: debian/control
+	dh_clean
+	cargo clean
+	rm build/stamp -rf
+	mkdir -p buildd
+
+.ONESHELL:
+build/stamp: Cargo.toml api chain config core keychain p2p pool servers src store util
+	git submodule update --init --recursive
+	git submodule update --recursive
+	cargo build --release
+	mkdir -p build
+	touch $(@)
+
+.PHONY: build build-arch build-indep
+build build-arch build-indep: build/stamp
+
+.PHONY: binary binary-arch binary-indep
+binary binary-arch binary-indep: build/stamp debian/control
+	@set -e
+	dh_testroot
+	dh_prep
+	mkdir -p $(ROOTDIR)/usr/share/bitgrin
+	cargo install --path . --root $(ROOTDIR)/usr/ --locked
+	strip $(ROOTDIR)/usr/bin/bitgrin
+	rm $(ROOTDIR)/usr/.crates.toml
+	dh_installdocs
+	dh_installchangelogs
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
