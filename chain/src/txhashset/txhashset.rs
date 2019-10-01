@@ -1537,10 +1537,10 @@ pub fn clean_header_folder(root_dir: &PathBuf) {
 	}
 }
 
-fn expected_file(path: &Path) -> bool {
+fn expected_file(_path: &Path) -> bool {
 	use lazy_static::lazy_static;
 	use regex::Regex;
-	let s_path = path.to_str().unwrap_or_else(|| "");
+	let s_path = _path.to_str().unwrap_or_else(|| "");
 	lazy_static! {
 		static ref RE: Regex = Regex::new(
 			format!(

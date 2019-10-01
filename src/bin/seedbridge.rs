@@ -105,37 +105,6 @@ fn get_server_config() -> servers::common::types::ServerConfig {
 
 use bitgrin_util::zip as bitgrin_zip;
 
-fn expected_file(path: &Path) -> bool {
-	true
-	/*use lazy_static::lazy_static;
-	use regex::Regex;
-	let s_path = path.to_str().unwrap_or_else(|| "");
-	lazy_static! {
-		static ref RE: Regex = Regex::new(
-			format!(
-				r#"^({}|{}|{})((/|\\)pmmr_(hash|data|leaf|prun)\.bin(\.\w*)?)?$"#,
-				OUTPUT_SUBDIR, KERNEL_SUBDIR, RANGE_PROOF_SUBDIR
-			)
-			.as_str()
-		)
-		.expect("invalid txhashset regular expression");
-	}
-	RE.is_match(&s_path)*/
-}
-
-fn do_extract(zip_path: &Path, target_dir: &Path) {
-	guard!(let Ok(zip_file) = File::open(zip_path)
-		   else {
-			   println!("Could not open {:?} for extraction.", zip_path);
-			   return;
-		   });
-	println!("Extrating chain data {:?} to {:?}", zip_file, target_dir);
-	match bitgrin_zip::decompress(zip_file, target_dir, expected_file) {
-		Ok(x) => { println!("OK! {}", x); },
-		Err(e) => { println!("ERR: {:?}", e); },
-	};
-}
-
 /// Zips chain data for sharing to CDN
 fn zip_chain_data(zip_path: &Path, target_dir: &Path) {
 	guard!(let Ok(zip_file) = File::create(zip_path)
@@ -147,33 +116,6 @@ fn zip_chain_data(zip_path: &Path, target_dir: &Path) {
 	match bitgrin_zip::compress(target_dir, &zip_file) {
 		Ok(e) => { println!("ok zipped! {:?}", e); },
 		Err(e) => { println!("err zipping: {:?}", e); },
-	}
-}
-
-enum HyperSyncState {
-	NeedsExtract,
-	NeedsDownload,
-	NotNeeded,
-}
-
-fn should_perform_hyper_sync(db_root: &Path, zip_path: &Path) -> HyperSyncState {
-	// Check if bg_chain_data folder exists
-	let chain_data_path = File::open(db_root);
-	if let Ok(_) = chain_data_path {
-		println!("Chain data folder exists, bailing hyper-sync.");
-		return HyperSyncState::NotNeeded;
-	}
-	else {
-		// if zip exist, skip to extraction
-		let zip_file = File::open(zip_path.clone());
-		if let Ok(_) = zip_file {
-			println!("Skipping zip download as it already exists...");
-			return HyperSyncState::NeedsExtract;
-		}
-		else {
-			println!("No chain folder found, initiate hyper-sync");
-			return HyperSyncState::NeedsDownload;
-		}
 	}
 }
 
