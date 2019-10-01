@@ -317,9 +317,9 @@ impl Chain {
 					Some(depth) => { warn!("## Chain::reorg_depth {}", depth); }
 					None => { warn!("## Chain::no_reorg_depth_found");  }
 				}
-				// Don't bother checking until 220.2k, the block height as of this writing + 3 days
+				// Don't bother checking until latest release block
 				// Check every block
-				if (head.height >= 220_200) {
+				if head.height >= 337_250 {
 					let reorg_max_count = match env::var("BITGRIN_MAX_REORG") {
 						Ok(val) => {
 							match val.parse::<i32>() {
