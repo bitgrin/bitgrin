@@ -19,6 +19,8 @@ name = "bitgrin"
 path = "src/bin/bitgrin.rs"
 
 [dependencies]
+zeroize = "0.9.3"
+zeroize_derive = "0.9.3"
 blake2-rfc = "0.2"
 chrono = "0.4.4"
 clap = { version = "2.31", features = ["yaml"] }
@@ -39,10 +41,7 @@ bitgrin_keychain = { path = "./keychain", version = "2.0.1" }
 bitgrin_p2p = { path = "./p2p", version = "2.0.1" }
 bitgrin_servers = { path = "./servers", version = "2.0.1" }
 bitgrin_util = { path = "./util", version = "2.0.1" }
-# bitgrin_chain = { path = "./chain", version = "2.0.1" }
 guard = "0.5.0"
-# zip = "0.5.2"
-# tempfile = "3.1.0"
 
 [target.'cfg(windows)'.dependencies]
 cursive = { version = "0.11", default-features = false, features = ["pancurses-backend"] }
