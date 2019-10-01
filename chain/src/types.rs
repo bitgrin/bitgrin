@@ -188,6 +188,7 @@ pub enum BlockStatus {
 	/// Block updates the chain head via a (potentially disruptive) "reorg".
 	/// Previous block was not our previous chain head.
 	Reorg(u64),
+	/// Chain hash unexpected
 	ChainIntegrityFailure,
 }
 
@@ -196,14 +197,15 @@ pub enum BlockStatus {
 
 /// ****
 /// Just enough info from api crate to recreate BlockPrintable
-
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum OutputType {
+	/// Coinbase output type
 	Coinbase,
+	/// Transaction output type
 	Transaction,
 }
 
-// As above, except formatted a bit better for human viewing
+/// As above, except formatted a bit better for human viewing
 #[derive(Debug, Clone)]
 pub struct OutputPrintable {
 	/// The type of output Coinbase|Transaction
@@ -225,7 +227,9 @@ pub struct OutputPrintable {
 	pub mmr_index: u64,
 }
 
+/// Printable form of an output
 impl OutputPrintable {
+	/// Create printable from output
 	pub fn from_output(
 		output: &core::Output,
 		chain: Arc<Chain>,
@@ -277,12 +281,12 @@ impl OutputPrintable {
 		})
 	}
 
-	
-
+	/// Clones the commit
 	pub fn commit(&self) -> Result<pedersen::Commitment, ser::Error> {
 		Ok(self.commit.clone())
 	}
 
+	/// Validate RangeProof and return a clone
 	pub fn range_proof(&self) -> Result<pedersen::RangeProof, ser::Error> {
 		let proof_str = match self.proof.clone() {
 			Some(p) => p,
@@ -443,20 +447,25 @@ impl<'de> serde::de::Deserialize<'de> for OutputPrintable {
 	}
 }
 
-// Printable representation of a block
+/// Printable representation of a block
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct TxKernelPrintable {
+	/// Kernel features
 	pub features: String,
+	/// Fee for kernel
 	pub fee: u64,
+	/// Lock height of kernel
 	pub lock_height: u64,
+	/// Kernel excess
 	pub excess: String,
+	/// Kernel excess signature
 	pub excess_sig: String,
 }
 
-// Just the information required for wallet reconstruction
+/// Just the information required for wallet reconstruction
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BlockHeaderInfo {
-	// Hash
+	/// Hash
 	pub hash: String,
 	/// Height of this block since the genesis block (height 0)
 	pub height: u64,
@@ -464,9 +473,10 @@ pub struct BlockHeaderInfo {
 	pub previous: String,
 }
 
+/// Printable representation of a block header
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BlockHeaderPrintable {
-	// Hash
+	/// Hash
 	pub hash: String,
 	/// Version of the block
 	pub version: u16,
@@ -498,12 +508,12 @@ pub struct BlockHeaderPrintable {
 	pub total_kernel_offset: String,
 }
 
-// Printable representation of a block
+/// Printable representation of a block
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct BlockPrintable {
 	/// The block header
 	pub header: BlockHeaderPrintable,
-	// Input transactions
+	/// Input transactions
 	pub inputs: Vec<String>,
 	/// A printable version of the outputs
 	pub outputs: Vec<OutputPrintable>,

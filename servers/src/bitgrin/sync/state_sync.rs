@@ -58,8 +58,8 @@ impl StateSync {
 	pub fn check_run(
 		&mut self,
 		header_head: &chain::Tip,
-		head: &chain::Tip,
-		tail: &chain::Tip,
+		_: &chain::Tip,
+		_: &chain::Tip,
 		highest_height: u64,
 	) -> bool {
 

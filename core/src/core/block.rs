@@ -384,7 +384,7 @@ impl BlockHeader {
 
 	/// The "total overage" to use when verifying the kernel sums for a full
 	/// chain state. For a full chain state this is 0 - (height * reward).
-	pub fn total_overage(&self, genesis_had_reward: bool) -> i64 {
+	pub fn total_overage(&self, _: bool) -> i64 {
 		total_overage_at_height(self.height)
 			.checked_neg()
 			.unwrap_or(0)

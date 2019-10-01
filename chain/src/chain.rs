@@ -343,7 +343,7 @@ impl Chain {
 							// Full synchronizing node
 							let seed_hash = self.seed_hash_at_height(head.height);
 							match seed_hash {
-								Ok(seed_hash) => {
+								Ok(_) => {
 									// Seed hash mismatch. Reject this block
 									error!("Integrity failure in seed hash validation! Rejecting blocks.");
 									return BlockStatus::ChainIntegrityFailure;
@@ -358,7 +358,7 @@ impl Chain {
 							// Mature node
 							if reorg_depth.is_some() {
 								let r_depth = reorg_depth.unwrap() as i32;
-								if(r_depth >= max_count) {
+								if r_depth >= max_count {
 									// Reject reorgs beyond BITGRIN_MAX_REORG env var
 									error!("Rejected reorg with depth {} given reorg max {}.", r_depth, max_count);
 									return BlockStatus::ChainIntegrityFailure;
@@ -408,7 +408,7 @@ impl Chain {
 		match maybe_new_head {
 			Ok(head) => {
 				let status = self.determine_status(head.clone(), prev_head);
-				if (status == BlockStatus::ChainIntegrityFailure) {
+				if status == BlockStatus::ChainIntegrityFailure {
 					debug!("Chain integrity check failed in block");
 					return Err(ErrorKind::Other("Chain integrity check failed".to_string()).into());
 				}
@@ -628,8 +628,8 @@ impl Chain {
 					Ok(header) => {
 						return header.height == checkpoint_height;
 					}
-					Err(e) => {
-						if (self.head().unwrap().height < checkpoint_height) {
+					Err(_) => {
+						if self.head().unwrap().height < checkpoint_height {
 							// The block is not in our chain, but this
 							// is simply because the chain is not synchronized
 							// this far yet, is not a chain validation error
@@ -640,11 +640,10 @@ impl Chain {
 					}
 				}
 			}
-			Err(err) => {
+			Err(_) => {
 				return false;
 			}
 		}
-		return false;
 	}
 
 	/// Validate the current chain state.

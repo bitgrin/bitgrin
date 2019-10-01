@@ -187,7 +187,7 @@ fn real_main() -> i32 {
 		("fullsync", _) => {
 			let db_root_path = node_config.clone().unwrap().members.unwrap().server.db_root;
 			println!("Cleaning chain data directory: {}", db_root_path);
-			std::fs::remove_dir_all(db_root_path);
+			let _ = std::fs::remove_dir_all(db_root_path);
 			cmd::server_command(None, node_config.unwrap())
 		},
 

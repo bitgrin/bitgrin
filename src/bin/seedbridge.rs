@@ -58,12 +58,12 @@ pub fn seed_bridge() -> Result<Hash, Error> {
 use bitgrin_config as config;
 use bitgrin_servers as servers;
 use bitgrin_core::global;
-use std::fs::{self, File};
-use std::path::{Path, PathBuf};
+use std::fs::{File};
+use std::path::{Path};
 #[macro_use] extern crate guard;
 
 use std::io::{Read};
-use reqwest::{header, Client, Url};
+// use reqwest::{header, Client, Url};
 
 struct DownloadProgress<R> {
     inner: R,
@@ -103,7 +103,6 @@ fn get_server_config() -> servers::common::types::ServerConfig {
 	node_config.unwrap().members.as_ref().unwrap().server.clone()
 }
 
-use std::io;
 use bitgrin_util::zip as bitgrin_zip;
 
 fn expected_file(path: &Path) -> bool {
@@ -135,87 +134,6 @@ fn do_extract(zip_path: &Path, target_dir: &Path) {
 		Ok(x) => { println!("OK! {}", x); },
 		Err(e) => { println!("ERR: {:?}", e); },
 	};
-}
-
-fn start_hyper_sync() {
-	println!("Starting hyper-sync...");
-	let uri = "https://d1joz5daoz8ntk.cloudfront.net/bg_chain_data07092019.zip";
-
-	guard!(let Ok(url) = Url::parse(uri)
-		   else { println!("Cannot parse URL"); return; });
-	println!("Parsed URL");
-    let client = Client::new();
-
-    let total_size = {
-        let resp_try = client.head(url.as_str()).send();
-		match resp_try {
-			Ok(resp) => {
-				if resp.status().is_success() {
-					resp.headers()
-						.get(header::CONTENT_LENGTH)
-						.and_then(|ct_len| ct_len.to_str().ok())
-						.and_then(|ct_len| ct_len.parse().ok())
-						.unwrap_or(0)
-				} else {
-					println!("Couldn't download URL: {}. Error: {:?}", url, resp.status()); -1
-				}
-			},
-			Err(_) => { println!("Can't get size."); -1 }
-		}
-    };
-	println!("Total size: {}", total_size);
-
-    let mut request = client.get(url.as_str());
-
-    let filename = Path::new(
-         url
-            .path_segments()
-            .and_then(|segments| segments.last())
-            .unwrap_or("tmp.bin"),
-    );
-
-
-
-
-	let server_config =	get_server_config();
-	let db_root = Path::new(&server_config.db_root);
-	
-	guard!(let Some(db_parent_path) = db_root.parent()
-		   else { println!("No db_root."); return; });
-	guard!(let zip_path_root = Path::new(&db_parent_path)
-	       else { println!("No db_parent_path"); return; });
-	guard!(let zip_path = zip_path_root.join("bg_chain_data.zip")
-	       else { println!("No db_parent_path"); return; });
-
-    if zip_path.exists() {
-		println!("file_exists");
-		guard!(let Ok(zip_metadata) = zip_path.metadata()
-			   else { println!("Couldnt get zip metadata."); return; });
-        let size = zip_metadata.len() - 1;
-        request = request.header(header::RANGE, format!("bytes={}-", size));
-        //pb.inc(size);
-		// println!("inc size {}", size);
-    }
-
-	guard!(let Ok(send_request) = request.send()
-	       else { println!("send() error"); return; });
-
-    let mut source = DownloadProgress {
-        inner: send_request,
-		bytes_downloaded: 0,
-		out_per: 0.0,
-		total_size: total_size as u64,
-    };
-
-	guard!(let Ok(mut dest) = fs::OpenOptions::new().create(true).append(true).open(&zip_path)
-		   else { println!("err opening options"); return; });
-
-    std::io::copy(&mut source, &mut dest);
-	
-    println!(
-        "Download of '{}' has been completed.",
-        zip_path.to_str().unwrap()
-    );
 }
 
 /// Zips chain data for sharing to CDN
@@ -284,13 +202,13 @@ pub fn main() {
 			_ => { println!("Unrecognized command."); }
 		}
 	}
-	else {
-		match should_perform_hyper_sync(db_root, &zip_path) {
-			HyperSyncState::NeedsDownload => { start_hyper_sync(); do_extract(&zip_path, db_root); },
-			HyperSyncState::NeedsExtract => { do_extract(&zip_path, db_root); },
-			HyperSyncState::NotNeeded => { println!("Skipping hyper-sync."); }
-		};
-	}
+	// else {
+	// 	match should_perform_hyper_sync(db_root, &zip_path) {
+	// 		HyperSyncState::NeedsDownload => { start_hyper_sync(); do_extract(&zip_path, db_root); },
+	// 		HyperSyncState::NeedsExtract => { do_extract(&zip_path, db_root); },
+	// 		HyperSyncState::NotNeeded => { println!("Skipping hyper-sync."); }
+	// 	};
+	// }
 
 	/*
 	// Seed bridge tests

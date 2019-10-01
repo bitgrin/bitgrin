@@ -17,7 +17,7 @@
 
 use chrono::prelude::Utc;
 use cursive::direction::Orientation;
-use cursive::theme::BaseColor::{Black, Blue, Cyan, White, Yellow};
+use cursive::theme::BaseColor::{Black, Cyan, White, Yellow};
 use cursive::theme::Color::Dark;
 use cursive::theme::PaletteColor::{
 	Background, Highlight, HighlightInactive, Primary, Shadow, View,

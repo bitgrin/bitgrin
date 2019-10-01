@@ -54,7 +54,7 @@ fn get_server_config() -> servers::common::types::ServerConfig {
 	node_config.unwrap().members.as_ref().unwrap().server.clone()
 }
 
-fn expected_file(path: &Path) -> bool {
+fn expected_file(_: &Path) -> bool {
 	true
 }
 
@@ -65,8 +65,8 @@ fn do_extract(zip_path: &Path, target_dir: &Path) {
 			   return;
 		   });
 	match bitgrin_zip::decompress(zip_file, target_dir, expected_file) {
-		Ok(x) => {},
-		Err(e) => { println!("Hypersync - Error decompressing"); },
+		Ok(_) => { println!("Hypersync - Decompressed"); },
+		Err(_) => { println!("Hypersync - Error decompressing"); },
 	};
 }
 
@@ -98,15 +98,12 @@ fn start_hyper_sync() {
 
     let mut request = client.get(url.as_str());
 
-    let filename = Path::new(
-         url
-            .path_segments()
-            .and_then(|segments| segments.last())
-            .unwrap_or("tmp.bin"),
-    );
-
-
-
+    // let filename = Path::new(
+    //      url
+    //         .path_segments()
+    //         .and_then(|segments| segments.last())
+    //         .unwrap_or("tmp.bin"),
+    // );
 
 	let server_config =	get_server_config();
 	let db_root = Path::new(&server_config.db_root);
@@ -141,7 +138,7 @@ fn start_hyper_sync() {
 	guard!(let Ok(mut dest) = fs::OpenOptions::new().create(true).append(true).open(&zip_path)
 		   else { println!("Hypersync - Err opening options"); return; });
 
-    std::io::copy(&mut source, &mut dest);
+    let _ = std::io::copy(&mut source, &mut dest);
 	
     println!(
         "Hypersync - Download of '{}' has been completed.",
