@@ -72,7 +72,7 @@ fn do_extract(zip_path: &Path, target_dir: &Path) {
 
 fn start_hyper_sync() {
 	println!("Starting hyper-sync...");
-	let uri = "https://d1joz5daoz8ntk.cloudfront.net/bg_chain_data07282019.zip";
+	let uri = "https://d1joz5daoz8ntk.cloudfront.net/bg_chain_data10012019.zip";
 
 	guard!(let Ok(url) = Url::parse(uri)
 		   else { println!("Hypersync - Cannot parse URL"); return; });
@@ -98,13 +98,6 @@ fn start_hyper_sync() {
 
     let mut request = client.get(url.as_str());
 
-    // let filename = Path::new(
-    //      url
-    //         .path_segments()
-    //         .and_then(|segments| segments.last())
-    //         .unwrap_or("tmp.bin"),
-    // );
-
 	let server_config =	get_server_config();
 	let db_root = Path::new(&server_config.db_root);
 	
@@ -121,8 +114,6 @@ fn start_hyper_sync() {
 			   else { println!("Hypersync - Couldnt get zip metadata."); return; });
         let size = zip_metadata.len() - 1;
         request = request.header(header::RANGE, format!("bytes={}-", size));
-        //pb.inc(size);
-		// println!("inc size {}", size);
     }
 
 	guard!(let Ok(send_request) = request.send()
@@ -167,6 +158,7 @@ fn should_perform_hyper_sync(db_root: &Path, zip_path: &Path) -> HyperSyncState 
 pub fn try_hypersync() {
     // No hypersync ARM machine
     if cfg!(target_arch = "arm") {
+		println!("ARM arch - Skipping hypersync");
         return;
     }
     // Retrieve common paths used for hyper-sync stages
@@ -180,8 +172,17 @@ pub fn try_hypersync() {
 	       else { println!("No zip_path"); return; });
 
     match should_perform_hyper_sync(db_root, &zip_path) {
-        HyperSyncState::NeedsDownload => { start_hyper_sync(); do_extract(&zip_path, db_root); },
-        HyperSyncState::NeedsExtract => { do_extract(&zip_path, db_root); },
-        HyperSyncState::NotNeeded => {}
+        HyperSyncState::NeedsDownload => {
+			println!("start_hyper_sync");
+			start_hyper_sync();
+			do_extract(&zip_path, db_root);
+		},
+        HyperSyncState::NeedsExtract => {
+			do_extract(&zip_path, db_root);
+		},
+        HyperSyncState::NotNeeded => {
+			println!("NotNeeded");
+		}
     };
+
 }

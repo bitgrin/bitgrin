@@ -68,7 +68,7 @@ fn log_build_info() {
 }
 
 fn main() {
-	println!("BitGrin v2.0.1");
+	println!("Bitgrin v2.0.3");
 	let exit_code = real_main();
 	std::process::exit(exit_code);
 }
@@ -195,7 +195,9 @@ fn real_main() -> i32 {
 		// this could possibly become the way to configure most things
 		// with most command line options being phased out
 		_ => {
+				println!("Checking need for hypersync...");
 				cmd::try_hypersync();
+				println!("Done with hypersync check. Running server...");
 				cmd::server_command(None, node_config.unwrap())
 			},
 	}

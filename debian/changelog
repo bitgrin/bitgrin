@@ -1,4 +1,10 @@
-bitgrin (2.0.2) bionic; urgency=medium
+bitgrin (2.0.3) bionic; urgency=medium
+
+  * Update hyper-sync.
+
+ -- pharazen <pharazen@protonmail.com> Tue, 01 Oct 2019 18:13:10 -0500
+
+bitgrin (2.0.1) bionic; urgency=medium
 
   * Initial release.
 

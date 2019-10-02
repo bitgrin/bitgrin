@@ -30,6 +30,7 @@ use crate::tui::ui;
 
 /// wrap below to allow UI to clean up on stop
 pub fn start_server(config: servers::ServerConfig) {
+	trace!("Starting server from config...");
 	start_server_tui(config);
 	// Just kill process for now, otherwise the process
 	// hangs around until sigint because the API server
@@ -90,9 +91,11 @@ pub fn server_command(
 	);
 
 	// just get defaults from the global config
+	println!("Retrieving global config...");
 	let mut server_config = global_config.members.as_ref().unwrap().server.clone();
 
 	if let Some(a) = server_args {
+		println!("Retrieving config overrides...");
 		if let Some(port) = a.value_of("port") {
 			server_config.p2p_config.port = port.parse().unwrap();
 		}
@@ -123,6 +126,7 @@ pub fn server_command(
 	}
 
 	if let Some(a) = server_args {
+		println!("Retrieving server args...");
 		match a.subcommand() {
 			("run", _) => {
 				start_server(server_config);
@@ -139,6 +143,7 @@ pub fn server_command(
 			}
 		}
 	} else {
+		println!("Starting server with no args...");
 		start_server(server_config);
 	}
 	0
