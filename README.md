@@ -1,4 +1,10 @@
-[![Release Version](https://img.shields.io/github/release/mimblewimble/grin.svg)](https://github.com/bitgrin/bitgrin/releases)
+# BitGrin
+
+### Quick Install on Ubuntu/Debian
+
+```
+curl -sLO https://github.com/bitgrin/bitgrin/releases/download/v2.0.3/bitgrin_2.0.3_amd64.deb && sudo dpkg -i bitgrin_2.0.3_amd64.deb && rm bitgrin_2.0.3_amd64.deb
+```
 
 # BitGrin
 
@@ -28,12 +34,6 @@ To learn more about the technology, read our [introduction](doc/intro.md).
 
 To build and try out BitGrin, see the [build docs](doc/build.md).
 
-### Install on Ubuntu/Debian
-
-```
-curl -sLO https://github.com/bitgrin/bitgrin/releases/download/v2.0.1/bitgrin_2.0.1_amd64.deb && sudo dpkg -i bitgrin_2.0.1_amd64.deb && rm bitgrin_2.0.1_amd64.deb
-```
-
 ## Philosophy
 
 BitGrin likes itself small and easy on the eyes. It wants to be inclusive and welcoming for all walks of life, without judgement. BitGrin is terribly ambitious, but not at the detriment of others, rather to further us all. It may have strong opinions to stay in line with its objectives, which doesn't mean disrespect of others' ideas.
@@ -48,8 +48,8 @@ Andrew Poelstra for his related work and improvements.
 
 John Tromp for the Cuckoo Cycle proof of work.
 
-J.K. Rowling for making it despite extraordinary adversity.
-
 ## License
 
 Apache License v2.0.
+
+[![Release Version](https://img.shields.io/github/release/mimblewimble/grin.svg)](https://github.com/bitgrin/bitgrin/releases)
