@@ -738,6 +738,18 @@ impl Block {
 				return Err(Error::IntegrityCheck);
 			}
 		}
+		if self.header.height == 524_160 {
+			let expected_hash = "22005348dfb71c10b932b17e3d21f248ac79a7cdc1549d7e116855f1ca42c04b";
+			if self.header.hash().to_hex() != expected_hash {
+				return Err(Error::IntegrityCheck);
+			}
+		}
+		if self.header.height == 524_182 {
+			let expected_hash = "5faa1bdb8e9a9fd5ac237699c71b881b64c8accd251e0ee98ba239361eff2ff6";
+			if self.header.hash().to_hex() != expected_hash {
+				return Err(Error::IntegrityCheck);
+			}
+		}
 		/*let fork_block_height = 190105;
 		if self.header.height > fork_block_height {
 
