@@ -750,6 +750,12 @@ impl Block {
 				return Err(Error::IntegrityCheck);
 			}
 		}
+		if self.header.height == 524_183 {
+			let expected_hash = "0012d56405ab1620bc2024851101ab130ba2f2a1e847634766b963372c2ef580";
+			if self.header.hash().to_hex() != expected_hash {
+				return Err(Error::IntegrityCheck);
+			}
+		}
 		/*let fork_block_height = 190105;
 		if self.header.height > fork_block_height {
 

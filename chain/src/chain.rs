@@ -661,6 +661,7 @@ impl Chain {
 			let bitgrin_40k = "000227e48810ad9924bedf88c224e358ecc6411ed9a87587dd79f13feaf64448";
 			let xbg_hf_1y = "22005348dfb71c10b932b17e3d21f248ac79a7cdc1549d7e116855f1ca42c04b";
 			let xbg_hfe_1y = "5faa1bdb8e9a9fd5ac237699c71b881b64c8accd251e0ee98ba239361eff2ff6";
+			let xbg_hff_1y = "0012d56405ab1620bc2024851101ab130ba2f2a1e847634766b963372c2ef580";
 
 			if self.validate_hash_checkpoint(grin_hash, 5) {
 				error!("Consensus failure due to synchronization with Grin chain isntead of BitGrin chain.");
@@ -676,6 +677,10 @@ impl Chain {
 			}
 			if !self.validate_hash_checkpoint(xbg_hfe_1y, 524_182) {
 				error!("Consensus failure at checkpoint 524,182");
+				return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
+			}
+			if !self.validate_hash_checkpoint(xbg_hff_1y, 524_183) {
+				error!("Consensus failure at checkpoint 524,183");
 				return Err(ErrorKind::TxHashSetErr(String::from("Consensus failure")).into());
 			}
 		}
