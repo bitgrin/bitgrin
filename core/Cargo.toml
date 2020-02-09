@@ -1,6 +1,6 @@
 [package]
 name = "bitgrin_core"
-version = "2.0.1"
+version = "2.0.5"
 license = "Apache-2.0"
 repository = "https://github.com/bitgrin/bitgrin"
 keywords = [ "crypto", "bitgrin", "mimblewimble" ]
@@ -27,8 +27,8 @@ log = "0.4"
 chrono = { version = "0.4.4", features = ["serde"] }
 zeroize = "0.9.3"
 
-bitgrin_keychain = { path = "../keychain", version = "2.0.1" }
-bitgrin_util = { path = "../util", version = "2.0.1" }
+bitgrin_keychain = { path = "../keychain", version = "2.0.5" }
+bitgrin_util = { path = "../util", version = "2.0.5" }
 
 [dev-dependencies]
 serde_json = "1"

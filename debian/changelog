@@ -1,3 +1,9 @@
+bitgrin (2.0.5) bionic; urgency=high
+
+  * Update for hard fork
+
+ -- pharazen <pharazen@protonmail.com> Sun, 09 Feb 2020 11:10:05 -0500
+
 bitgrin (2.0.3) bionic; urgency=medium
 
   * Update hyper-sync.

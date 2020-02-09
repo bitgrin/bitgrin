@@ -84,6 +84,7 @@ impl Server {
 
 			match listener.accept() {
 				Ok((stream, peer_addr)) => {
+					stream.set_nonblocking(false)?;
 					let peer_addr = PeerAddr(peer_addr);
 
 					if self.check_undesirable(&stream) {

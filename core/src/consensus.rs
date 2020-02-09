@@ -85,6 +85,12 @@ pub fn dev_fee_at_height(height: u64) -> u64 {
 	return DEV_FEE_AMT * BITGRIN_BASE;
 }
 
+/// 1 year hard fork, avoid chain split
+fn year_block_overage() -> f64 {
+	// reward - fee per block for this block
+	return (BLOCK_REWARD as f64) * (BITGRIN_BASE as f64);
+}
+
 /// Actual block reward for a given total fee amount, and lock offset
 pub fn reward(fee: u64, height: u64) -> (u64, u64) {
 	let (reward, lock_offset) = reward_at_height(height);
@@ -97,11 +103,6 @@ pub fn get_coinbase_maturity_for_block(fee: u64, height: u64) -> u64 {
 		return height + reward(fee, height).1;
 	}
 	return height + COINBASE_MATURITY;
-}
-
-/// Adjusted down block reward to compensate for dev fee in emission curve
-pub fn adjusted_block_reward() -> u64 {
-	return (4.5 * BITGRIN_BASE as f64) as u64;
 }
 
 /// The total overage at a given height. Variable due to changing rewards
@@ -118,7 +119,7 @@ pub fn total_overage_at_height(height: u64) -> i64 {
 /// Returns (reward, height_offset) at given height
 pub fn reward_at_height(height: u64) -> (u64, u64) {
 	if height == 0 {
-		return (adjusted_block_reward(), 0);
+		return (adjusted_block_reward(height), 0);
 	}
 	if height - 1 < QTY_DEV_FEE_PAYOUTS {
 		// Initial blocks create locked outputs that
@@ -129,12 +130,23 @@ pub fn reward_at_height(height: u64) -> (u64, u64) {
 		return (dev_fee_at_height(height), height_offset);
 	}
 	if height < HALVENING_FREQUENCY {
-		return (adjusted_block_reward(), 0);
+		return (adjusted_block_reward(height), 0);
 	}
 	let reward_divisor = ((height as f64) / (HALVENING_FREQUENCY as f64)).ceil() as u64;
 	let reward_divisor_bounded = max(reward_divisor, 1);
 	let reward = BLOCK_REWARD * BITGRIN_BASE / reward_divisor_bounded;
 	(reward, 0)
+}
+
+/// Adjusted down block reward to compensate for dev fee in emission curve and the hard fork at 1 year
+pub fn adjusted_block_reward(height: u64) -> u64 {
+	if height == YEAR_HEIGHT {
+		return (year_block_overage() * BITGRIN_BASE as f64) as u64;
+	} else if height > YEAR_HEIGHT {
+		// After first year
+		return (4.5 * BITGRIN_BASE as f64) as u64;
+	}
+	return (4.5 * BITGRIN_BASE as f64) as u64;
 }
 
 /// Ratio the secondary proof of work should take over the primary, as a
@@ -220,6 +232,8 @@ pub fn valid_header_version(height: u64, version: HeaderVersion) -> bool {
 			// } else if height < FLOONET_SECOND_HARD_FORK {
 			} else if height < 2 * HARD_FORK_INTERVAL {
 				version == HeaderVersion::new(2)
+			} else if height < 3 * HARD_FORK_INTERVAL {
+				version == HeaderVersion::new(3)
 			} else {
 				false
 			}
@@ -231,9 +245,9 @@ pub fn valid_header_version(height: u64, version: HeaderVersion) -> bool {
 			} else if height < 2 * HARD_FORK_INTERVAL {
 				version == HeaderVersion::new(2)
 			// uncomment branches one by one as we go from hard fork to hard fork
-			/*} else if height < 3 * HARD_FORK_INTERVAL {
+			} else if height < 3 * HARD_FORK_INTERVAL {
 				version == HeaderVersion::new(3)
-			} else if height < 4 * HARD_FORK_INTERVAL {
+			/*} else if height < 4 * HARD_FORK_INTERVAL {
 				version == HeaderVersion::new(4)
 			} else {
 				version > HeaderVersion::new(4) */
@@ -412,6 +426,9 @@ where
 	} else if height <= (50 + 23) {
 		// Keep difficulty above 250k for at least long enough to become MA for difficulty correction
 		difficulty = max(250_000, difficulty);
+	} else if height >= 524160 && height < 524183 {
+		// Reset's chain after hard fork issue with 20-block checkpoint
+		difficulty = 1;
 	}
 
 	HeaderInfo::from_diff_scaling(Difficulty::from_num(difficulty), sec_pow_scaling)
