@@ -1,3 +1,9 @@
+bitgrin (2.0.6) bionic; urgency=high
+
+  * Update for seed
+
+ -- pharazen <pharazen@protonmail.com> Sun, 11 Feb 2020 11:12:01 -0500
+
 bitgrin (2.0.5) bionic; urgency=high
 
   * Update for hard fork
