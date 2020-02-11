@@ -3,7 +3,7 @@
 ### Quick Install on Ubuntu/Debian
 
 ```
-curl -sLO https://github.com/bitgrin/bitgrin/releases/download/2.0.5/bitgrin_2.0.5_amd64.deb && sudo dpkg -i bitgrin_2.0.5_amd64.deb && rm bitgrin_2.0.5_amd64.deb
+curl -sLO https://github.com/bitgrin/bitgrin/releases/download/2.0.6/bitgrin_2.0.6_amd64.deb && sudo dpkg -i bitgrin_2.0.6_amd64.deb && rm bitgrin_2.0.6_amd64.deb
 ```
 
 # BitGrin
