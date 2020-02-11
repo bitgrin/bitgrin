@@ -72,7 +72,7 @@ fn do_extract(zip_path: &Path, target_dir: &Path) {
 
 fn start_hyper_sync() {
 	println!("Starting hyper-sync...");
-	let uri = "https://d1joz5daoz8ntk.cloudfront.net/bg_chain_data10012019.zip";
+	let uri = "https://d1joz5daoz8ntk.cloudfront.net/bg_chain_data02112020.zip";
 
 	guard!(let Ok(url) = Url::parse(uri)
 		   else { println!("Hypersync - Cannot parse URL"); return; });
